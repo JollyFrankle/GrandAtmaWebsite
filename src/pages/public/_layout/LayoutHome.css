@@ -23,5 +23,5 @@ mark::after {
     height: 40%;
     z-index: -1;
     background-color: hsl(var(--primary));
-    opacity: 0.5;
+    opacity: 0.2;
 }
