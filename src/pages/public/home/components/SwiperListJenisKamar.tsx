@@ -11,10 +11,10 @@ import { Link } from "react-router-dom";
 import { Grid2X2Icon, StarIcon, UserIcon } from "lucide-react";
 import axios from "axios";
 
-import Featured1 from "@/assets/images/pph_featured-1.png"
 import { ApiResponse, BASE_URL, JenisKamar, getImage } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
+import { toast } from "@/cn/components/ui/use-toast";
 
 export default function SwiperListJenisKamar() {
     const [data, setData] = useState<Partial<JenisKamar>[]>([])
@@ -25,6 +25,12 @@ export default function SwiperListJenisKamar() {
             const data = res.data as ApiResponse<Partial<JenisKamar>[]>
             setData(data.data)
             setIsLoading(false)
+        }).catch((err) => {
+            toast({
+                title: "Error",
+                content: err,
+                variant: "destructive"
+            })
         })
     }
 
@@ -57,13 +63,12 @@ export default function SwiperListJenisKamar() {
                             <StarIcon className="w-4 h-4 me-1 text-orange-400" />
                             {Formatter.formatNumber(it.rating!!)}
                         </div>
-
                     </CardHeader>
                     <CardContent className="flex flex-col justify-between h-full">
                         <p className="text-muted-foreground">{it.short_desc}</p>
                         <div className="flex justify-between items-center">
                             <Button className="text-sm p-0" variant="link" asChild>
-                                <Link to="/docs">
+                                <Link to={`/kamar/${it.id}`}>
                                     Selengkapnya
                                 </Link>
                             </Button>
@@ -81,8 +86,10 @@ export default function SwiperListJenisKamar() {
                     </CardFooter>
                 </Card>
             </SwiperSlide>
-        )) : [...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="w-full max-w-sm h-96" />
+        )) : [...Array(5)].map((_, i) => (
+            <SwiperSlide key={i} className="w-full max-w-sm h-96">
+                <Skeleton className="w-full h-full" />
+            </SwiperSlide>
         ))}
     </Swiper>
 }

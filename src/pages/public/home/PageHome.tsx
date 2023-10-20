@@ -1,45 +1,24 @@
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Card, CardContent } from "@/cn/components/ui/card";
-import ReservationDatePicker from "./components/ReservationDatePicker";
-import { Button } from "@/cn/components/ui/button";
-import GuestAmountPicker from "./components/GuestAmountPicker";
-import InputWithIcon from "./components/InputWithIcon";
-import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-react";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
-import { useToast } from "@/cn/components/ui/use-toast";
+import { BackpackIcon, LuggageIcon } from "lucide-react";
+import SwiperListJenisKamar from "./components/SwiperListJenisKamar";
+import ListFasilitasNormal from "./components/ListFasilitasNormal";
+import SwiperListLayananTambahan from "./components/SwiperListLayananTambahan";
 
 import "swiper/css"
 import 'swiper/css/effect-creative';
 import 'swiper/css/navigation';
 import { EffectCreative, Navigation } from "swiper/modules"
 
+import usePageTitle from "@/hooks/usePageTitle";
+
 import CoverImage from "@/assets/images/cover-image.jpg"
 import Tugu from "@/assets/images/tugu-crop.png"
 import Featured1 from "@/assets/images/pph_featured-1.png"
 import Featured2 from "@/assets/images/pph_featured-2.png"
 import Featured3 from "@/assets/images/pph_featured-3.jpg"
-import { Link } from "react-router-dom";
-import usePageTitle from "@/hooks/usePageTitle";
-import SwiperListJenisKamar from "./components/SwiperListJenisKamar";
-import ListFasilitasNormal from "./components/ListFasilitasNormal";
-import SwiperListLayananTambahan from "./components/SwiperListLayananTambahan";
+import RoomSearch from "../_layout/components/RoomSearch";
 
 export default function PageHome() {
-    const [inDate, setInDate] = useState<DateRange | undefined>(undefined)
-    const [inDewasa, setInDewasa] = useState<string>()
-    const [inAnak, setInAnak] = useState<string>()
-
-    const { toast } = useToast()
-
-    const onSubmit = () => {
-        toast({
-            title: "Berhasil!",
-            description: "Kamar berhasil dipesan.",
-            duration: 5000,
-            variant: "destructive",
-        })
-    }
 
     usePageTitle("Grand Atma Hotel - Tempat Ternyaman Anda di Yogyakarta")
     return <>
@@ -57,37 +36,7 @@ export default function PageHome() {
         <section className="relative">
             <div className="lg:h-48 -mt-24">
                 <div className="container h-full">
-                    <Card className="w-full h-full rounded-3xl shadow-lg">
-                        <CardContent className="py-6 h-full text-center">
-                            <p className="mb-3 text-xl md:text-start">
-                                <mark className="font-bold"><em>Sugeng rawuh!</em></mark> Rencanakan liburan Anda selanjutnya ditemani kami!
-                            </p>
-                            <div className="grid grid-cols-12 grid-flow-row gap-4 items-center">
-                                <InputWithIcon icon={<CalendarIcon />} className="col-span-12 lg:col-span-4">
-                                    <ReservationDatePicker className="ps-9" value={inDate} onChange={setInDate} />
-                                </InputWithIcon>
-                                <InputWithIcon icon={<UserIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                                    <GuestAmountPicker className="ps-9" placeholder="Jumlah dewasa" onChange={setInDewasa} suffix="dewasa" max={10} />
-                                </InputWithIcon>
-                                <InputWithIcon icon={<BabyIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                                    <GuestAmountPicker className="ps-9" placeholder="Jumlah anak" onChange={setInAnak} suffix="anak" max={10} />
-                                </InputWithIcon>
-                                <InputWithIcon icon={<BedIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                                    <GuestAmountPicker className="ps-9" placeholder="Jumlah kamar" onChange={setInAnak} suffix="kamar" max={5} />
-                                </InputWithIcon>
-                                <Button className="col-span-12 lg:col-span-2 text-lg h-14" onClick={onSubmit}>
-                                    <SearchIcon className="w-4 h-4 me-2" />
-                                    Cari Kamar
-                                </Button>
-                            </div>
-                            <div className="mt-3 text-md md:text-end">
-                                Ingin memesan kamar untuk lebih dari 10 orang?
-                                <Button variant="link" className="p-0 ms-2 text-md" asChild>
-                                    <Link to="/docs">Hubungi kami</Link>
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <RoomSearch />
                 </div>
             </div>
         </section>
@@ -140,8 +89,10 @@ export default function PageHome() {
             </div>
         </section>
 
-        <section className="py-8 rounded-3xl shadow-lg bg-secondary text-secondary-foreground relative">
+        <section className="py-8 rounded-3xl shadow-lg bg-secondary text-secondary-foreground relative overflow-hidden">
             <div className="container">
+                <BackpackIcon className="absolute -bottom-14 w-96 h-96 left-0 opacity-10" />
+                <LuggageIcon className="absolute -bottom-14 w-96 h-96 right-0 opacity-10" />
                 <div className="text-center">
                     <h2 className="text-4xl font-bold mb-3"><mark>Akomodasi</mark> Eksklusif</h2>
                     <p className="text-lg mb-8">Grand Atma Hotel menyediakan 150 kamar dengan berbagai jenis dan ukuran untuk keperluan Anda.</p>

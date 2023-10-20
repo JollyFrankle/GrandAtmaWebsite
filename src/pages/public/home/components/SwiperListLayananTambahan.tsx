@@ -60,7 +60,9 @@ export default function SwiperListLayananTambahan({
                 <div className="absolute left-0 w-full h-96 bottom-0 bg-gradient-to-t from-[#00000088] to-transparent rounded-br-3xl rounded-bl-3xl"></div>
             </SwiperSlide>
         )) : [...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="w-full max-w-sm h-96" />
+            <SwiperSlide key={i} className="h-full">
+                <Skeleton className="w-full h-full" />
+            </SwiperSlide>
         ))}
     </Swiper>
 }

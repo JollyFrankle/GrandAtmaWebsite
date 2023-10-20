@@ -2,110 +2,158 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { Link, Outlet } from 'react-router-dom'
 import React from 'react';
 import { cn } from '@/cn/lib/utils';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReact } from '@fortawesome/free-brands-svg-icons';
+import { FacebookIcon, InstagramIcon, LogInIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
 
 import './LayoutHome.css'
-import { FacebookIcon, InstagramIcon, LogInIcon, MailIcon, PhoneIcon, XIcon, YoutubeIcon } from 'lucide-react';
+import Logo from "@/assets/images/gah-logo.png"
+import { Button } from '@/cn/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
 
-const components: { title: string; href: string; description: string | React.ReactNode }[] = [
+interface MenuItemProps {
+    title: string
+    href: string
+    description: string | React.ReactNode
+    children?: MenuItemProps[]
+}
+
+const components: MenuItemProps[] = [
     {
-        title: "Alert Dialog",
-        href: "/docs/primitives/alert-dialog",
-        description: "A modal dialog that interrupts the user with important content and expects a response.",
+        title: "Tentang Kami",
+        href: "#",
+        description: "Tentang Grand Atma Hotel",
+        children: [
+            {
+                title: "Sejarah",
+                href: "/sejarah",
+                description: "Grand Atma Hotel dari masa ke masa",
+            },
+            {
+                title: "Visi & Misi",
+                href: "/visi-misi",
+                description: "Visi & Misi Grand Atma Hotel",
+            },
+            {
+                title: "Lokasi",
+                href: "/lokasi",
+                description: "Lokasi Grand Atma Hotel",
+            }
+        ]
     },
     {
-        title: "Hover Card",
-        href: "/docs/primitives/hover-card",
-        description: "For sighted users to preview content available behind a link.",
-    },
-    {
-        title: "Progress",
-        href: "/docs/primitives/progress",
-        description: "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-    },
-    {
-        title: "Scroll-area",
-        href: "/docs/primitives/scroll-area",
-        description: "Visually or semantically separates content.",
-    },
-    {
-        title: "Tabs",
-        href: "/docs/primitives/tabs",
-        description: "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-    },
-    {
-        title: "Tooltip",
-        href: "/docs/primitives/tooltip",
-        description: "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-    },
+        title: "Reservasi",
+        href: "#",
+        description: "Pesan kamar di Grand Atma Hotel",
+        children: [
+            {
+                title: "Pemesanan Kamar",
+                href: "/reservasi",
+                description: "Rencanakan liburan Anda bersama kami",
+            },
+            {
+                title: "Pemesanan Kamar Grup",
+                href: "/reservasi-grup",
+                description: "Grand Atma Hotel siap melayani rombongan Anda",
+            },
+            {
+                title: "Informasi Kamar",
+                href: "/kamar",
+                description: "Temukan kamar yang nyaman untuk Anda",
+            }
+        ]
+    }
 ]
+
+function generateChildNavLG(children: MenuItemProps[]) {
+    return <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+        {children.map((component) => (
+            <ListItem
+                key={component.title}
+                title={component.title}
+                href={component.href}
+            >
+                {component.description}
+            </ListItem>
+        ))}
+    </ul>
+}
+
+function generateNavLG() {
+    return <NavigationMenu className="hidden lg:block">
+        <NavigationMenuList>
+            <NavigationMenuItem asChild>
+                <Link to="/" className='me-2 bg-background p-2 rounded hover:bg-accent duration-300'>
+                    <img src={Logo} className="h-12" />
+                </Link>
+            </NavigationMenuItem>
+            {components.map((component, i) => (
+                <NavigationMenuItem key={i}>
+                    <NavigationMenuTrigger>{component.title}</NavigationMenuTrigger>
+                    {component.children && (
+                        <NavigationMenuContent>
+                            {generateChildNavLG(component.children)}
+                        </NavigationMenuContent>
+                    )}
+                </NavigationMenuItem>
+            ))}
+        </NavigationMenuList>
+    </NavigationMenu>
+}
+
+function generateChildNavSM(children: MenuItemProps[]) {
+    return <ul>
+        {children.map((component) => (
+            <li>
+                <Button variant="link" asChild className="p-0 w-full justify-start">
+                    <Link to={component.href}>
+                        {component.title}
+                    </Link>
+                </Button>
+                <p className="text-muted-foreground">{component.description}</p>
+            </li>
+        ))}
+    </ul>
+}
+
+function generateNavSM() {
+    return <Sheet>
+        <SheetTrigger asChild>
+            <Button variant="secondary" className="lg:hidden">
+                <MenuIcon className="w-6 h-6" />
+            </Button>
+        </SheetTrigger>
+        <SheetContent className="w-full">
+            <div className='flex justify-between items-center mb-3'>
+                <Link to="/">
+                    <img src={Logo} className="h-12" />
+                </Link>
+                <div className='text-end'>
+                    <p className="text-lg font-bold">Grand Atma Hotel</p>
+                    <p className="text-muted-foreground">Tempat Ternyaman Anda di Yogyakarta</p>
+                </div>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+                {components.map((component, i) => (
+                    <AccordionItem value={'sheet'+i}>
+                        <AccordionTrigger>
+                            {component.title}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            {component.children && generateChildNavSM(component.children)}
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </SheetContent>
+    </Sheet>
+}
 
 export default function LayoutHome() {
     return <>
-        <section className='fixed top-0 w-full top-nav py-4 z-50'>
+        <section className='fixed top-0 w-full top-nav py-3 z-50'>
             <div className="container flex justify-between">
-                <NavigationMenu>
-                    <NavigationMenuList>
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>Tentang Kami</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                                    <li className="row-span-3">
-                                        <NavigationMenuLink asChild>
-                                            <a
-                                                className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                                                href="/"
-                                            >
-                                                <FontAwesomeIcon icon={faReact} className="text-6xl" />
-                                                <div className="mb-2 mt-4 text-lg font-medium">
-                                                    shadcn/ui
-                                                </div>
-                                                <p className="text-sm leading-tight text-muted-foreground">
-                                                    Beautifully designed components built with Radix UI and
-                                                    Tailwind CSS.
-                                                </p>
-                                            </a>
-                                        </NavigationMenuLink>
-                                    </li>
-                                    <ListItem href="/docs" title="Introduction">
-                                        Re-usable components built using Radix UI and Tailwind CSS.
-                                    </ListItem>
-                                    <ListItem href="/docs/installation" title="Installation">
-                                        How to install dependencies and structure your app.
-                                    </ListItem>
-                                    <ListItem href="/docs/primitives/typography" title="Typography">
-                                        Styles for headings, paragraphs, lists...etc
-                                    </ListItem>
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>Reservasi Kamar</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                                    {components.map((component) => (
-                                        <ListItem
-                                            key={component.title}
-                                            title={component.title}
-                                            href={component.href}
-                                        >
-                                            {component.description}
-                                        </ListItem>
-                                    ))}
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem asChild>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                                {/* asChild: semua prop element ini akan di pass ke element child yg ada di dalamnya */}
-                                <Link to="/docs">
-                                    Hubungi
-                                </Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                    </NavigationMenuList>
-                </NavigationMenu>
+                {generateNavLG()}
+                {generateNavSM()}
 
                 <NavigationMenu>
                     <NavigationMenuItem asChild>
@@ -125,21 +173,12 @@ export default function LayoutHome() {
             <div className="container">
                 <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-12 md:col-span-6 lg:col-span-3">
-                        <h3 className="text-xl font-bold mb-3">Grand Atma Hotel</h3>
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <Link to="/">
+                            <img src={Logo} className="h-12" />
+                        </Link>
+                        <h3 className="text-xl font-bold my-3">Grand Atma Hotel</h3>
+                        <p className="text-muted-foreground mb-2">
                             Jl. Babarsari No. 43, Caturtunggal, Depok, Sleman, Daerah Istimewa Yogyakarta 55281
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            <a href="tel:+62274567890">
-                                <PhoneIcon className='inline h-4 w-4 me-2' />
-                                +62 274 567 890
-                            </a>
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            <a href="mailto:grandatma@notamail.com">
-                                <MailIcon className='inline h-4 w-4 me-2' />
-                                grandatma@notamail.com
-                            </a>
                         </p>
                     </div>
                     <div className="col-span-12 md:col-span-6 lg:col-span-3">
@@ -191,7 +230,7 @@ export default function LayoutHome() {
                             </li>
                             <li>
                                 <a href="https://twitter.com">
-                                    <XIcon className="w-6 h-6" />
+                                    𝕏
                                 </a>
                             </li>
                             <li>
@@ -207,7 +246,7 @@ export default function LayoutHome() {
 
         <div className="bg-secondary-foreground text-secondary py-4 text-sm text-center rounded-t-3xl -mt-6">
             <div className="container">
-                &copy; 2021 Grand Atma Hotel. All rights reserved.
+                &copy; 2023 Grand Atma Hotel. All rights reserved.
             </div>
         </div>
     </>

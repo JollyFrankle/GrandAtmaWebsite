@@ -16,7 +16,7 @@ export interface JenisKamar {
     short_desc: string
     rating: number
     fasilitas_unggulan: string[]
-    fasilitas: KeyValue<string>[]
+    fasilitas: KeyValue<string>
     rincian: string[]
     ukuran: number
     kapasitas: number
