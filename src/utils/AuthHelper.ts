@@ -34,4 +34,10 @@ export default class AuthHelper {
         localStorage.setItem("type", "p")
         localStorage.setItem("role", user.role)
     }
+
+    static logout() {
+        localStorage.removeItem("user")
+        localStorage.removeItem("type")
+        localStorage.removeItem("token")
+    }
 }

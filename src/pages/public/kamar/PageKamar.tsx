@@ -1,4 +1,3 @@
-import { useToast } from "@/cn/components/ui/use-toast";
 import { ApiResponse, BASE_URL, JenisKamar, KeyValue, getImage } from "@/utils/ApiModels";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import SwiperListJenisKamar from "../home/components/SwiperListJenisKamar";
 import { DoorOpenIcon, HeartHandshakeIcon, SparklesIcon } from "lucide-react";
 import Formatter from "@/utils/Formatter";
+import { toast } from "react-toastify";
 
 export default function PageKamar() {
     const params = useParams<{ id: string }>()
@@ -16,8 +16,6 @@ export default function PageKamar() {
 
     const [data, setData] = useState<JenisKamar>()
     const [isLoading, setIsLoading] = useState(true)
-
-    const { toast } = useToast()
 
     const fetchData = () => {
         axios.get(BASE_URL + "/public/jenis-kamar/" + id).then((res) => {
@@ -28,10 +26,8 @@ export default function PageKamar() {
             setData(data.data)
             setIsLoading(false)
         }).catch((err) => {
-            toast({
-                title: "Error",
-                content: err,
-                variant: "destructive"
+            toast(err.response?.data.message || "Terjadi kesalahan", {
+                type: "error"
             })
         })
     }

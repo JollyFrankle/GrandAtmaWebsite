@@ -1,14 +1,15 @@
 import AuthHelper from "@/utils/AuthHelper"
 import { DataTableDemo } from "../../../components/DataTable"
-import axios from "axios"
-import { BASE_URL, Reservasi } from "@/utils/ApiModels"
+import axios, { AxiosError } from "axios"
+import { ApiResponse, BASE_URL, Reservasi } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import Formatter from "@/utils/Formatter"
 import DetailReservasi from "./components/DetailReservasi"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
-import { BookmarkCheckIcon, EditIcon } from "lucide-react"
+import { BookmarkCheckIcon, UserIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
+
 
 export default function PageCustomerDashboard() {
     const user = AuthHelper.getUserCustomer()!!
@@ -23,8 +24,8 @@ export default function PageCustomerDashboard() {
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             }
         }).then((res) => {
-            const data = res.data.data as Reservasi[]
-            setReservations(data)
+            const data = res.data as ApiResponse<Reservasi[]>
+            setReservations(data.data)
         }).catch((err) => {
             console.log(err)
         })
@@ -38,10 +39,10 @@ export default function PageCustomerDashboard() {
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             }
         }).then((res) => {
-            const data = res.data.data as Reservasi
-            setDetailReservasi(data)
+            const data = res.data as ApiResponse<Reservasi>
+            setDetailReservasi(data.data)
             setDetailLoading(false)
-        }).catch((err) => {
+        }).catch((err: AxiosError) => {
             console.log(err)
         })
     }
@@ -60,8 +61,8 @@ export default function PageCustomerDashboard() {
                         <h2 className="text-4xl font-bold">{user.nama}</h2>
                     </div>
                     <Button asChild>
-                        <Link to="/profile">
-                            <EditIcon className="h-4 w-4 me-2" /> Ubah Profil
+                        <Link to="/customer/profile">
+                            <UserIcon className="h-4 w-4 me-2" /> Lihat Profil
                         </Link>
                     </Button>
                 </div>

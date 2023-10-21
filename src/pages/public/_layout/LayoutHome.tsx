@@ -1,5 +1,5 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/cn/components/ui/navigation-menu';
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import React, { useEffect } from 'react';
 import { cn } from '@/cn/lib/utils';
 import { FacebookIcon, InstagramIcon, LayoutDashboardIcon, LogInIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
@@ -10,8 +10,10 @@ import { Button } from '@/cn/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
 import ScrollToTop from '@/utils/ScrollToTop';
-import { UserCustomer } from '@/utils/ApiModels';
+import { BASE_URL, UserCustomer } from '@/utils/ApiModels';
 import AuthHelper from '@/utils/AuthHelper';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 interface MenuItemProps {
     title: string
@@ -154,9 +156,31 @@ function generateNavSM(user?: UserCustomer|null) {
 export default function LayoutHome() {
     const [userCustomer, setUserCustomer] = React.useState<UserCustomer | null>(null)
 
+    const navigate = useNavigate()
+
+    const logout = () => {
+        const token = AuthHelper.getToken()
+        AuthHelper.logout()
+        navigate('/login')
+
+        const logoutUrl = localStorage.getItem("type") === "c" ? `${BASE_URL}/customer/logout` : `${BASE_URL}/pegawai/logout`
+        axios.post(logoutUrl, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(() => {
+            toast("Berhasil log out.", {
+                type: "success"
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
         setUserCustomer(AuthHelper.getUserCustomer())
     }, [])
+
     return <>
         <ScrollToTop />
         <section className='fixed top-0 w-full top-nav py-3 z-50'>
@@ -175,10 +199,10 @@ export default function LayoutHome() {
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem asChild>
-                                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'ms-2 bg-red-600 text-white hover:bg-red-700 hover:text-white')} asChild>
-                                    <Link to="/logout">
+                                <NavigationMenuLink className='ms-2' onClick={logout} asChild>
+                                    <Button variant="destructive">
                                         <LogInIcon className="h-4 w-4" />
-                                    </Link>
+                                    </Button>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                         </>

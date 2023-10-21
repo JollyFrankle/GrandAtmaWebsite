@@ -3,7 +3,7 @@
 export default function InputWithIcon({
     icon,
     children,
-    className
+    className = ""
 }: {
     icon: React.ReactNode,
     children: React.ReactNode,

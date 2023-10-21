@@ -1,13 +1,11 @@
 import { Input } from "@/cn/components/ui/input"
-import { Label } from "@/cn/components/ui/label"
 import InputWithIcon from "../_layout/components/InputWithIcon"
 import { AsteriskIcon, MailIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import ReCAPTCHA from "react-google-recaptcha"
-import { createRef, useState } from "react"
+import { createRef, useEffect, useState } from "react"
 import axios, { AxiosError } from "axios"
-import { ApiError as ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer, UserPegawai } from "@/utils/ApiModels"
-import { useToast } from "@/cn/components/ui/use-toast"
+import { ApiErrorResponse as ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer, UserPegawai } from "@/utils/ApiModels"
 import usePageTitle from "@/hooks/usePageTitle"
 
 import Tugu from "@/assets/images/tugu-crop.png"
@@ -15,21 +13,26 @@ import PrambananHalfRight from "@/assets/images/prambanan-half-right.png"
 import UnderDevelopment from "@/assets/images/under-dev.jpg"
 import { Link, useNavigate } from "react-router-dom"
 import AuthHelper from "@/utils/AuthHelper"
+import { toast } from "react-toastify"
 
 const recaptchaRef = createRef<ReCAPTCHA>()
 
 export default function PageLogin() {
+    const userC = AuthHelper.getUserCustomer()
+    const userP = AuthHelper.getUserPegawai()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [captcha, setCaptcha] = useState<string|null>(null)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const { toast } = useToast()
     const navigate = useNavigate()
 
     usePageTitle("Masuk - Grand Atma Hotel")
 
     const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setIsLoading(true)
         axios.post(`${BASE_URL}/login`, {
             username: email,
             password,
@@ -46,36 +49,41 @@ export default function PageLogin() {
                 AuthHelper.setUserCustomer(data.data.user)
                 navigate("/customer")
             }
-            toast({
-                title: "Berhasil",
-                content: "Anda berhasil masuk",
+            toast("Berhasil masuk", {
+                type: "success"
             })
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
                 const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
 
                 if (!data.errors) {
-                    toast({
-                        title: data.message,
-                        content: err.message,
-                        variant: "destructive"
+                    toast(data.message, {
+                        type: "error"
                     })
-                    recaptchaRef.current?.reset()
+                } else {
+                    setErrors(data.errors)
                 }
+                recaptchaRef.current?.reset()
             } else {
                 console.log(err)
-                toast({
-                    title: "Unknown error. Silakan hubungi pengembang.",
-                    content: err.message,
-                    variant: "destructive"
+                toast("Gagal masuk. Silakan hubungi pengelola.", {
+                    type: "error"
                 })
             }
+        }).finally(() => {
+            setIsLoading(false)
         })
-        e.preventDefault()
     }
 
-    return <>
+    useEffect(() => {
+        if (userC) {
+            navigate("/customer")
+        } else if (userP) {
+            navigate("/")
+        }
+    }, [])
+
+    return (!userC && !userP) && <>
         <section className="min-h-[calc(100vh-368px)] w-full relative mt-24 py-8 ps-10 md:py-10 lg:ps-0">
             <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-75 -z-10" />
             <img src={PrambananHalfRight} className="h-full absolute right-0 -bottom-8 pointer-events-none opacity-75 -z-10" />
@@ -87,25 +95,25 @@ export default function PageLogin() {
                         <h2 className="text-4xl font-bold mb-6"><mark>Grand Atma</mark> Hotel</h2>
 
                         <form onSubmit={formSubmitHandler}>
-                            <Label className="mb-4 block">
+                            <label className="mb-4 block">
                                 <div className="mb-1 text-lg">Alamat e-mail</div>
                                 <InputWithIcon icon={<MailIcon />} className="w-full mb-2">
-                                    <Input className="text-lg h-14 ps-9" placeholder="Alamat e-mail" type="email" onChange={(e) =>setEmail(e.target.value)} />
+                                    <Input required className="text-lg h-14 ps-9" placeholder="Alamat e-mail" type="email" onChange={(e) =>setEmail(e.target.value)} />
                                 </InputWithIcon>
                                 {errors?.username && (
                                     <div className="text-sm text-red-500">{errors.username}</div>
                                 )}
-                            </Label>
+                            </label>
 
-                            <Label className="mb-4 block">
+                            <label className="mb-4 block">
                                 <div className="mb-1 text-lg">Kata sandi</div>
                                 <InputWithIcon icon={<AsteriskIcon />} className="w-full mb-2">
-                                    <Input className="text-lg h-14 ps-9" placeholder="Kata sandi" type="password" onChange={(e) => setPassword(e.target.value)} />
+                                    <Input required className="text-lg h-14 ps-9" placeholder="Kata sandi" type="password" onChange={(e) => setPassword(e.target.value)} />
                                 </InputWithIcon>
                                 {errors?.password && (
                                     <div className="text-sm text-red-500">{errors.password}</div>
                                 )}
-                            </Label>
+                            </label>
 
                             <div className="mb-4">
                                 <ReCAPTCHA
@@ -123,7 +131,7 @@ export default function PageLogin() {
 
                             <div className="text-center">
                                 Belum punya akun?
-                                <Button variant="link" className="ms-2 p-0 text-md" asChild>
+                                <Button variant="link" className="ms-2 p-0 text-md" asChild disabled={isLoading}>
                                     <Link to="/register">Daftar</Link>
                                 </Button>
                             </div>

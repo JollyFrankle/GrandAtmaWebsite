@@ -9,7 +9,7 @@ export interface ApiResponse<T> {
     data: T
 }
 
-export interface ApiError {
+export interface ApiErrorResponse {
     message: string
     errors: KeyValue<string>|null
 }
@@ -49,6 +49,7 @@ export interface UserCustomer {
     no_telp: string
     email: string
     alamat: string
+    password?: string
 }
 
 export interface UserPegawai {
@@ -56,6 +57,7 @@ export interface UserPegawai {
     role: string
     nama: string
     email: string
+    password?: string
 }
 
 export interface Reservasi {

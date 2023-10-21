@@ -48,7 +48,7 @@ export default function DetailReservasi({
                 }} />
             </div>
             <div>
-                <h3 className="text-xl font-bold mb-2">Detail Pemesanan</h3>
+                <h4 className="text-xl font-bold mb-2">Detail Pemesanan</h4>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div className="col-span-1">
                         <h4 className="font-bold mb-2">Pemesan</h4>
@@ -83,7 +83,7 @@ export default function DetailReservasi({
                         </div>
                     </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Kamar</h3>
+                <h4 className="text-xl font-bold mb-2">Kamar</h4>
                 <Table className="mb-4">
                     <TableHeader>
                         <TableRow>
@@ -105,7 +105,7 @@ export default function DetailReservasi({
                     </TableBody>
                 </Table>
 
-                <h3 className="text-xl font-bold mb-2">Layanan Berbayar</h3>
+                <h4 className="text-xl font-bold mb-2">Layanan Berbayar</h4>
                 <Table className="mb-4">
                     <TableHeader>
                         <TableRow>
@@ -134,7 +134,7 @@ export default function DetailReservasi({
             {data?.invoice && <>
                 <div className="flex justify-between items-center mb-2">
                     <h3 className="text-xl font-bold">Invoice <span className="font-normal text-lg">#{data.invoice.no_invoice}</span></h3>
-                    <span className="text-muted-foreground text-sm">Dicetak pada <strong>{Formatter.formatDateTime(new Date(data.invoice.created_at))}</strong></span>
+                    <span className="text-muted-foreground text-sm">Diciptakan pada <strong>{Formatter.formatDateTime(new Date(data.invoice.created_at))}</strong></span>
                 </div>
                 <Table className="mb-4">
                     <TableBody>

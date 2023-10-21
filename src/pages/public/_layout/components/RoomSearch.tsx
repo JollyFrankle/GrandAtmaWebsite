@@ -4,10 +4,10 @@ import ReservationDatePicker from "./ReservationDatePicker";
 import GuestAmountPicker from "./GuestAmountPicker";
 import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
-import { useToast } from "@/cn/components/ui/use-toast";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export default function RoomSearch() {
@@ -15,14 +15,9 @@ export default function RoomSearch() {
     const [inDewasa, setInDewasa] = useState<string>()
     const [inAnak, setInAnak] = useState<string>()
 
-    const { toast } = useToast()
-
     const onSubmit = () => {
-        toast({
-            title: "Berhasil!",
-            description: "Kamar berhasil dipesan.",
-            duration: 5000,
-            variant: "destructive",
+        toast("Berhasil dipesan!", {
+            type: "success"
         })
     }
 
