@@ -1,14 +1,17 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/cn/components/ui/navigation-menu';
 import { Link, Outlet } from 'react-router-dom'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { cn } from '@/cn/lib/utils';
-import { FacebookIcon, InstagramIcon, LogInIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
+import { FacebookIcon, InstagramIcon, LayoutDashboardIcon, LogInIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
 
 import './LayoutHome.css'
 import Logo from "@/assets/images/gah-logo.png"
 import { Button } from '@/cn/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
+import ScrollToTop from '@/utils/ScrollToTop';
+import { UserCustomer } from '@/utils/ApiModels';
+import AuthHelper from '@/utils/AuthHelper';
 
 interface MenuItemProps {
     title: string
@@ -78,7 +81,7 @@ function generateChildNavLG(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavLG() {
+function generateNavLG(user?: UserCustomer|null) {
     return <NavigationMenu className="hidden lg:block">
         <NavigationMenuList>
             <NavigationMenuItem asChild>
@@ -102,8 +105,8 @@ function generateNavLG() {
 
 function generateChildNavSM(children: MenuItemProps[]) {
     return <ul>
-        {children.map((component) => (
-            <li>
+        {children.map((component, i) => (
+            <li key={i}>
                 <Button variant="link" asChild className="p-0 w-full justify-start">
                     <Link to={component.href}>
                         {component.title}
@@ -115,7 +118,7 @@ function generateChildNavSM(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavSM() {
+function generateNavSM(user?: UserCustomer|null) {
     return <Sheet>
         <SheetTrigger asChild>
             <Button variant="secondary" className="lg:hidden">
@@ -134,7 +137,7 @@ function generateNavSM() {
             </div>
             <Accordion type="single" collapsible className="w-full">
                 {components.map((component, i) => (
-                    <AccordionItem value={'sheet'+i}>
+                    <AccordionItem value={'sheet'+i} key={i}>
                         <AccordionTrigger>
                             {component.title}
                         </AccordionTrigger>
@@ -149,20 +152,45 @@ function generateNavSM() {
 }
 
 export default function LayoutHome() {
+    const [userCustomer, setUserCustomer] = React.useState<UserCustomer | null>(null)
+
+    useEffect(() => {
+        setUserCustomer(AuthHelper.getUserCustomer())
+    }, [])
     return <>
+        <ScrollToTop />
         <section className='fixed top-0 w-full top-nav py-3 z-50'>
             <div className="container flex justify-between">
-                {generateNavLG()}
-                {generateNavSM()}
+                {generateNavLG(userCustomer)}
+                {generateNavSM(userCustomer)}
 
                 <NavigationMenu>
-                    <NavigationMenuItem asChild>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                            <Link to="/login">
-                                <LogInIcon className="me-3 h-4 w-4" /> Log In
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
+                    {userCustomer ? (
+                        <>
+                            <NavigationMenuItem asChild>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                                    <Link to="/customer">
+                                        <LayoutDashboardIcon className="me-3 h-4 w-4" /> Dashboard
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem asChild>
+                                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'ms-2 bg-red-600 text-white hover:bg-red-700 hover:text-white')} asChild>
+                                    <Link to="/logout">
+                                        <LogInIcon className="h-4 w-4" />
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                        </>
+                    ) : (
+                        <NavigationMenuItem asChild>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                                <Link to="/login">
+                                    <LogInIcon className="me-3 h-4 w-4" /> Log In
+                                </Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                    )}
                 </NavigationMenu>
             </div>
         </section>

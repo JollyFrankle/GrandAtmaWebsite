@@ -1,5 +1,5 @@
 import { JenisKamar } from "@/utils/ApiModels";
-import CardWithIcon from "../../_layout/components/CardWithIcon";
+import CardWithIcon from "../../../../components/CardWithIcon";
 import { LandPlotIcon, StarIcon, UserIcon } from "lucide-react";
 import Formatter from "@/utils/Formatter";
 

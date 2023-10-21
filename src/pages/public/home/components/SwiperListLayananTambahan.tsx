@@ -51,13 +51,13 @@ export default function SwiperListLayananTambahan({
         }}
     >
         {!isLoading ? data.map((it, _) => (
-            <SwiperSlide className="relative card rounded-3xl overflow-hidden" key={it.id}>
+            <SwiperSlide className="relative card overflow-hidden" key={it.id}>
                 <img src={getImage(it.gambar)} className="absolute top-0 left-0 w-full h-full object-cover -z-10" />
                 <div className="absolute bottom-0 left-0 w-full p-6 z-10">
-                    <span className="inline-block bg-accent-foreground text-accent px-3 py-1 text-xl font-bold">{it.nama}</span>
-                    <div className="text-lg mt-2 text-background">{it.short_desc}</div>
+                    <span className="border-s-4 px-4 inline-block bg-background text-foreground py-1 text-xl font-bold">{it.nama}</span>
+                    <div className="border-s-4 ps-4 pt-2 text-lg text-background">{it.short_desc}</div>
                 </div>
-                <div className="absolute left-0 w-full h-96 bottom-0 bg-gradient-to-t from-[#00000088] to-transparent rounded-br-3xl rounded-bl-3xl"></div>
+                <div className="absolute left-0 w-full h-96 bottom-0 bg-gradient-to-t from-[#00000088] to-transparent"></div>
             </SwiperSlide>
         )) : [...Array(3)].map((_, i) => (
             <SwiperSlide key={i} className="h-full">

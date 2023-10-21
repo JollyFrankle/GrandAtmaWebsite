@@ -108,6 +108,21 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
+export function dialogSizeByClass(size: "sm" | "md" | "lg" | "xl") {
+  let dialogClass = "max-h-[90vh] overflow-y-auto ";
+
+  switch (size) {
+    case "sm":
+      return dialogClass
+    case "md":
+      return dialogClass + "md:max-w-[532px]"
+    case "lg":
+      return dialogClass + "md:max-w-[532px] lg:max-w-[832px]"
+    case "xl":
+      return dialogClass + "md:max-w-[532px] lg:max-w-[832px] xl:max-w-[1140px]"
+  }
+}
+
 export {
   Dialog,
   DialogPortal,

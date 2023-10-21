@@ -1,5 +1,5 @@
 import { AirVentIcon, DumbbellIcon, UtensilsIcon, WavesIcon } from "lucide-react";
-import CardWithIcon from "../../_layout/components/CardWithIcon";
+import CardWithIcon from "../../../../components/CardWithIcon";
 
 const fasilitas: { icon: React.ReactNode; title: string; content: string }[] = [
     {
