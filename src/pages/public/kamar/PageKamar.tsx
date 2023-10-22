@@ -9,6 +9,7 @@ import SwiperListJenisKamar from "../home/components/SwiperListJenisKamar";
 import { DoorOpenIcon, HeartHandshakeIcon, SparklesIcon } from "lucide-react";
 import Formatter from "@/utils/Formatter";
 import { toast } from "react-toastify";
+import usePageTitle from "@/hooks/usePageTitle";
 
 export default function PageKamar() {
     const params = useParams<{ id: string }>()
@@ -16,6 +17,9 @@ export default function PageKamar() {
 
     const [data, setData] = useState<JenisKamar>()
     const [isLoading, setIsLoading] = useState(true)
+    const [pageTitle, setPageTitle] = useState("Grand Atma Hotel")
+
+    usePageTitle(pageTitle)
 
     const fetchData = () => {
         axios.get(BASE_URL + "/public/jenis-kamar/" + id).then((res) => {
@@ -24,6 +28,7 @@ export default function PageKamar() {
             data.data.rincian = Formatter.formatJSON<string[]>(data.data.rincian)
             data.data.fasilitas_unggulan = Formatter.formatJSON<KeyValue<string>>(data.data.fasilitas_unggulan)
             setData(data.data)
+            setPageTitle(`${data.data.nama} - Grand Atma Hotel`)
             setIsLoading(false)
         }).catch((err) => {
             toast(err.response?.data.message || "Terjadi kesalahan", {

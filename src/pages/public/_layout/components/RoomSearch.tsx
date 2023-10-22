@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/cn/components/ui/card";
-import InputWithIcon from "./InputWithIcon";
+import InputWithIcon from "../../../../components/InputWithIcon";
 import ReservationDatePicker from "./ReservationDatePicker";
 import GuestAmountPicker from "./GuestAmountPicker";
 import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-react";
@@ -14,9 +14,10 @@ export default function RoomSearch() {
     const [inDate, setInDate] = useState<DateRange | undefined>(undefined)
     const [inDewasa, setInDewasa] = useState<string>()
     const [inAnak, setInAnak] = useState<string>()
+    const [inJumlahKamar, setInJumlahKamar] = useState<string>()
 
     const onSubmit = () => {
-        toast("Berhasil dipesan!", {
+        toast(<>Data input: {inDewasa} dewasa, {inAnak} anak, {inJumlahKamar} kamar, tanggal: {inDate?.from?.toLocaleDateString()} - {inDate?.to?.toLocaleDateString()}</>, {
             type: "success"
         })
     }
@@ -37,7 +38,7 @@ export default function RoomSearch() {
                     <GuestAmountPicker className="ps-9" placeholder="Jumlah anak" onChange={setInAnak} suffix="anak" max={10} />
                 </InputWithIcon>
                 <InputWithIcon icon={<BedIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                    <GuestAmountPicker className="ps-9" placeholder="Jumlah kamar" onChange={setInAnak} suffix="kamar" max={5} />
+                    <GuestAmountPicker className="ps-9" placeholder="Jumlah kamar" onChange={setInJumlahKamar} suffix="kamar" max={5} />
                 </InputWithIcon>
                 <Button className="col-span-12 lg:col-span-2 text-lg h-14" onClick={onSubmit}>
                     <SearchIcon className="w-4 h-4 me-2" />

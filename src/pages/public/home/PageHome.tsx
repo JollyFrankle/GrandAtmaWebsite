@@ -110,7 +110,7 @@ export default function PageHome() {
                         <ListFasilitasNormal />
                     </div>
                     <div className="col-span-12 md:col-span-8 relative">
-                        <SwiperListLayananTambahan className="md:absolute top-0 bottom-0 left-0 right-0" />
+                        <SwiperListLayananTambahan className="h-96 md:h-full md:absolute top-0 bottom-0 left-0 right-0" />
                     </div>
                 </div>
             </div>

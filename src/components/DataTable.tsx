@@ -36,7 +36,7 @@ import {
     TableRow,
 } from "@/cn/components/ui/table"
 
-export interface ColumnRules<T> {
+interface ColumnRules<T> {
     id?: string
     field: keyof T
     header: string
@@ -45,7 +45,7 @@ export interface ColumnRules<T> {
     enableHiding?: boolean
 }
 
-export interface RowActions<T> {
+interface RowActions<T> {
     action: string | React.ReactNode
     onClick: (row: T) => void
 }
@@ -56,7 +56,7 @@ function generateActionChildren<T>(actions: RowActions<T>[], row: T) {
     })
 }
 
-export function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][] = [], select: boolean = false): ColumnDef<T>[] {
+function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][] = [], select: boolean = false): ColumnDef<T>[] {
     const headers: ColumnDef<T>[] = []
 
     if (select) {
@@ -136,7 +136,7 @@ export function generateColumns<T>(columns: ColumnRules<T>[], actions: RowAction
 }
 
 
-export function DataTableDemo<T>({
+export default function DataTable<T>({
     data,
     columns,
     actions,
@@ -190,20 +190,17 @@ export function DataTableDemo<T>({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
+                        {columns
+                            .filter((col) => col.enableHiding ?? true)
+                            .map((col) => {
+                                const column = table.getColumn(col.id ?? col.field.toString())
                                 return (
                                     <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
+                                        key={col.id}
+                                        checked={column?.getIsVisible() ?? true}
+                                        onCheckedChange={(value) => column?.toggleVisibility(!!value)}
                                     >
-                                        {column.id}
+                                        {col.header}
                                     </DropdownMenuCheckboxItem>
                                 )
                             })}

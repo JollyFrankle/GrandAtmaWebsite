@@ -1,19 +1,19 @@
 import LayoutHome from "@/pages/public/_layout/LayoutHome";
 import AuthHelper from "@/utils/AuthHelper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 
 export default function LayoutCustomer() {
-    const user = AuthHelper.getUserCustomer()
+    const [isUser] = useState(AuthHelper.getUserCustomer() !== null)
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!user) {
+        if (!isUser) {
             navigate("/login")
         }
     }, [])
 
-    return user && <LayoutHome />
+    return isUser && <LayoutHome />
 }

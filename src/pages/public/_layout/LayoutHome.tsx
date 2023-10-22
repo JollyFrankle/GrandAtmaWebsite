@@ -83,7 +83,7 @@ function generateChildNavLG(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavLG(user?: UserCustomer|null) {
+function generateNavLG(user?: UserCustomer | null) {
     return <NavigationMenu className="hidden lg:block">
         <NavigationMenuList>
             <NavigationMenuItem asChild>
@@ -120,7 +120,7 @@ function generateChildNavSM(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavSM(user?: UserCustomer|null) {
+function generateNavSM(user?: UserCustomer | null) {
     return <Sheet>
         <SheetTrigger asChild>
             <Button variant="secondary" className="lg:hidden">
@@ -139,7 +139,7 @@ function generateNavSM(user?: UserCustomer|null) {
             </div>
             <Accordion type="single" collapsible className="w-full">
                 {components.map((component, i) => (
-                    <AccordionItem value={'sheet'+i} key={i}>
+                    <AccordionItem value={'sheet' + i} key={i}>
                         <AccordionTrigger>
                             {component.title}
                         </AccordionTrigger>
@@ -160,10 +160,11 @@ export default function LayoutHome() {
 
     const logout = () => {
         const token = AuthHelper.getToken()
+        const type = localStorage.getItem("type")
         AuthHelper.logout()
         navigate('/login')
 
-        const logoutUrl = localStorage.getItem("type") === "c" ? `${BASE_URL}/customer/logout` : `${BASE_URL}/pegawai/logout`
+        const logoutUrl = type === "c" ? `${BASE_URL}/customer/logout` : `${BASE_URL}/pegawai/logout`
         axios.post(logoutUrl, {}, {
             headers: {
                 Authorization: `Bearer ${token}`

@@ -1,16 +1,15 @@
 import { Button } from "@/cn/components/ui/button"
-import { Input } from "@/cn/components/ui/input"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/cn/components/ui/select"
-import { Textarea } from "@/cn/components/ui/textarea"
-import InputWithIcon from "@/pages/public/_layout/components/InputWithIcon"
+import IconInput from "@/components/IconInput"
+import IconSelect from "@/components/IconSelect"
+import IconTextarea from "@/components/IconTextarea"
+import usePageTitle from "@/hooks/usePageTitle"
 import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import axios, { AxiosError } from "axios"
-import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, EditIcon, MailIcon, MapPinIcon, SaveIcon, UserIcon } from "lucide-react"
+import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, EditIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
-
 
 
 export default function PageProfileCustomer() {
@@ -18,7 +17,9 @@ export default function PageProfileCustomer() {
     user.password = ""
     const [isEditing, setIsEditing] = useState(false)
     const [data, setData] = useState(user)
-    const [errors, setErrors] = useState<KeyValue<string>|null>(null)
+    const [errors, setErrors] = useState<KeyValue<string> | null>(null)
+
+    usePageTitle("Profil - Grand Atma Hotel")
 
     const onInputChangeHandler = (value: string, key: keyof typeof data) => {
         setData(prev => ({
@@ -81,101 +82,97 @@ export default function PageProfileCustomer() {
                 <form className="grid grid-cols-1 md:grid-cols-3 gap-6" onSubmit={saveProfile}>
                     <div className="col-span-1">
                         <h4 className="text-xl font-bold mb-2">Otentikasi</h4>
-                        <label className="mb-4 block">
-                            <div className="mb-1">Alamat e-mail</div>
-                            <InputWithIcon icon={<AsteriskIcon />}>
-                                <Input required className="ps-9 w-full" placeholder="Alamat e-mail" type="text" value={data.email} disabled={!isEditing} onChange={(e) => onInputChangeHandler(e.target.value, "email")} />
-                            </InputWithIcon>
-                        {errors?.email && (
-                            <div className="mt-2 text-sm text-red-500">{errors.email}</div>
-                        )}
-                        </label>
+                        <IconInput
+                            required
+                            disabled={!isEditing}
+                            value={data.email}
+                            icon={<MailIcon />}
+                            type="email"
+                            label="Alamat e-mail"
+                            maxLength={100}
+                            onValueChange={(value) => onInputChangeHandler(value, "email")}
+                            errorText={errors?.email} />
 
+                        {isEditing &&
+                            <IconInput
+                                disabled={!isEditing}
+                                value={data.password}
+                                icon={<AsteriskIcon />}
+                                type="password"
+                                label="Password"
+                                maxLength={100}
+                                onValueChange={(value) => onInputChangeHandler(value, "password")}
+                                errorText={errors?.password} />
+                        }
+                    </div>
+                    <div className="col-span-1">
+                        <h4 className="text-xl font-bold mb-2">Identitas</h4>
+                        <IconInput
+                            required
+                            disabled={!isEditing}
+                            value={data.nama}
+                            icon={<UserIcon />}
+                            type="text"
+                            label="Nama"
+                            maxLength={100}
+                            onValueChange={(value) => onInputChangeHandler(value, "nama")}
+                            errorText={errors?.nama} />
+
+                        <IconSelect
+                            required
+                            disabled={!isEditing}
+                            value={data.jenis_identitas}
+                            icon={<CreditCardIcon />}
+                            label="Jenis identitas"
+                            onValueChange={(value) => onInputChangeHandler(value, "jenis_identitas")}
+                            errorText={errors?.jenis_identitas}
+                            values={[
+                                { value: "ktp", label: "KTP" },
+                                { value: "sim", label: "SIM" },
+                                { value: "paspor", label: "Paspor" }
+                            ]} />
+
+                        <IconInput
+                            required
+                            disabled={!isEditing}
+                            value={data.no_identitas}
+                            icon={<BookUserIcon />}
+                            type="text"
+                            label="Nomor identitas"
+                            maxLength={20}
+                            onValueChange={(value) => onInputChangeHandler(value, "no_identitas")}
+                            errorText={errors?.no_identitas} />
+                    </div>
+                    <div className="col-span-1">
+                        <h4 className="text-xl font-bold mb-2">Kontak</h4>
+                        <IconInput
+                            required
+                            disabled={!isEditing}
+                            value={data.no_telp}
+                            icon={<PhoneCallIcon />}
+                            type="text"
+                            label="Nomor telepon"
+                            maxLength={50}
+                            onValueChange={(value) => onInputChangeHandler(value, "no_telp")}
+                            errorText={errors?.no_telp} />
+
+                        <IconTextarea
+                            required
+                            disabled={!isEditing}
+                            value={data.alamat}
+                            icon={<MapPinIcon />}
+                            label="Alamat"
+                            maxLength={254}
+                            rows={3}
+                            onValueChange={(value) => onInputChangeHandler(value, "alamat")}
+                            errorText={errors?.alamat} />
+                    </div>
                     {isEditing && (
-                        <label className="mb-4 block">
-                            <div className="mb-1">Password <span className="text-sm">(kosongkan jika tidak ingin diubah)</span></div>
-                            <InputWithIcon icon={<MailIcon />}>
-                                <Input className="ps-9 w-full" placeholder="Password" type="password" disabled={!isEditing} onChange={(e) => onInputChangeHandler(e.target.value, "password")} />
-                            </InputWithIcon>
-                        {errors?.password && (
-                            <div className="mt-2 text-sm text-red-500">{errors.password}</div>
-                        )}
-                        </label>
+                        <div className="col-span-3 text-center">
+                            <Button className="w-full md:w-auto me-3" variant="secondary" type="button" onClick={resetToDefault}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>
+                            <Button className="w-full md:w-auto" type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
+                        </div>
                     )}
-
-                        <label className="mb-4 block">
-                            <div className="mb-1">Nomor telepon</div>
-                            <InputWithIcon icon={<MailIcon />}>
-                                <Input required maxLength={50} className="ps-9 w-full" placeholder="Nomor telepon" type="text" value={data.no_telp} disabled={!isEditing} onChange={(e) => onInputChangeHandler(e.target.value, "no_telp")} />
-                            </InputWithIcon>
-                        {errors?.no_telp && (
-                            <div className="mt-2 text-sm text-red-500">{errors.no_telp}</div>
-                        )}
-                        </label>
-                    </div>
-                    <div className="col-span-1">
-                        <h4 className="text-xl font-bold mb-2">Identitas</h4>
-                        <label className="mb-4 block">
-                            <div className="mb-1">Nama</div>
-                            <InputWithIcon icon={<UserIcon />}>
-                                <Input required maxLength={100} className="ps-9 w-full" placeholder="Nama" type="text" value={data.nama} disabled={!isEditing} onChange={(e) => onInputChangeHandler(e.target.value, "nama")} />
-                            </InputWithIcon>
-                        {errors?.nama && (
-                            <div className="mt-2 text-sm text-red-500">{errors.nama}</div>
-                        )}
-                        </label>
-
-                        <label className="mb-4 block">
-                            <div className="mb-1">Jenis identitas</div>
-                            <InputWithIcon icon={<CreditCardIcon />}>
-                                <Select required value={data.jenis_identitas} disabled={!isEditing} onValueChange={(value) => onInputChangeHandler(value, "jenis_identitas")}>
-                                    <SelectTrigger className="ps-9 w-full">
-                                        <SelectValue placeholder="Pilih jenis identitas" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Pilih jenis identitas</SelectLabel>
-                                            <SelectItem value="ktp">KTP</SelectItem>
-                                            <SelectItem value="sim">SIM</SelectItem>
-                                            <SelectItem value="paspor">Paspor</SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </InputWithIcon>
-                        {errors?.jenis_identitas && (
-                            <div className="mt-2 text-sm text-red-500">{errors.jenis_identitas}</div>
-                        )}
-                        </label>
-
-                        <label className="mb-4 block">
-                            <div className="mb-1">Nomor identitas</div>
-                            <InputWithIcon icon={<BookUserIcon />}>
-                                <Input required maxLength={20} className="ps-9 w-full" placeholder="Nomor identitas" type="text" value={data.no_identitas} disabled={!isEditing} onChange={(e) => onInputChangeHandler(e.target.value, "no_identitas")} />
-                            </InputWithIcon>
-                        {errors?.no_identitas && (
-                            <div className="mt-2 text-sm text-red-500">{errors.no_identitas}</div>
-                        )}
-                        </label>
-                    </div>
-                    <div className="col-span-1">
-                        <h4 className="text-xl font-bold mb-2">Identitas</h4>
-
-                        <label className="mb-4 block">
-                            <div className="mb-1">Alamat</div>
-                            <InputWithIcon icon={<MapPinIcon />}>
-                                <Textarea required maxLength={254} className="ps-9 w-full" placeholder="Alamat" value={data.alamat} disabled={!isEditing} rows={5} onChange={(e) => onInputChangeHandler(e.target.value, "alamat")} />
-                            </InputWithIcon>
-                        {errors?.alamat && (
-                            <div className="mt-2 text-sm text-red-500">{errors.alamat}</div>
-                        )}
-                        </label>
-                    </div>
-                {isEditing && (
-                    <div className="col-span-3 text-center">
-                        <Button className="w-full md:w-auto me-3" variant="secondary" onClick={resetToDefault}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>
-                        <Button className="w-full md:w-auto" type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
-                    </div>
-                )}
                 </form>
             </div>
         </section>

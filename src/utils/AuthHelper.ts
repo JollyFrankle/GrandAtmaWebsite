@@ -40,4 +40,8 @@ export default class AuthHelper {
         localStorage.removeItem("type")
         localStorage.removeItem("token")
     }
+
+    static getUserType() {
+        return localStorage.getItem("type") as "c" | "p" | null
+    }
 }

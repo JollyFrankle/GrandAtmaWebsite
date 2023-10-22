@@ -1,5 +1,5 @@
 import AuthHelper from "@/utils/AuthHelper"
-import { DataTableDemo } from "../../../components/DataTable"
+import DataTable from "@/components/DataTable"
 import axios, { AxiosError } from "axios"
 import { ApiResponse, BASE_URL, Reservasi } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
@@ -9,6 +9,7 @@ import ReservasiFormatter from "@/utils/ReservasiFormatter"
 import { BookmarkCheckIcon, UserIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
+import usePageTitle from "@/hooks/usePageTitle"
 
 
 export default function PageCustomerDashboard() {
@@ -17,6 +18,8 @@ export default function PageCustomerDashboard() {
     const [showDialog, setShowDialog] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)
+
+    usePageTitle("Dashboard - Grand Atma Hotel")
 
     const fetchReservations = () => {
         axios.get(`${BASE_URL}/customer/reservasi`, {
@@ -62,7 +65,7 @@ export default function PageCustomerDashboard() {
                     </div>
                     <Button asChild>
                         <Link to="/customer/profile">
-                            <UserIcon className="h-4 w-4 me-2" /> Lihat Profil
+                            <UserIcon className="h-4 w-4 me-2" /> Profil Anda
                         </Link>
                     </Button>
                 </div>
@@ -71,7 +74,7 @@ export default function PageCustomerDashboard() {
 
                 <h3 className="text-3xl font-bold"><mark>Reservasi</mark> Anda</h3>
 
-                <DataTableDemo<Reservasi> data={reservations} columns={[
+                <DataTable<Reservasi> data={reservations} columns={[
                     {
                         field: "id_booking",
                         header: "Booking ID",

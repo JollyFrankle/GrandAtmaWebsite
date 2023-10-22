@@ -45,6 +45,9 @@ export default function ReservationDatePicker({
                     selected={date}
                     onSelect={setDate}
                     numberOfMonths={2}
+                    fromDate={new Date()}
+                    toDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+                    min={2}
                 />
             </PopoverContent>
         </Popover>
