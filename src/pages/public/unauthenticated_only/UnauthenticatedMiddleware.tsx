@@ -11,9 +11,9 @@ export default function UnauthenticatedMiddleware() {
         if (userType === "c") {
             navigate("/customer")
         } else if (userType === "p") {
-            navigate("/")
+            navigate("/admin")
         }
-    }, [])
+    }, [userType])
 
     return !userType && <Outlet />
 }

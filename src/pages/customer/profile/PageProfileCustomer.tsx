@@ -5,6 +5,7 @@ import IconTextarea from "@/components/IconTextarea"
 import usePageTitle from "@/hooks/usePageTitle"
 import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
+import Formatter from "@/utils/Formatter"
 import axios, { AxiosError } from "axios"
 import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, EditIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react"
 import { useState } from "react"
@@ -17,7 +18,10 @@ export default function PageProfileCustomer() {
     user.password = ""
     const [isEditing, setIsEditing] = useState(false)
     const [data, setData] = useState(user)
-    const [errors, setErrors] = useState<KeyValue<string> | null>(null)
+    const [passwordConfirmation, setPasswordConfirmation] = useState("")
+    const [oldPassword, setOldPassword] = useState("")
+    const [changePassword, setChangePassword] = useState(false)
+    const [errors, setErrors] = useState<KeyValue<string>|null>(null)
 
     usePageTitle("Profil - Grand Atma Hotel")
 
@@ -34,7 +38,19 @@ export default function PageProfileCustomer() {
     }
 
     const saveProfile = (e: React.FormEvent<HTMLFormElement>) => {
-        axios.put(`${BASE_URL}/customer/user`, data, {
+        e.preventDefault()
+        if (data.password !== passwordConfirmation) {
+            setErrors(prev => ({
+                ...prev,
+                password: "Kata sandi tidak sama",
+                passconf: "Kata sandi tidak sama"
+            }))
+            return
+        }
+        axios.put(`${BASE_URL}/customer/user`, {
+            ...data,
+            old_password: oldPassword,
+        }, {
             headers: {
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             }
@@ -47,6 +63,7 @@ export default function PageProfileCustomer() {
             toast(data.message, {
                 type: "success"
             })
+            setErrors(null)
         }).catch((err: AxiosError) => {
             console.log(err)
             if (err.response?.data) {
@@ -57,7 +74,13 @@ export default function PageProfileCustomer() {
                 })
             }
         })
-        e.preventDefault()
+    }
+
+    const changePasswordHandler = () => {
+        setPasswordConfirmation("")
+        setOldPassword("")
+        onInputChangeHandler("", "password")
+        setChangePassword(prev => !prev)
     }
 
     return <>
@@ -70,11 +93,9 @@ export default function PageProfileCustomer() {
                         </Button>
                         <mark>Profil</mark> Anda
                     </h3>
-                    {!isEditing && (
-                        <Button onClick={() => setIsEditing(true)}>
-                            <EditIcon className="h-4 w-4 me-2" /> Ubah Profil
-                        </Button>
-                    )}
+                    <Button onClick={() => setIsEditing(true)} hidden={isEditing}>
+                        <EditIcon className="h-4 w-4 me-2" /> Ubah Profil
+                    </Button>
                 </div>
 
                 <hr className="my-6" />
@@ -93,17 +114,41 @@ export default function PageProfileCustomer() {
                             onValueChange={(value) => onInputChangeHandler(value, "email")}
                             errorText={errors?.email} />
 
-                        {isEditing &&
-                            <IconInput
-                                disabled={!isEditing}
-                                value={data.password}
-                                icon={<AsteriskIcon />}
-                                type="password"
-                                label="Password"
-                                maxLength={100}
-                                onValueChange={(value) => onInputChangeHandler(value, "password")}
-                                errorText={errors?.password} />
-                        }
+                        <div hidden={!isEditing}>
+                            <p className="text-muted-foreground text-sm">
+                                <Button type="button" variant="link" className="px-0" onClick={changePasswordHandler}>Ubah Kata Sandi</Button>
+                                <span className="ms-2">{data.password_last_changed ? `Terakhir diubah ${Formatter.formatDateTime(new Date(data.password_last_changed))}` : `Belum pernah diubah sebelumnya`}.</span>
+                            </p>
+
+                            <div className="mb-4" hidden={!changePassword}>
+                                <IconInput
+                                    value={oldPassword}
+                                    icon={<AsteriskIcon />}
+                                    type="password"
+                                    label="Kata sandi lama"
+                                    maxLength={100}
+                                    onValueChange={setOldPassword}
+                                    errorText={errors?.old_password} />
+
+                                <IconInput
+                                    value={data.password}
+                                    icon={<AsteriskIcon />}
+                                    type="password"
+                                    label="Kata sandi baru"
+                                    maxLength={100}
+                                    onValueChange={(value) => onInputChangeHandler(value, "password")}
+                                    errorText={errors?.password} />
+
+                                <IconInput
+                                    value={passwordConfirmation}
+                                    icon={<AsteriskIcon />}
+                                    type="password"
+                                    label="Konfirmasi kata sandi baru"
+                                    maxLength={100}
+                                    onValueChange={setPasswordConfirmation}
+                                    errorText={errors?.passconf} />
+                            </div>
+                        </div>
                     </div>
                     <div className="col-span-1">
                         <h4 className="text-xl font-bold mb-2">Identitas</h4>
@@ -167,12 +212,10 @@ export default function PageProfileCustomer() {
                             onValueChange={(value) => onInputChangeHandler(value, "alamat")}
                             errorText={errors?.alamat} />
                     </div>
-                    {isEditing && (
-                        <div className="col-span-3 text-center">
-                            <Button className="w-full md:w-auto me-3" variant="secondary" type="button" onClick={resetToDefault}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>
-                            <Button className="w-full md:w-auto" type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
-                        </div>
-                    )}
+                    <div className="col-span-3 text-center" hidden={!isEditing}>
+                        <Button className="w-full md:w-auto me-3" variant="secondary" type="button" onClick={resetToDefault}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>
+                        <Button className="w-full md:w-auto" type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
+                    </div>
                 </form>
             </div>
         </section>

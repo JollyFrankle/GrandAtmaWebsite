@@ -2,14 +2,8 @@ import { Calendar } from "@/cn/components/ui/calendar";
 import { Input } from "@/cn/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/cn/components/ui/popover";
 import { cn } from "@/cn/lib/utils";
+import Formatter from "@/utils/Formatter";
 import { DateRange } from "react-day-picker";
-
-const dateFormatter = new Intl.DateTimeFormat("id-ID", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-})
 
 export default function ReservationDatePicker({
     className,
@@ -29,9 +23,9 @@ export default function ReservationDatePicker({
                     className={cn("cursor-pointer justify-start text-left text-lg h-14", !date && "text-muted-foreground", className)}
                     value={date?.from ? (
                         date.to ? (
-                            `${dateFormatter.format(date.from)} - ${dateFormatter.format(date.to)}`
+                            `${Formatter.formatDate(date.from)} - ${Formatter.formatDate(date.to)}`
                         ) : (
-                            dateFormatter.format(date.from)
+                            Formatter.formatDate(date.from)
                         )
                     ) : ''}
                     placeholder="Tanggal menginap"

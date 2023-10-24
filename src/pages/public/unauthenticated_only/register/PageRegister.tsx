@@ -90,9 +90,9 @@ export default function PageRegister() {
     }
 
     return <>
-        <section className="min-h-[calc(100vh-368px)] w-full relative mt-24 py-8 ps-10 md:py-10 lg:ps-0 overflow-hidden">
-            <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-75 -z-10" />
-            <img src={PrambananHalfRight} className="h-full absolute right-0 -bottom-8 pointer-events-none opacity-75 -z-10" />
+        <section className="min-h-[calc(100vh-368px)] w-full relative mt-24 py-8 md:py-10 overflow-hidden">
+            <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-50 lg:opacity-75 -z-10" />
+            <img src={PrambananHalfRight} className="h-full absolute right-0 -bottom-8 pointer-events-none opacity-50 lg:opacity-75 -z-10" />
 
             <div className="container h-full">
                 <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 h-full" onSubmit={doRegister}>
@@ -131,7 +131,7 @@ export default function PageRegister() {
                             errorText={errors?.passconf} />
                     </div>
                     <div className="col-span-1">
-                        <h4 className="text-xl font-bold mb-2">Identitas</h4>
+                        <h4 className="text-xl font-bold mb-2">Identitas & Kontak</h4>
 
                         <IconInput
                             required
@@ -141,15 +141,6 @@ export default function PageRegister() {
                             maxLength={100}
                             onValueChange={(value) => onInputChangeHandler(value, "nama")}
                             errorText={errors?.nama} />
-
-                        <IconInput
-                            required
-                            icon={<PhoneCallIcon />}
-                            type="text"
-                            label="Nomor telepon"
-                            maxLength={50}
-                            onValueChange={(value) => onInputChangeHandler(value, "no_telp")}
-                            errorText={errors?.no_telp} />
 
                         <IconSelect
                             required
@@ -171,6 +162,15 @@ export default function PageRegister() {
                             maxLength={20}
                             onValueChange={(value) => onInputChangeHandler(value, "no_identitas")}
                             errorText={errors?.no_identitas} />
+
+                        <IconInput
+                            required
+                            icon={<PhoneCallIcon />}
+                            type="text"
+                            label="Nomor telepon"
+                            maxLength={50}
+                            onValueChange={(value) => onInputChangeHandler(value, "no_telp")}
+                            errorText={errors?.no_telp} />
 
                         <IconTextarea
                             required

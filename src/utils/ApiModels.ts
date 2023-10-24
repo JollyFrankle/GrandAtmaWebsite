@@ -50,6 +50,7 @@ export interface UserCustomer {
     email: string
     alamat: string
     password?: string
+    password_last_changed?: string
 }
 
 export interface UserPegawai {

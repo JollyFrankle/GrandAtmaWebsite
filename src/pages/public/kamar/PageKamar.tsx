@@ -74,43 +74,43 @@ export default function PageKamar() {
             </div>
         </section>
 
-    {!isLoading ? (
-        <section className="container py-10">
-            <div className=" border-s-8 border-accent-foreground ps-8 text-2xl leading-10 mb-6">
-                {data?.short_desc}
-            </div>
-            <InfoPentingRow data={data} className="my-8 text-lg" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="col-span-1 relative">
-                    <h3 className="text-2xl font-bold mb-3">Rincian Kamar</h3>
-                    <ul className="list-disc ms-5 text-lg">
-                        {(data?.rincian as string[])?.map((it, i) => (
-                            <li key={i}>{it}</li>
-                        ))}
-                    </ul>
-
-                    <DoorOpenIcon className="w-48 h-48 opacity-10 absolute right-0 bottom-0" />
+        {!isLoading ? (
+            <section className="container py-10">
+                <div className=" border-s-8 border-accent-foreground ps-8 text-2xl leading-10 mb-6">
+                    {data?.short_desc}
                 </div>
-                <div className="col-span-1 relative">
-                    <h3 className="text-2xl font-bold mb-3">Fasilitas</h3>
-                    <ul className="list-disc ms-5 text-lg">
-                        {data?.fasilitas && Object.keys(data?.fasilitas).map((it, i) => (
-                            <li key={i} className="mb-3">
-                                <p className="font-bold">{it}</p>
-                                <p className="text-muted-foreground">{data?.fasilitas[it]}</p>
-                            </li>
-                        ))}
-                    </ul>
+                <InfoPentingRow data={data} className="my-8 text-lg" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="col-span-1 relative">
+                        <h3 className="text-2xl font-bold mb-3">Rincian Kamar</h3>
+                        <ul className="list-disc ms-5 text-lg">
+                            {(data?.rincian as string[])?.map((it, i) => (
+                                <li key={i}>{it}</li>
+                            ))}
+                        </ul>
 
-                    <SparklesIcon className="w-48 h-48 opacity-10 absolute right-0 bottom-0" />
+                        <DoorOpenIcon className="w-48 h-48 opacity-10 absolute right-0 bottom-0" />
+                    </div>
+                    <div className="col-span-1 relative">
+                        <h3 className="text-2xl font-bold mb-3">Fasilitas</h3>
+                        <ul className="list-disc ms-5 text-lg">
+                            {data?.fasilitas && Object.keys(data?.fasilitas).map((it, i) => (
+                                <li key={i} className="mb-3">
+                                    <p className="font-bold">{it}</p>
+                                    <p className="text-muted-foreground">{data?.fasilitas[it]}</p>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <SparklesIcon className="w-48 h-48 opacity-10 absolute right-0 bottom-0" />
+                    </div>
                 </div>
-            </div>
-        </section>
-    ) : (
-        <section className="container py-10 text-center text-muted-foreground text-xl">
-            Memuat...
-        </section>
-    )}
+            </section>
+        ) : (
+            <section className="container py-10 text-center text-muted-foreground text-xl">
+                Memuat...
+            </section>
+        )}
 
         <section className="py-8">
             <div className="container">

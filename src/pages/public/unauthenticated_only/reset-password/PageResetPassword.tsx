@@ -120,7 +120,7 @@ export default function PageResetPassword() {
 
                             <div className="text-center">
                                 <Button variant="link" className="p-0 text-md" asChild disabled={isLoading}>
-                                    <Link to="/register">Log in</Link>
+                                    <Link to="/login">Log in</Link>
                                 </Button>
                                 <Button variant="link" className="ms-2 p-0 text-md" asChild disabled={isLoading}>
                                     <Link to="/register">Daftar akun</Link>

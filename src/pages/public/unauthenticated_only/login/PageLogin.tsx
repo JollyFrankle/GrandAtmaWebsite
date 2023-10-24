@@ -76,9 +76,9 @@ export default function PageLogin() {
     }
 
     return <>
-        <section className="min-h-[calc(100vh-368px)] w-full relative mt-24 py-8 ps-10 md:py-10 lg:ps-0">
-            <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-75 -z-10" />
-            <img src={PrambananHalfRight} className="h-full absolute right-0 -bottom-8 pointer-events-none opacity-75 -z-10" />
+        <section className="min-h-[calc(100vh-368px)] w-full relative mt-24 py-8 md:py-10">
+            <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-50 lg:opacity-75 -z-10" />
+            <img src={PrambananHalfRight} className="h-full absolute right-0 -bottom-8 pointer-events-none opacity-50 lg:opacity-75 -z-10" />
 
             <div className="container h-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 h-full">

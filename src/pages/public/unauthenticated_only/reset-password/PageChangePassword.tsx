@@ -81,7 +81,7 @@ export default function PageChangePassword() {
                             <CheckCircleIcon className="w-20 h-20 text-green-500 mx-auto mb-4" />
                             <p>Kata sandi Anda berhasil diubah.</p>
                             <Button className="mt-4" asChild>
-                                <Link to="/login">Masuk</Link>
+                                <Link to="/login">Log in</Link>
                             </Button>
                         </div>
                     ) : (

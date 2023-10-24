@@ -10,7 +10,7 @@ import { Button } from '@/cn/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
 import ScrollToTop from '@/utils/ScrollToTop';
-import { BASE_URL, UserCustomer } from '@/utils/ApiModels';
+import { BASE_URL, UserCustomer, UserPegawai } from '@/utils/ApiModels';
 import AuthHelper from '@/utils/AuthHelper';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -83,7 +83,7 @@ function generateChildNavLG(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavLG(user?: UserCustomer | null) {
+function generateNavLG() {
     return <NavigationMenu className="hidden lg:block">
         <NavigationMenuList>
             <NavigationMenuItem asChild>
@@ -120,7 +120,7 @@ function generateChildNavSM(children: MenuItemProps[]) {
     </ul>
 }
 
-function generateNavSM(user?: UserCustomer | null) {
+function generateNavSM() {
     return <Sheet>
         <SheetTrigger asChild>
             <Button variant="secondary" className="lg:hidden">
@@ -155,6 +155,7 @@ function generateNavSM(user?: UserCustomer | null) {
 
 export default function LayoutHome() {
     const [userCustomer, setUserCustomer] = React.useState<UserCustomer | null>(null)
+    const [userPegawai, setUserPegawai] = React.useState<UserPegawai | null>(null)
 
     const navigate = useNavigate()
 
@@ -180,14 +181,15 @@ export default function LayoutHome() {
 
     useEffect(() => {
         setUserCustomer(AuthHelper.getUserCustomer())
+        setUserPegawai(AuthHelper.getUserPegawai())
     }, [])
 
     return <>
         <ScrollToTop />
         <section className='fixed top-0 w-full top-nav py-3 z-50'>
             <div className="container flex justify-between">
-                {generateNavLG(userCustomer)}
-                {generateNavSM(userCustomer)}
+                {generateNavLG()}
+                {generateNavSM()}
 
                 <NavigationMenu>
                     {userCustomer ? (
@@ -197,6 +199,25 @@ export default function LayoutHome() {
                                     <Link to="/customer">
                                         <LayoutDashboardIcon className="me-3 h-4 w-4" /> Dashboard
                                     </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem asChild>
+                                <NavigationMenuLink className='ms-2' onClick={logout} asChild>
+                                    <Button variant="destructive">
+                                        <LogInIcon className="h-4 w-4" />
+                                    </Button>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                        </>
+                    ) : userPegawai ? (
+                        <>
+                            <NavigationMenuItem asChild>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                                    <Button variant="secondary" asChild>
+                                        <Link to="/admin">
+                                            <LayoutDashboardIcon className="me-3 h-4 w-4" /> Admin Panel
+                                        </Link>
+                                    </Button>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem asChild>
