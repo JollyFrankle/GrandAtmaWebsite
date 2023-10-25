@@ -2,7 +2,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import React, { useEffect } from 'react';
 import { cn } from '@/cn/lib/utils';
-import { FacebookIcon, InstagramIcon, LayoutDashboardIcon, LogInIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
+import { FacebookIcon, InstagramIcon, LayoutDashboardIcon, LogInIcon, LogOutIcon, MenuIcon, YoutubeIcon } from 'lucide-react';
 
 import './LayoutHome.css'
 import Logo from "@/assets/images/gah-logo.png"
@@ -204,7 +204,7 @@ export default function LayoutHome() {
                             <NavigationMenuItem asChild>
                                 <NavigationMenuLink className='ms-2' onClick={logout} asChild>
                                     <Button variant="destructive">
-                                        <LogInIcon className="h-4 w-4" />
+                                        <LogOutIcon className="h-4 w-4" />
                                     </Button>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
@@ -223,7 +223,7 @@ export default function LayoutHome() {
                             <NavigationMenuItem asChild>
                                 <NavigationMenuLink className='ms-2' onClick={logout} asChild>
                                     <Button variant="destructive">
-                                        <LogInIcon className="h-4 w-4" />
+                                        <LogOutIcon className="h-4 w-4" />
                                     </Button>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>

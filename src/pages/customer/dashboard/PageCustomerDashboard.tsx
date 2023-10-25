@@ -4,12 +4,13 @@ import axios, { AxiosError } from "axios"
 import { ApiResponse, BASE_URL, Reservasi } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import Formatter from "@/utils/Formatter"
-import DetailReservasi from "./components/DetailReservasi"
+import ModalDetailReservasi from "./components/ModalDetailReservasi"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
 import { BookmarkCheckIcon, UserIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
 import usePageTitle from "@/hooks/usePageTitle"
+import { toast } from "react-toastify"
 
 
 export default function PageCustomerDashboard() {
@@ -31,6 +32,9 @@ export default function PageCustomerDashboard() {
             setReservations(data.data)
         }).catch((err) => {
             console.log(err)
+            toast("Gagal memuat data reservasi.", {
+                type: "error"
+            })
         })
     }
 
@@ -127,6 +131,6 @@ export default function PageCustomerDashboard() {
             </div>
         </section>
 
-        <DetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} user={user} />
+        <ModalDetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} user={user} />
     </>
 }

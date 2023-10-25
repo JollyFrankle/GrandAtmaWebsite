@@ -9,6 +9,8 @@ export default function IconInput({
     label,
     errorText,
     maxLength,
+    max,
+    min,
     value,
     onValueChange,
     required = false,
@@ -22,6 +24,8 @@ export default function IconInput({
     label?: string,
     errorText?: string,
     maxLength?: number,
+    max?: number,
+    min?: number,
     value?: string,
     onValueChange?: (value: string) => void,
     required?: boolean,
@@ -31,9 +35,9 @@ export default function IconInput({
 }) {
     return (
         <label className={className}>
-            {label && ( <div className={`mb-1 ${size === "lg" && "text-lg"}`}>{label}</div> )}
+            {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
             <InputWithIcon icon={icon} className="w-full mb-2">
-                <Input required={required} disabled={disabled} maxLength={maxLength} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`} placeholder={placeholder} type={type} value={value} onChange={(e) => onValueChange?.(e.target.value)} />
+                <Input required={required} disabled={disabled} max={max} min={min} maxLength={maxLength} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`} placeholder={placeholder} type={type} value={value} onChange={(e) => onValueChange?.(e.target.value)} />
             </InputWithIcon>
             {errorText && (
                 <div className="text-sm text-red-500">{errorText}</div>

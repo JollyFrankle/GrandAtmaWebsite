@@ -7,7 +7,7 @@ import { Reservasi, UserCustomer } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
 
-export default function DetailReservasi({
+export default function ModalDetailReservasi({
     data,
     user,
     show,

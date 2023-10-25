@@ -11,7 +11,7 @@ import Formatter from "@/utils/Formatter";
 import { toast } from "react-toastify";
 import usePageTitle from "@/hooks/usePageTitle";
 
-export default function PageKamar() {
+export default function PageDetailKamar() {
     const params = useParams<{ id: string }>()
     const { id } = params
 

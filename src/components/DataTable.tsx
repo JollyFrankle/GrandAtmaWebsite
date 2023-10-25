@@ -51,9 +51,9 @@ interface RowActions<T> {
 }
 
 function generateActionChildren<T>(actions: RowActions<T>[], row: T) {
-    return actions.map((action, i) => {
-        return <DropdownMenuItem onClick={() => action.onClick(row)} key={i}>{action.action}</DropdownMenuItem>
-    })
+    return actions.map((action, i) => (
+        <DropdownMenuItem onClick={() => action.onClick(row)} key={i}>{action.action}</DropdownMenuItem>
+    ))
 }
 
 function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][] = [], select: boolean = false): ColumnDef<T>[] {
@@ -118,7 +118,7 @@ function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Tindakan</DropdownMenuLabel>
+                            <DropdownMenuLabel key={-1}>Tindakan</DropdownMenuLabel>
                             {actions.map((action, i) => (
                                 <div key={i}>
                                     {generateActionChildren<T>(action, row.original)}
@@ -192,11 +192,11 @@ export default function DataTable<T>({
                     <DropdownMenuContent align="end">
                         {columns
                             .filter((col) => col.enableHiding ?? true)
-                            .map((col) => {
+                            .map((col, i) => {
                                 const column = table.getColumn(col.id ?? col.field.toString())
                                 return (
                                     <DropdownMenuCheckboxItem
-                                        key={col.id}
+                                        key={i}
                                         checked={column?.getIsVisible() ?? true}
                                         onCheckedChange={(value) => column?.toggleVisibility(!!value)}
                                     >

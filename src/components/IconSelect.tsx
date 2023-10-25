@@ -16,7 +16,7 @@ export default function IconSelect({
     className = "mb-4 block",
 }: {
     icon: React.ReactNode,
-    values: { value: string, label: string }[],
+    values?: { value: string, label: string }[],
     size?: "md" | "lg",
     label?: string,
     errorText?: string,
@@ -29,16 +29,16 @@ export default function IconSelect({
 }) {
     return (
         <label className={className}>
-        {label && ( <div className={`mb-1 ${size === "lg" && "text-lg"}`}>{label}</div> )}
+        {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
         <InputWithIcon icon={icon}>
             <Select required={required} disabled={disabled} value={value} onValueChange={onValueChange}>
-                <SelectTrigger className={`ps-9 w-full ${size === "lg" && "text-lg h-14"} ${errorText ? "border-red-500 text-red-500" : ""}`}>
+                <SelectTrigger className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`}>
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
                         <SelectLabel>{label}</SelectLabel>
-                        {values.map(({ value, label }) => (
+                        {values?.map(({ value, label }) => (
                             <SelectItem key={value} value={value}>{label}</SelectItem>
                         ))}
                     </SelectGroup>

@@ -3,7 +3,7 @@ import LayoutHome from './pages/public/_layout/LayoutHome'
 import PageHome from './pages/public/home/PageHome'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import PageKamar from './pages/public/kamar/PageKamar'
+import PageDetailKamar from './pages/public/kamar/PageDetailKamar'
 import PageLogin from './pages/public/unauthenticated_only/login/PageLogin'
 import PageCustomerDashboard from './pages/customer/dashboard/PageCustomerDashboard'
 import LayoutCustomer from './pages/customer/_layout/LayoutCustomer'
@@ -14,6 +14,7 @@ import PageResetPassword from './pages/public/unauthenticated_only/reset-passwor
 import PageChangePassword from './pages/public/unauthenticated_only/reset-password/PageChangePassword'
 import UnauthenticatedMiddleware from './pages/public/unauthenticated_only/UnauthenticatedMiddleware'
 import LayoutAdmin from './pages/admin/_layout/LayoutAdmin'
+import PageKamar from './pages/admin/kamar/PageKamar'
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     element: <LayoutHome />,
     children: [
       { index: true, element: <PageHome /> },
-      { path: "kamar/:id", element: <PageKamar /> },
+      { path: "kamar/:id", element: <PageDetailKamar /> },
       { path: "", element: <UnauthenticatedMiddleware />, children: [
         { path: "login", element: <PageLogin /> },
         { path: "register", element: <PageRegister /> },
@@ -44,6 +45,8 @@ const router = createBrowserRouter([
     element: <LayoutAdmin />,
     children: [
       { index: true, element: <>SULING</> },
+      { path: "kamar", element: <PageKamar /> },
+      { path: "*", element: <>404</> }
     ]
   }
 ])

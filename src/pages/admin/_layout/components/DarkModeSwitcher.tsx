@@ -29,12 +29,12 @@ export default function DarkModeSwitcher() {
                     onChange={() => setColorMode(colorMode === 'light' ? 'dark' : 'light')}
                     className="dur absolute top-0 z-50 m-0 h-full w-full cursor-pointer opacity-0"
                 />
-                <span className={`absolute top-1/2 left-[3px] flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full bg-white shadow-switcher duration-75 ease-linear ${colorMode === 'dark' && '!right-[3px] !translate-x-full'}`}>
+                <span className={`left-[3px] flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-switcher duration-75 ease-linear ${colorMode === 'dark' && '!right-[3px] !translate-x-full'}`}>
                     <span className="dark:hidden">
-                        <SunIcon className="w-4 h-4" />
+                        <SunIcon className="w-5 h-5" />
                     </span>
                     <span className="hidden dark:inline-block text-background">
-                        <MoonIcon className="w-4 h-4" />
+                        <MoonIcon className="w-5 h-5" />
                     </span>
                 </span>
             </label>

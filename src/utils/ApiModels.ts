@@ -119,6 +119,17 @@ export interface Invoice {
     created_at: string
 }
 
+export interface Kamar {
+    no_kamar: string
+    id_jenis_kamar: number
+    jenis_bed: string
+    no_lantai: number
+    is_smoking: number
+    created_at: string
+    updated_at: string
+    jenis_kamar?: JenisKamar
+}
+
 export interface KeyValue<T> {
     [key: string]: T
 }

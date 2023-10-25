@@ -1,15 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/assets/images/gah-logo.png";
 import DarkModeSwitcher from "./DarkModeSwitcher";
-import { MenuIcon } from "lucide-react";
+import { LogOutIcon, MenuIcon } from "lucide-react";
+import { Button } from "@/cn/components/ui/button";
+import AuthHelper from "@/utils/AuthHelper";
+import { BASE_URL } from "@/utils/ApiModels";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Header(props: {
     sidebarOpen: string | boolean | undefined;
     setSidebarOpen: (arg0: boolean) => void;
 }) {
+    const navigate = useNavigate()
+
+    const logout = () => {
+        const token = AuthHelper.getToken()
+        AuthHelper.logout()
+        navigate('/login')
+
+        const logoutUrl = `${BASE_URL}/pegawai/logout`
+        axios.post(logoutUrl, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(() => {
+            toast("Berhasil log out.", {
+                type: "success"
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     return (
-        <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-            <div className="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
+        <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-black">
+            <div className="flex flex-grow items-center justify-between h-16 px-4 shadow-2 md:px-6 2xl:px-11">
                 <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
                     {/* <!-- Hamburger Toggle BTN --> */}
                     <button
@@ -29,9 +55,7 @@ export default function Header(props: {
                     </Link>
                 </div>
 
-                <div className="hidden sm:block">
-                        &nbsp;
-                </div>
+                <div className="hidden sm:block"></div>
 
                 <div className="flex items-center gap-3 2xsm:gap-7">
                     <ul className="flex items-center gap-2 2xsm:gap-4">
@@ -51,6 +75,10 @@ export default function Header(props: {
                     {/* <!-- User Area --> */}
                     {/* <DropdownUser /> */}
                     {/* <!-- User Area --> */}
+
+                    <Button variant="destructive" onClick={logout}>
+                        <LogOutIcon className="h-4 w-4" />
+                    </Button>
                 </div>
             </div>
         </header>
