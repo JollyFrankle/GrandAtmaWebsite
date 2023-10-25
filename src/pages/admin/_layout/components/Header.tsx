@@ -76,7 +76,7 @@ export default function Header(props: {
                     {/* <DropdownUser /> */}
                     {/* <!-- User Area --> */}
 
-                    <Button variant="destructive" onClick={logout}>
+                    <Button variant="destructive" onClick={logout} className="ms-2">
                         <LogOutIcon className="h-4 w-4" />
                     </Button>
                 </div>

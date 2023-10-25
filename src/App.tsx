@@ -16,6 +16,7 @@ import UnauthenticatedMiddleware from './pages/public/unauthenticated_only/Unaut
 import LayoutAdmin from './pages/admin/_layout/LayoutAdmin'
 import PageKamar from './pages/admin/kamar/PageKamar'
 import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
+import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
 
 const router = createBrowserRouter([
   {
@@ -45,9 +46,10 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <LayoutAdmin />,
     children: [
-      { index: true, element: <>SULING</> },
+      { index: true, element: <>DEMO PAGE, LANGSUNG SAJA KE NAV!!!</> },
       { path: "kamar", element: <PageKamar /> },
       { path: "fasilitas", element: <PageFasilitas /> },
+      { path: "season", element: <PageSeasonTarif /> },
       { path: "*", element: <>404</> }
     ]
   }

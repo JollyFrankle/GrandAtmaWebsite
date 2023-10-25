@@ -36,11 +36,11 @@ export default function IconInput({
     return (
         <label className={className}>
             {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
-            <InputWithIcon icon={icon} className="w-full mb-2">
+            <InputWithIcon icon={icon} className="w-full">
                 <Input required={required} disabled={disabled} max={max} min={min} maxLength={maxLength} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`} placeholder={placeholder} type={type} value={value} onChange={(e) => onValueChange?.(e.target.value)} />
             </InputWithIcon>
             {errorText && (
-                <div className="text-sm text-red-500">{errorText}</div>
+                <div className="text-sm mt-1 text-red-500">{errorText}</div>
             )}
         </label>
     )

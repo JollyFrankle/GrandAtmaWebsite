@@ -42,7 +42,7 @@ export default function PageLogin() {
                 toast(data.message, {
                     type: "success"
                 })
-                navigate("/admin")
+                navigate("/admin/")
             } else {
                 const data = res.data as ApiResponse<{user: UserCustomer, token: string }>
                 AuthHelper.setToken(data.data.token)

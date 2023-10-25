@@ -77,9 +77,9 @@ export interface Reservasi {
     status: string
     total: number
     deposit: number
+    permintaan_tambahan: string|null
     created_at: string
     updated_at: string
-    permintaan_tambahan: string|null
     bukti_transfer: string|null
     reservasi_layanan?: ReservasiLayanan[]
     reservasi_rooms?: ReservasiRoom[]
@@ -115,8 +115,8 @@ export interface Invoice {
     total_layanan: number
     pajak_layanan: number
     grand_total: number
-    reservasi?: Reservasi
     created_at: string
+    reservasi?: Reservasi
 }
 
 export interface Kamar {
@@ -128,6 +128,26 @@ export interface Kamar {
     created_at: string
     updated_at: string
     jenis_kamar?: JenisKamar
+}
+
+export interface Season {
+    id: number
+    type: 'l' | 'h'
+    nama: string
+    tanggal_start: string
+    tanggal_end: string
+    created_at: string
+    updated_at: string
+    tarif?: Tarif[]
+}
+
+export interface Tarif {
+    id: number
+    id_jenis_kamar: number
+    id_season: number
+    harga: number
+    jenis_kamar?: JenisKamar
+    season?: Season
 }
 
 export interface KeyValue<T> {

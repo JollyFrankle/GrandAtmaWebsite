@@ -37,7 +37,7 @@ export default function IconSelect({
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
-                        <SelectLabel>{label}</SelectLabel>
+                        <SelectLabel>{placeholder}</SelectLabel>
                         {values?.map(({ value, label }) => (
                             <SelectItem key={value} value={value}>{label}</SelectItem>
                         ))}
@@ -46,7 +46,7 @@ export default function IconSelect({
             </Select>
         </InputWithIcon>
         {errorText && (
-            <div className="text-sm text-red-500">{errorText}</div>
+            <div className="text-sm mt-1 text-red-500">{errorText}</div>
         )}
     </label>
     )

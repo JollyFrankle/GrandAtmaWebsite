@@ -115,7 +115,7 @@ export default function PageFasilitas() {
             }
         ]]} />
 
-        <ModalCUFasilitas id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => fetchTableData()} />
+        <ModalCUFasilitas id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
         <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteFasilitas}>
             <p className="mb-3">Apakah Anda yakin ingin menghapus fasilitas ini?</p>
             <p className="text-xl font-bold">{currentData?.nama}</p>

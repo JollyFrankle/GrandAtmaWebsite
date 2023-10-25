@@ -22,4 +22,8 @@ export default class Formatter {
             return null
         }
     }
+
+    static dateToYMD(date: Date): string {
+        return date.toISOString().slice(0, 10);
+    }
 }
