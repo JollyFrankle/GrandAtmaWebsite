@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalCUKamar from "./components/ModalCUKamar";
 import ModalDelete from "../_layout/components/ModalDelete";
+import { useNavigate } from "react-router-dom";
 
 
 export default function PageKamar() {
@@ -17,6 +18,7 @@ export default function PageKamar() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const navigate = useNavigate()
 
     usePageTitle("Kamar - Grand Atma Hotel")
 
@@ -56,7 +58,14 @@ export default function PageKamar() {
     }
 
     useEffect(() => {
-        fetchTableData()
+        if(AuthHelper.authorize(["admin"])) {
+            fetchTableData()
+        } else {
+            toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
+                type: "error"
+            })
+            navigate("/admin/")
+        }
     }, [])
 
     return <>
@@ -82,7 +91,7 @@ export default function PageKamar() {
                 field: "id_jenis_kamar",
                 header: "Jenis Kamar",
                 enableSorting: true,
-                cell: (row) => <a target="_blank" href={`/kamar/${row.id_jenis_kamar}`}>{row.jenis_kamar?.nama}</a>
+                cell: (row) => <Button variant="link" className="h-fit p-0" asChild><a href={`/kamar/${row.id_jenis_kamar}`} target="_blank">{row.jenis_kamar?.nama}</a></Button>
             },
             {
                 field: "jenis_bed",

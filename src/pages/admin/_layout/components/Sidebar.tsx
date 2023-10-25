@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
-import Logo from "@/assets/images/gah-logo.png";
+import { Link, NavLink } from "react-router-dom";
+import Logo from "@/assets/images/gah-inline-logo.png";
 import React from "react";
-import { BedIcon, CalendarClockIcon, ChevronDownIcon, HelpingHandIcon, LayoutDashboardIcon, MenuIcon } from "lucide-react";
+import { BedIcon, CalendarClockIcon, ChevronDownIcon, HelpingHandIcon, HomeIcon, LayoutDashboardIcon, MenuIcon } from "lucide-react";
 import AuthHelper from "@/utils/AuthHelper";
 
 interface SidebarProps {
@@ -66,7 +66,7 @@ function generateSidebar(role: string) {
             <p className="uppercase font-bold mb-3">{group.label}</p>
             <ul>
                 {group.children.map((item, j) => (!item.roles || (item.roles.includes(role))) && (
-                    <li key={j}>
+                    <li key={j} className="mb-1">
                         <NavLink
                             to={'/admin' + item.to}
                             className={({ isActive }) => `${isActive ? 'bg-primary' : 'hover:bg-white hover:bg-opacity-10'} flex items-center gap-2 rounded p-2`}
@@ -132,16 +132,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     return (
         <aside
             ref={sidebar}
-            className={`absolute left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-black duration-300 ease-linear lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+            className={`absolute left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-slate-800 dark:bg-slate-900 duration-300 ease-linear lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
             {/* <!-- SIDEBAR HEADER --> */}
             <div className="flex items-center justify-between gap-2 px-6 h-16 lg:py-3">
-                <NavLink to="/" className="bg-white p-2 rounded text-black flex items-center">
-                    <img src={Logo} alt="Logo" className="w-10 inline me-2" />
-                    <div>
-                        <div className="text-lg font-bold leading-5">GRAND ATMA</div>
-                    </div>
-                </NavLink>
+                <Link to="/admin/" className="bg-white py-2 px-3 rounded text-black">
+                    <img src={Logo} alt="Logo" className="h-7 inline me-2" />
+                </Link>
 
                 <button
                     ref={trigger}
@@ -158,6 +155,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
                 {/* <!-- Sidebar Menu --> */}
                 <nav className="py-4 px-4 lg:px-6 text-white">
+                    {/* Lihat situs utama */}
+                    <NavLink
+                        to="/"
+                        className="hover:bg-white hover:bg-opacity-10 flex items-center gap-2 rounded p-2 mb-4"
+                    >
+                        <HomeIcon className="w-4 h-4" />
+                        Kembali ke Situs Utama
+                    </NavLink>
+
                     {/* <!-- Menu Group --> */}
                     {generateSidebar(adminData?.role ?? "none")}
                 </nav>

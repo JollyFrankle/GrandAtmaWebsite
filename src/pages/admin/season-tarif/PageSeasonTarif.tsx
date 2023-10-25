@@ -4,13 +4,22 @@ import usePageTitle from "@/hooks/usePageTitle";
 import { ApiErrorResponse, ApiResponse, BASE_URL, Season } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
 import axios, { AxiosError } from "axios";
-import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { EditIcon, EyeIcon, PlusIcon, Trash2Icon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalCUSeasonTarif from "./components/ModalCUSeasonTarif";
 import ModalDelete from "../_layout/components/ModalDelete";
 import Formatter from "@/utils/Formatter";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/cn/components/ui/badge";
 
+function getBadgeMusim(tipe: string) {
+    if (tipe === "h") {
+        return <Badge variant="default"><TrendingUpIcon className="w-4 h-4 me-2" /> High season</Badge>
+    } else {
+        return <Badge variant="secondary"><TrendingDownIcon className="w-4 h-4 me-2" /> Low season</Badge>
+    }
+}
 
 export default function PageSeasonTarif() {
     const [tableData, setTableData] = useState<Season[]>([])
@@ -18,6 +27,7 @@ export default function PageSeasonTarif() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const navigate = useNavigate()
 
     usePageTitle("Season dan Tarif - Grand Atma Hotel")
 
@@ -67,7 +77,14 @@ export default function PageSeasonTarif() {
     }
 
     useEffect(() => {
-        fetchTableData()
+        if(AuthHelper.authorize(["sm"])) {
+            fetchTableData()
+        } else {
+            toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
+                type: "error"
+            })
+            navigate("/admin/")
+        }
     }, [])
 
     return <>
@@ -92,7 +109,7 @@ export default function PageSeasonTarif() {
                 field: "type",
                 header: "Tipe musim",
                 enableSorting: true,
-                cell: (row) => row.type === "h" ? "Musim tinggi" : "Musim rendah"
+                cell: (row) => getBadgeMusim(row.type)
             },
             {
                 field: "tanggal_start",

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "@/assets/images/gah-logo.png";
+import Logo from "@/assets/images/gah-inline-logo.png";
 import DarkModeSwitcher from "./DarkModeSwitcher";
 import { LogOutIcon, MenuIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
@@ -34,7 +34,7 @@ export default function Header(props: {
     }
 
     return (
-        <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-black">
+        <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-slate-900">
             <div className="flex flex-grow items-center justify-between h-16 px-4 shadow-2 md:px-6 2xl:px-11">
                 <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
                     {/* <!-- Hamburger Toggle BTN --> */}
@@ -44,14 +44,14 @@ export default function Header(props: {
                             e.stopPropagation();
                             props.setSidebarOpen(!props.sidebarOpen);
                         }}
-                        className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
+                        className="z-99999 block rounded-sms bg-white p-2 dark:bg-transparent lg:hidden"
                     >
                         <MenuIcon size={24} />
                     </button>
                     {/* <!-- Hamburger Toggle BTN --> */}
 
-                    <Link className="block flex-shrink-0 lg:hidden" to="/">
-                        <img src={Logo} alt="Logo" className="w-12" />
+                    <Link to="/admin/" className="bg-white py-2 px-3 rounded text-black">
+                        <img src={Logo} alt="Logo" className="h-7 inline me-2" />
                     </Link>
                 </div>
 

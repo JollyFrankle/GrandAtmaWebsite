@@ -30,7 +30,7 @@ export default function ModalDetailReservasi({
     ) : (
         <DialogContent className={dialogSizeByClass("lg")}>
             <DialogHeader>Detail Pemesanan</DialogHeader>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                 <CardWithIcon className="col-span-1" item={{
                     icon: <TicketIcon className="w-full h-full" />,
                     title: "ID Booking",
@@ -48,8 +48,7 @@ export default function ModalDetailReservasi({
                 }} />
             </div>
             <div>
-                <h4 className="text-xl font-bold mb-2">Detail Pemesanan</h4>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="lg:grid grid-cols-2 gap-4 mb-2">
                     <div className="col-span-1">
                         <h4 className="font-bold mb-2">Pemesan</h4>
                         <div className="mb-2">
@@ -134,7 +133,7 @@ export default function ModalDetailReservasi({
             {data?.invoice && <>
                 <div className="flex justify-between items-center mb-2">
                     <h3 className="text-xl font-bold">Invoice <span className="font-normal text-lg">#{data.invoice.no_invoice}</span></h3>
-                    <span className="text-muted-foreground text-sm">Diciptakan pada <strong>{Formatter.formatDateTime(new Date(data.invoice.created_at))}</strong></span>
+                    <span className="text-muted-foreground text-sm">Dicetak pada <strong>{Formatter.formatDateTime(new Date(data.invoice.created_at))}</strong></span>
                 </div>
                 <Table className="mb-4">
                     <TableBody>

@@ -44,4 +44,12 @@ export default class AuthHelper {
     static getUserType() {
         return localStorage.getItem("type") as "c" | "p" | null
     }
+
+    static authorize(role: string[]): boolean {
+        const userRole = localStorage.getItem("role")
+        if (userRole === null) {
+            return false
+        }
+        return role.includes(userRole)
+    }
 }

@@ -9,7 +9,7 @@ import AuthHelper from "@/utils/AuthHelper";
 import Formatter from "@/utils/Formatter";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon } from "lucide-react";
+import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -52,6 +52,7 @@ export default function ModalCUSeasonTarif({
         }).then((res) => {
             const data = res.data as ApiResponse<Season>
             setData(data.data)
+            setErrors(null)
         }).catch((err) => {
             console.log(err)
             toast("Gagal memuat data season.", {
@@ -176,7 +177,7 @@ export default function ModalCUSeasonTarif({
                     <DialogTitle>
                         {editable ? id !== undefined ? "Edit Season" : "Tambah Season" : "Detail Season"}
                     </DialogTitle>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="lg:grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <IconInput
                                 required
@@ -234,7 +235,7 @@ export default function ModalCUSeasonTarif({
                                     </Button>
                                 )}
                             </div>
-                            <Table className="mb-4">
+                            <Table className="mb-4 min-w-[480px]">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="w-[48px]">No.</TableHead>
@@ -276,7 +277,7 @@ export default function ModalCUSeasonTarif({
                                             {editable && (
                                                 <TableCell>
                                                     <Button type="button" variant="link" onClick={() => removeTarif(index)}>
-                                                        <BanIcon className="w-4 h-4 -mx-2" />
+                                                        <Trash2Icon className="w-4 h-4 -mx-2" />
                                                     </Button>
                                                 </TableCell>
                                             )}
@@ -291,8 +292,8 @@ export default function ModalCUSeasonTarif({
                     </div>
 
                     {editable && (
-                        <DialogFooter className="mt-4">
-                            <Button type="button" onClick={() => onOpenChange(false)} variant="secondary" className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
+                        <DialogFooter className="mt-4 gap-2">
+                            <Button type="button" onClick={() => onOpenChange(false)} variant="secondary"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
                             <Button type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
                         </DialogFooter>
                     )}

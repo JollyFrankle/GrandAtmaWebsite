@@ -119,7 +119,7 @@ export default function ModalCUFasilitas({
                     <DialogTitle>
                         {editable ? id !== undefined ? "Edit Fasilitas" : "Tambah Fasilitas" : "Detail Fasilitas"}
                     </DialogTitle>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="lg:grid grid-cols-2 gap-4">
                         <div className="col-span-1">
                             <IconInput
                                 required
@@ -169,8 +169,8 @@ export default function ModalCUFasilitas({
                     </div>
 
                     {editable && (
-                        <DialogFooter className="mt-4">
-                            <Button type="button" onClick={() => onOpenChange(false)} variant="secondary" className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
+                        <DialogFooter className="mt-4 gap2">
+                            <Button type="button" onClick={() => onOpenChange(false)} variant="secondary"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
                             <Button type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
                         </DialogFooter>
                     )}

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import ModalCUFasilitas from "./components/ModalCUFasilitas";
 import ModalDelete from "../_layout/components/ModalDelete";
 import Formatter from "@/utils/Formatter";
+import { useNavigate } from "react-router-dom";
 
 
 export default function PageFasilitas() {
@@ -18,6 +19,7 @@ export default function PageFasilitas() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const navigate = useNavigate()
 
     usePageTitle("Fasilitas dan Layanan Berbayar - Grand Atma Hotel")
 
@@ -57,7 +59,14 @@ export default function PageFasilitas() {
     }
 
     useEffect(() => {
-        fetchTableData()
+        if(AuthHelper.authorize(["sm"])) {
+            fetchTableData()
+        } else {
+            toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
+                type: "error"
+            })
+            navigate("/admin/")
+        }
     }, [])
 
     return <>
