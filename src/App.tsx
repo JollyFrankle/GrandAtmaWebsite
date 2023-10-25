@@ -15,6 +15,7 @@ import PageChangePassword from './pages/public/unauthenticated_only/reset-passwo
 import UnauthenticatedMiddleware from './pages/public/unauthenticated_only/UnauthenticatedMiddleware'
 import LayoutAdmin from './pages/admin/_layout/LayoutAdmin'
 import PageKamar from './pages/admin/kamar/PageKamar'
+import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <>SULING</> },
       { path: "kamar", element: <PageKamar /> },
+      { path: "fasilitas", element: <PageFasilitas /> },
       { path: "*", element: <>404</> }
     ]
   }

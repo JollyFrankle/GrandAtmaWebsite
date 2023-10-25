@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 const emptyKamar: Kamar = {
     no_kamar: "",
-    id_jenis_kamar: 0,
+    id_jenis_kamar: -1,
     jenis_bed: "",
     no_lantai: 0,
     is_smoking: 0,

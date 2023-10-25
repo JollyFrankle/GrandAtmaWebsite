@@ -28,10 +28,10 @@ export interface JenisKamar {
     harga_dasar: number
 }
 
-export interface LayananTambahan {
+export interface FasilitasLayananTambahan {
     id: number
     nama: string
-    gambar: string
+    gambar: string|null
     short_desc: string
     satuan: string
     tarif: number
@@ -93,7 +93,7 @@ export interface ReservasiLayanan {
     tanggal_pakai: string
     qty: number
     total: number
-    layanan_tambahan?: LayananTambahan
+    layanan_tambahan?: FasilitasLayananTambahan
 }
 
 export interface ReservasiRoom {

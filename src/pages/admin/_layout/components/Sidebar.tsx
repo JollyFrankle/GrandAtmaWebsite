@@ -53,7 +53,7 @@ const sidebarItems: SidebarGroupProps[] = [
             {
                 icon: <HelpingHandIcon />,
                 label: "Layanan Berbayar",
-                to: "/layanan",
+                to: "/fasilitas",
                 roles: ["sm"]
             }
         ]

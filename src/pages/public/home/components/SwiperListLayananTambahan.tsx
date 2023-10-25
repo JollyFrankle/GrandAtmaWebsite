@@ -8,7 +8,7 @@ import 'swiper/css/autoplay'
 import { Navigation, EffectCoverflow, Autoplay } from "swiper/modules"
 import axios from "axios";
 
-import { ApiResponse, BASE_URL, LayananTambahan, getImage } from "@/utils/ApiModels";
+import { ApiResponse, BASE_URL, FasilitasLayananTambahan, getImage } from "@/utils/ApiModels";
 import { Skeleton } from "@/cn/components/ui/skeleton";
 
 export default function SwiperListLayananTambahan({
@@ -16,12 +16,12 @@ export default function SwiperListLayananTambahan({
 }: {
     className?: string
 }) {
-    const [data, setData] = useState<LayananTambahan[]>([])
+    const [data, setData] = useState<FasilitasLayananTambahan[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
     const fetchData = () => {
         axios.get(BASE_URL + "/public/layanan-tambahan").then((res) => {
-            const data = res.data as ApiResponse<LayananTambahan[]>
+            const data = res.data as ApiResponse<FasilitasLayananTambahan[]>
             setData(data.data)
             setIsLoading(false)
         })
@@ -52,7 +52,7 @@ export default function SwiperListLayananTambahan({
     >
         {!isLoading ? data.map((it, _) => (
             <SwiperSlide className="relative card overflow-hidden" key={it.id}>
-                <img src={getImage(it.gambar)} className="absolute top-0 left-0 w-full h-full object-cover -z-10" />
+                <img src={getImage(it.gambar!!)} className="absolute top-0 left-0 w-full h-full object-cover -z-10" />
                 <div className="absolute bottom-0 left-0 w-full p-6 z-10">
                     <span className="border-s-4 px-4 inline-block bg-background text-foreground py-1 text-xl font-bold">{it.nama}</span>
                     <div className="border-s-4 ps-4 pt-2 text-lg text-background">{it.short_desc}</div>

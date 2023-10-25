@@ -60,7 +60,7 @@ export default {
     },
     extend: {
       colors: {
-        ...adminDashColors, // ditempatkan paling atas agar tidak menimpa warna default
+        // ...adminDashColors, // ditempatkan paling atas agar tidak menimpa warna default
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
