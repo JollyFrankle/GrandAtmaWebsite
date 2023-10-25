@@ -54,9 +54,16 @@ export default function ModalCUKamar({
             setErrors(null)
         }).catch((err) => {
             console.log(err)
-            toast("Gagal memuat data kamar.", {
-                type: "error"
-            })
+            if (err.response) {
+                const data = err.response.data as ApiErrorResponse
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal mengambil data.", {
+                    type: "error"
+                })
+            }
         }).finally(() => {
             setLoading(false)
         })
@@ -71,10 +78,16 @@ export default function ModalCUKamar({
             const data = res.data as ApiResponse<JenisKamar[]>
             setListJenis(data.data)
         }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data jenis kamar.", {
-                type: "error"
-            })
+            if (err.response) {
+                const data = err.response.data as ApiErrorResponse
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal mengambil data jenis kamar.", {
+                    type: "error"
+                })
+            }
         })
     }
 
@@ -106,12 +119,16 @@ export default function ModalCUKamar({
             onSubmittedHandler()
         }).catch((err) => {
             console.log(err)
-            toast("Gagal menyimpan data kamar.", {
-                type: "error"
-            })
             if (err.response) {
                 const data = err.response.data as ApiErrorResponse
                 setErrors(data.errors)
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal menyimpan data.", {
+                    type: "error"
+                })
             }
         })
     }

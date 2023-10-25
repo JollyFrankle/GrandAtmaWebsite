@@ -50,9 +50,16 @@ export default function ModalCUFasilitas({
             setData(data.data)
         }).catch((err) => {
             console.log(err)
-            toast("Gagal memuat data fasilitas.", {
-                type: "error"
-            })
+            if (err.response) {
+                const data = err.response.data as ApiErrorResponse
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal mengambil data.", {
+                    type: "error"
+                })
+            }
         }).finally(() => {
             setLoading(false)
         })
@@ -70,9 +77,9 @@ export default function ModalCUFasilitas({
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             },
             data: data
-        }).then((_) => {
-            // const data = res.data as ApiResponse<Fasilitas>
-            toast("Berhasil menyimpan data fasilitas.", {
+        }).then((res) => {
+            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+            toast(data.message, {
                 type: "success"
             })
             setErrors(null)
@@ -81,12 +88,16 @@ export default function ModalCUFasilitas({
             onSubmittedHandler()
         }).catch((err) => {
             console.log(err)
-            toast("Gagal menyimpan data fasilitas.", {
-                type: "error"
-            })
             if (err.response) {
                 const data = err.response.data as ApiErrorResponse
                 setErrors(data.errors)
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal menyimpan data.", {
+                    type: "error"
+                })
             }
         })
     }

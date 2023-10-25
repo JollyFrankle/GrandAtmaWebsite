@@ -54,10 +54,17 @@ export default function ModalCUSeasonTarif({
             setData(data.data)
             setErrors(null)
         }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data season.", {
-                type: "error"
-            })
+            if (err.response) {
+                const data = err.response.data as ApiErrorResponse
+                setErrors(data.errors)
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal mengambil data.", {
+                    type: "error"
+                })
+            }
         }).finally(() => {
             setLoading(false)
         })
@@ -75,9 +82,9 @@ export default function ModalCUSeasonTarif({
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             },
             data: data
-        }).then((_) => {
-            // const data = res.data as ApiResponse<Season>
-            toast("Berhasil menyimpan data season.", {
+        }).then((res) => {
+            const data = res.data as ApiResponse<Season>
+            toast(data.message, {
                 type: "success"
             })
             setErrors(null)
@@ -86,12 +93,16 @@ export default function ModalCUSeasonTarif({
             onSubmittedHandler()
         }).catch((err) => {
             console.log(err)
-            toast("Gagal menyimpan data season.", {
-                type: "error"
-            })
             if (err.response) {
                 const data = err.response.data as ApiErrorResponse
                 setErrors(data.errors)
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast("Gagal menyimpan data.", {
+                    type: "error"
+                })
             }
         })
     }
@@ -240,39 +251,51 @@ export default function ModalCUSeasonTarif({
                                     <TableRow>
                                         <TableHead className="w-[48px]">No.</TableHead>
                                         <TableHead>Jenis Kamar</TableHead>
-                                        <TableHead>Tarif per Malam (Rp)</TableHead>
+                                        <TableHead>Tarif Normal</TableHead>
+                                        <TableHead>Taris Musim</TableHead>
                                         {editable && (
                                             <TableHead className="w-8" />
                                         )}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {data.tarif?.map((tarif, index) => (
+                                    {data.tarif?.map((tarif, index) => {
+                                        const selectedJenis = listJenis?.find((jenis) => jenis.id === +tarif.id_jenis_kamar ?? 0)
+                                        return (
                                         <TableRow key={index}>
                                             <TableCell className="text-center">{index + 1}</TableCell>
                                             <TableCell>
-                                            <IconSelect
-                                                className="mb-0"
-                                                required
-                                                disabled={!editable}
-                                                value={tarif.id_jenis_kamar.toString()}
-                                                icon={<HotelIcon />}
-                                                placeholder="Jenis Kamar"
-                                                onValueChange={(value) => onTarifChangeHandler(value, "id_jenis_kamar", index)}
-                                                values={listJenis?.map((jenis) => ({ label: jenis.nama, value: jenis.id.toString() }))} />
+                                            {editable ? (
+                                                <IconSelect
+                                                    className="mb-0"
+                                                    required
+                                                    disabled={!editable}
+                                                    value={tarif.id_jenis_kamar.toString()}
+                                                    icon={<HotelIcon />}
+                                                    placeholder="Jenis Kamar"
+                                                    onValueChange={(value) => onTarifChangeHandler(value, "id_jenis_kamar", index)}
+                                                    values={listJenis?.map((jenis) => ({ label: jenis.nama, value: jenis.id.toString() }))} />
+                                            ) : (
+                                                selectedJenis?.nama ?? <em className="text-red-500">(tidak ada)</em>
+                                            )}
                                             </TableCell>
                                             <TableCell>
-                                            <IconInput
-                                                className="mb-0"
-                                                required
-                                                disabled={!editable}
-                                                value={tarif.harga.toString()}
-                                                icon={<CoinsIcon />}
-                                                type="number"
-                                                min={0}
-                                                placeholder="Tarif per malam"
-                                                onValueChange={(value) => onTarifChangeHandler(value, "harga", index)}
-                                                errorText={errors?.nama} />
+                                                {Formatter.formatCurrency(selectedJenis?.harga_dasar ?? 0)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {editable ? (
+                                                    <IconInput
+                                                        className="mb-0"
+                                                        required
+                                                        disabled={!editable}
+                                                        value={tarif.harga.toString()}
+                                                        icon={<CoinsIcon />}
+                                                        type="number"
+                                                        min={0}
+                                                        placeholder="Tarif per malam"
+                                                        onValueChange={(value) => onTarifChangeHandler(value, "harga", index)}
+                                                        errorText={errors?.nama} />
+                                                ) : Formatter.formatCurrency(tarif.harga)}
                                             </TableCell>
                                             {editable && (
                                                 <TableCell>
@@ -282,7 +305,7 @@ export default function ModalCUSeasonTarif({
                                                 </TableCell>
                                             )}
                                         </TableRow>
-                                    ))}
+                                    )})}
                                 </TableBody>
                             </Table>
                             {errors?.tarif && (
