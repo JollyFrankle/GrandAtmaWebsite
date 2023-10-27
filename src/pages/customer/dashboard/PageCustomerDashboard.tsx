@@ -131,6 +131,6 @@ export default function PageCustomerDashboard() {
             </div>
         </section>
 
-        <ModalDetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} user={user} />
+        <ModalDetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} />
     </>
 }

@@ -59,7 +59,7 @@ const sidebarItems: SidebarGroupProps[] = [
             {
                 icon: <UsersIcon />,
                 label: "Customer Group",
-                to: "/customer-group",
+                to: "/cg",
                 roles: ["sm"]
             }
         ]

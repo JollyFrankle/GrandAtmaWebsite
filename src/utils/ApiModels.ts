@@ -76,7 +76,7 @@ export interface Reservasi {
     jumlah_dp: number|null
     status: string
     total: number
-    deposit: number
+    deposit: number|null
     permintaan_tambahan: string|null
     created_at: string
     updated_at: string
@@ -84,6 +84,8 @@ export interface Reservasi {
     reservasi_layanan?: ReservasiLayanan[]
     reservasi_rooms?: ReservasiRoom[]
     invoice?: Invoice
+    user_customer?: UserCustomer
+    user_pegawai?: UserPegawai
 }
 
 export interface ReservasiLayanan {

@@ -18,6 +18,7 @@ import PageKamar from './pages/admin/kamar/PageKamar'
 import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
 import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
 import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
+import PageReservasiCG from './pages/admin/reservasi/PageReservasiCG'
 
 const router = createBrowserRouter([
   {
@@ -52,7 +53,8 @@ const router = createBrowserRouter([
       { path: "kamar", element: <PageKamar /> },
       { path: "fasilitas", element: <PageFasilitas /> },
       { path: "season", element: <PageSeasonTarif /> },
-      { path: "customer-group", element: <PageCustomerGroup /> }
+      { path: "cg", element: <PageCustomerGroup /> },
+      { path: "cg/reservasi/:id", element: <PageReservasiCG /> }
     ]
   }
 ])

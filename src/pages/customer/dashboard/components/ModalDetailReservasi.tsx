@@ -3,19 +3,17 @@ import CardWithIcon from "@/components/CardWithIcon"
 import { BadgeInfoIcon, TicketIcon, TvIcon } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table"
 import { Skeleton } from "@/cn/components/ui/skeleton"
-import { Reservasi, UserCustomer } from "@/utils/ApiModels"
+import { Reservasi } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
 
-export default function ModalDetailReservasi({
+export default function ModalDetailReservasiCG({
     data,
-    user,
     show,
     loading,
     onOpenChange,
 }: {
     data?: Reservasi,
-    user: UserCustomer,
     show: boolean,
     loading: boolean,
     onOpenChange: (open: boolean) => void
@@ -53,15 +51,19 @@ export default function ModalDetailReservasi({
                         <h4 className="font-bold mb-2">Pemesan</h4>
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Nama</p>
-                            <p className="font-bold">{user.nama}</p>
+                            <p className="font-bold">{data?.user_customer?.nama}</p>
+                        </div>
+                        <div className="mb-2" hidden={!data?.user_customer?.nama_institusi}>
+                            <p className="text-sm text-muted-foreground">Nama Institusi</p>
+                            <p className="font-bold">{data?.user_customer?.nama_institusi}</p>
                         </div>
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Email</p>
-                            <p className="font-bold">{user.email}</p>
+                            <p className="font-bold">{data?.user_customer?.email}</p>
                         </div>
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Nomor Telepon</p>
-                            <p className="font-bold">{user.no_telp}</p>
+                            <p className="font-bold">{data?.user_customer?.no_telp}</p>
                         </div>
                     </div>
                     <div className="col-span-1">
@@ -69,16 +71,20 @@ export default function ModalDetailReservasi({
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Tanggal menginap</p>
                             <p className="font-bold">{data && (
-                                Formatter.formatDate(new Date(data.arrival_date)) + " - " + Formatter.formatDate(ReservasiFormatter.getTanggalDeparture(new Date(data.arrival_date), data.jumlah_malam ?? 0)
-                            ))}</p>
+                                Formatter.formatDate(new Date(data.arrival_date)) + " - " + Formatter.formatDate(ReservasiFormatter.getTanggalDeparture(new Date(data.arrival_date), data.jumlah_malam ?? 0)) + " (" + data.jumlah_malam + " malam)"
+                            )}</p>
                         </div>
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Jumlah tamu</p>
-                            <p className="font-bold">{data?.jumlah_dewasa} dewasa, {data?.jumlah_anak} anak</p>
+                            <p className="font-bold">{data?.jumlah_dewasa} dewasa, {data?.jumlah_anak} anak ({data?.reservasi_rooms?.length ?? 0} kamar)</p>
                         </div>
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Tanggal <em>down-payment</em></p>
                             <p className="font-bold">{data?.tanggal_dp ? Formatter.formatDateTime(new Date(data.tanggal_dp)) : <em>(Belum diverifikasi)</em>}</p>
+                        </div>
+                        <div className="mb-2" hidden={!data?.user_pegawai?.nama}>
+                            <p className="text-sm text-muted-foreground">Penanggungjawab S&M</p>
+                            <p className="font-bold">{data?.user_pegawai?.nama} (#{data?.id_sm})</p>
                         </div>
                     </div>
                 </div>
@@ -88,6 +94,7 @@ export default function ModalDetailReservasi({
                         <TableRow>
                             <TableHead className="w-[48px]">No.</TableHead>
                             <TableHead>Jenis Kamar</TableHead>
+                            <TableHead>No. Kamar</TableHead>
                             <TableHead>Kapasitas</TableHead>
                             <TableHead>Harga per Malam</TableHead>
                         </TableRow>
@@ -96,7 +103,8 @@ export default function ModalDetailReservasi({
                         {data?.reservasi_rooms?.map((it, i) => (
                             <TableRow key={i}>
                                 <TableCell className="text-center">{i + 1}</TableCell>
-                                <TableCell>{it.jenis_kamar?.nama}{it.no_kamar && <strong> ({it.no_kamar})</strong>}</TableCell>
+                                <TableCell>{it.jenis_kamar?.nama}</TableCell>
+                                <TableCell>{it.no_kamar ? <strong>{it.no_kamar}</strong> : "-"}</TableCell>
                                 <TableCell>{it.jenis_kamar?.kapasitas} dewasa</TableCell>
                                 <TableCell>{Formatter.formatCurrency(it.harga_per_malam)}</TableCell>
                             </TableRow>
@@ -115,7 +123,7 @@ export default function ModalDetailReservasi({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.reservasi_layanan ? data.reservasi_layanan.map((it, i) => (
+                        {data?.reservasi_layanan?.length ? data.reservasi_layanan.map((it, i) => (
                             <TableRow key={i}>
                                 <TableCell className="text-center">{i + 1}</TableCell>
                                 <TableCell>{it.layanan_tambahan?.nama}</TableCell>

@@ -112,7 +112,7 @@ export default function PageCustomerGroup() {
             {
                 action: <><CalendarCheck2Icon className="w-4 h-4 me-2" /> Riwayat Reservasi</>,
                 onClick(row) {
-                    navigate(`/admin/reservasi/${row.id}`)
+                    navigate(`/admin/cg/reservasi/${row.id}`)
                 }
             }
         ]]} />
