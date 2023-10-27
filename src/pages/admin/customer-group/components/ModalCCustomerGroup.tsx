@@ -2,29 +2,29 @@ import { Button } from "@/cn/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog";
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
+import IconSelect from "@/components/IconSelect";
 import IconTextarea from "@/components/IconTextarea";
-import ImagePreview from "@/components/ImagePreview";
-import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, FasilitasLayananTambahan, getImage } from "@/utils/ApiModels";
+import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import FormHelper from "@/utils/FormHelper";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
+import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const emptyLTB: FasilitasLayananTambahan = {
+const emptyLTB: UserCustomer = {
     id: 0,
+    type: 'g',
     nama: "",
-    gambar: null,
-    short_desc: "",
-    satuan: "",
-    tarif: 0,
-    created_at: "",
-    updated_at: ""
+    nama_institusi: "",
+    no_identitas: "",
+    jenis_identitas: "",
+    no_telp: "",
+    email: "",
+    alamat: "",
 }
 
-export default function ModalCUFasilitas({
+export default function ModalCCustomerGroup({
     id,
     open,
     editable,
@@ -38,18 +38,17 @@ export default function ModalCUFasilitas({
     onSubmittedHandler: () => void
 }) {
     const [loading, setLoading] = useState(false)
-    const [data, setData] = useState<FasilitasLayananTambahan>(emptyLTB)
+    const [data, setData] = useState<UserCustomer>(emptyLTB)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
-    const [fGambar, setFGambar] = useState<File|null>(null)
 
     const getDetail = () => {
         setLoading(true)
-        axios.get(`${BASE_URL}/pegawai/fasilitas/${id}`, {
+        axios.get(`${BASE_URL}/pegawai/user/${id}`, {
             headers: {
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             }
         }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+            const data = res.data as ApiResponse<UserCustomer>
             setData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -68,49 +67,10 @@ export default function ModalCUFasilitas({
         })
     }
 
-    const postData = () => {
-        const formData = FormHelper.toFormData(data)
-        if (fGambar) {
-            formData.append("gambar", fGambar)
-        }
-
-        axios.post(`${BASE_URL}/pegawai/fasilitas`, formData, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
-        }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
-            toast(data.message, {
-                type: "success"
-            })
-            setErrors(null)
-            onOpenChange(false)
-            setData(emptyLTB)
-            onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
-        })
-    }
-
     const saveData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const url = id ? `${BASE_URL}/pegawai/fasilitas/${id}` : `${BASE_URL}/pegawai/fasilitas`
+        const url = id ? `${BASE_URL}/pegawai/user/${id}` : `${BASE_URL}/pegawai/user`
         const method = id ? "PUT" : "POST"
-
-        if (!id) {
-            return postData()
-        }
 
         axios({
             method,
@@ -120,7 +80,7 @@ export default function ModalCUFasilitas({
             },
             data: data
         }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+            const data = res.data as ApiResponse<UserCustomer>
             toast(data.message, {
                 type: "success"
             })
@@ -157,7 +117,6 @@ export default function ModalCUFasilitas({
         } else {
             setData(emptyLTB)
         }
-        setFGambar(null)
     }, [id])
 
     return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
@@ -171,76 +130,92 @@ export default function ModalCUFasilitas({
             <DialogContent className={dialogSizeByClass("lg")}>
                 <form onSubmit={saveData}>
                     <DialogTitle>
-                        {editable ? id !== undefined ? "Edit Fasilitas" : "Tambah Fasilitas" : "Detail Fasilitas"}
+                        {editable ? id !== undefined ? "Edit Customer" : "Tambah Customer" : "Detail Customer"}
                     </DialogTitle>
-                    {data.gambar && (
-                        <div className="flex justify-center">
-                            <img src={getImage(data.gambar)} className="w-full aspect-video rounded mb-4" alt="Gambar Fasilitas" />
-                        </div>
-                    )}
                     <div className="lg:grid grid-cols-2 gap-4">
                         <div className="col-span-1">
+                            <h4 className="text-xl font-bold mb-2">Identitas</h4>
                             <IconInput
                                 required
                                 disabled={!editable}
                                 value={data.nama}
-                                icon={<CaseSensitiveIcon />}
+                                icon={<UserIcon />}
                                 type="text"
                                 label="Nama"
                                 maxLength={100}
                                 onValueChange={(value) => onInputChangeHandler(value, "nama")}
                                 errorText={errors?.nama} />
 
+                            <IconInput
+                                required
+                                disabled={!editable}
+                                value={data.nama_institusi}
+                                icon={<BuildingIcon />}
+                                type="text"
+                                label="Nama Institusi"
+                                maxLength={100}
+                                onValueChange={(value) => onInputChangeHandler(value, "nama_institusi")}
+                                errorText={errors?.nama_institusi} />
+
+                            <IconSelect
+                                required
+                                disabled={!editable}
+                                value={data.jenis_identitas}
+                                icon={<CreditCardIcon />}
+                                label="Jenis identitas"
+                                onValueChange={(value) => onInputChangeHandler(value, "jenis_identitas")}
+                                errorText={errors?.jenis_identitas}
+                                values={[
+                                    { value: "ktp", label: "KTP" },
+                                    { value: "sim", label: "SIM" },
+                                    { value: "paspor", label: "Paspor" }
+                                ]} />
+
+                            <IconInput
+                                required
+                                disabled={!editable}
+                                value={data.no_identitas}
+                                icon={<BookUserIcon />}
+                                type="text"
+                                label="Nomor identitas"
+                                maxLength={20}
+                                onValueChange={(value) => onInputChangeHandler(value, "no_identitas")}
+                                errorText={errors?.no_identitas} />
+                        </div>
+                        <div className="col-span-1">
+                            <h4 className="text-xl font-bold mb-2">Kontak</h4>
+                            <IconInput
+                                required
+                                disabled={!editable}
+                                value={data.email}
+                                icon={<MailIcon />}
+                                type="email"
+                                label="Alamat e-mail"
+                                maxLength={100}
+                                onValueChange={(value) => onInputChangeHandler(value, "email")}
+                                errorText={errors?.email} />
+
+                            <IconInput
+                                required
+                                disabled={!editable}
+                                value={data.no_telp}
+                                icon={<PhoneCallIcon />}
+                                type="text"
+                                label="Nomor telepon"
+                                maxLength={50}
+                                onValueChange={(value) => onInputChangeHandler(value, "no_telp")}
+                                errorText={errors?.no_telp} />
+
                             <IconTextarea
                                 required
                                 disabled={!editable}
-                                value={data.short_desc}
-                                icon={<AlignJustifyIcon />}
-                                label="Deskripsi Singkat"
+                                value={data.alamat}
+                                icon={<MapPinIcon />}
+                                label="Alamat"
                                 maxLength={254}
-                                rows={5}
-                                onValueChange={(value) => onInputChangeHandler(value, "short_desc")}
-                                errorText={errors?.short_desc} />
-                        </div>
-                        <div className="col-span-1">
-                            <IconInput
-                                required
-                                disabled={!editable}
-                                value={data.satuan}
-                                icon={<Layers2Icon />}
-                                type="text"
-                                label="Satuan"
-                                maxLength={10}
-                                onValueChange={(value) => onInputChangeHandler(value, "satuan")}
-                                errorText={errors?.satuan} />
-
-                            <IconInput
-                                required
-                                disabled={!editable}
-                                value={data.tarif.toString()}
-                                icon={<DollarSignIcon />}
-                                type="number"
-                                min={0}
-                                label="Tarif"
-                                onValueChange={(value) => onInputChangeHandler(value, "tarif")}
-                                errorText={errors?.tarif} />
-
-                        {(editable && !id) && <>
-                            <ImagePreview file={fGambar} className="w-full aspect-video" showTitle={false} />
-                            <IconInput
-                                required
-                                disabled={!editable}
-                                icon={<DollarSignIcon />}
-                                type="file"
-                                label="Gambar"
-                                accept="image/jpeg,image/png"
-                                onChange={(e) => {
-                                    if (e.target.files) {
-                                        setFGambar(e.target.files[0])
-                                    }
-                                }}
-                                errorText={errors?.tarif} />
-                        </>}
+                                rows={3}
+                                onValueChange={(value) => onInputChangeHandler(value, "alamat")}
+                                errorText={errors?.alamat} />
                         </div>
                     </div>
 

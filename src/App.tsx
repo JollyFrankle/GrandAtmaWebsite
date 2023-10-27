@@ -17,6 +17,7 @@ import LayoutAdmin from './pages/admin/_layout/LayoutAdmin'
 import PageKamar from './pages/admin/kamar/PageKamar'
 import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
 import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
+import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,8 @@ const router = createBrowserRouter([
         { path: "reset-password", element: <PageResetPassword /> },
         { path: "change-password", element: <PageChangePassword />}
       ]}
-    ]
+    ],
+    errorElement: <>404</>
   },
   {
     path: "/customer",
@@ -50,7 +52,7 @@ const router = createBrowserRouter([
       { path: "kamar", element: <PageKamar /> },
       { path: "fasilitas", element: <PageFasilitas /> },
       { path: "season", element: <PageSeasonTarif /> },
-      { path: "*", element: <>404</> }
+      { path: "customer-group", element: <PageCustomerGroup /> }
     ]
   }
 ])

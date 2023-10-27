@@ -1,7 +1,7 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiResponse, BASE_URL, FasilitasLayananTambahan } from "@/utils/ApiModels";
+import { ApiResponse, BASE_URL, FasilitasLayananTambahan, getImage } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
 import axios from "axios";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -82,6 +82,11 @@ export default function PageFasilitas() {
         </div>
 
         <DataTable<FasilitasLayananTambahan> data={tableData} columns={[
+            {
+                field: "gambar",
+                header: "Gambar",
+                cell: (row) => row.gambar && <img src={getImage(row.gambar)} alt={row.nama} className="w-48 h-32 object-cover rounded" />
+            },
             {
                 field: "nama",
                 header: "Nama Layanan",
