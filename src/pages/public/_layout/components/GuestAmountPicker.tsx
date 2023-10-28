@@ -6,15 +6,17 @@ export default function GuestAmountPicker({
     className,
     suffix,
     max = 6,
+    value,
     onChange
 }: {
     placeholder: string
     className?: string
     suffix: string
     max?: number
+    value?: string
     onChange?: (value: string) => void
 }) {
-    return <Select onValueChange={onChange}>
+    return <Select onValueChange={onChange} value={value}>
         <SelectTrigger className={`text-lg h-14 ${className}`}>
             <SelectValue placeholder={placeholder} />
         </SelectTrigger>

@@ -11,10 +11,13 @@ import { toast } from "react-toastify";
 
 
 export default function RoomSearch() {
-    const [inDate, setInDate] = useState<DateRange | undefined>(undefined)
-    const [inDewasa, setInDewasa] = useState<string>()
-    const [inAnak, setInAnak] = useState<string>()
-    const [inJumlahKamar, setInJumlahKamar] = useState<string>()
+    const [inDate, setInDate] = useState<DateRange | undefined>({
+        from: new Date(),
+        to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    })
+    const [inDewasa, setInDewasa] = useState<string>("2")
+    const [inAnak, setInAnak] = useState<string>("0")
+    const [inJumlahKamar, setInJumlahKamar] = useState<string>("1")
 
     const onSubmit = () => {
         toast(<>Data input: {inDewasa} dewasa, {inAnak} anak, {inJumlahKamar} kamar, tanggal: {inDate?.from?.toLocaleDateString()} - {inDate?.to?.toLocaleDateString()}</>, {
@@ -32,13 +35,13 @@ export default function RoomSearch() {
                     <ReservationDatePicker className="ps-9" value={inDate} onChange={setInDate} />
                 </InputWithIcon>
                 <InputWithIcon icon={<UserIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                    <GuestAmountPicker className="ps-9" placeholder="Jumlah dewasa" onChange={setInDewasa} suffix="dewasa" max={10} />
+                    <GuestAmountPicker className="ps-9" placeholder="Jumlah dewasa" onChange={setInDewasa} value={inDewasa} suffix="dewasa" max={10} />
                 </InputWithIcon>
                 <InputWithIcon icon={<BabyIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                    <GuestAmountPicker className="ps-9" placeholder="Jumlah anak" onChange={setInAnak} suffix="anak" max={10} />
+                    <GuestAmountPicker className="ps-9" placeholder="Jumlah anak" onChange={setInAnak} value={inAnak} suffix="anak" max={10} />
                 </InputWithIcon>
                 <InputWithIcon icon={<BedIcon />} className="col-span-12 md:col-span-4 lg:col-span-2">
-                    <GuestAmountPicker className="ps-9" placeholder="Jumlah kamar" onChange={setInJumlahKamar} suffix="kamar" max={5} />
+                    <GuestAmountPicker className="ps-9" placeholder="Jumlah kamar" onChange={setInJumlahKamar} value={inJumlahKamar} suffix="kamar" max={5} />
                 </InputWithIcon>
                 <Button className="col-span-12 lg:col-span-2 text-lg h-14" onClick={onSubmit}>
                     <SearchIcon className="w-4 h-4 me-2" />

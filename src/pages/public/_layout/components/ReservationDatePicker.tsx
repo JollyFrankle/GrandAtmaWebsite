@@ -12,7 +12,7 @@ export default function ReservationDatePicker({
 }: {
     className?: string
     value?: DateRange
-    onChange?: (date: DateRange | undefined) => void
+    onChange?: (date?: DateRange) => void
 }) {
     return <>
         <Popover>
