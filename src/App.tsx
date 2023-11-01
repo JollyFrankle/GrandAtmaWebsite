@@ -49,7 +49,7 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <LayoutAdmin />,
     children: [
-      { index: true, element: <>DEMO PAGE, LANGSUNG SAJA KE NAV!!!</> },
+      { index: true, element: <>Selamat datang. Silakan langsung ke <em>navigation drawer</em> untuk melihat semua menu yang tersedia.</> },
       { path: "kamar", element: <PageKamar /> },
       { path: "fasilitas", element: <PageFasilitas /> },
       { path: "season", element: <PageSeasonTarif /> },

@@ -172,6 +172,10 @@ export default function ModalCUSeasonTarif({
     }, [id])
 
     useEffect(() => {
+        setErrors(null)
+    }, [open])
+
+    useEffect(() => {
         getJenisKamar()
     }, [])
 
@@ -259,7 +263,7 @@ export default function ModalCUSeasonTarif({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {data.tarif?.map((tarif, index) => {
+                                    {data.tarif?.length ?? 0 > 0 ? data.tarif?.map((tarif, index) => {
                                         const selectedJenis = listJenis?.find((jenis) => jenis.id === +tarif.id_jenis_kamar ?? 0)
                                         return (
                                         <TableRow key={index}>
@@ -305,7 +309,11 @@ export default function ModalCUSeasonTarif({
                                                 </TableCell>
                                             )}
                                         </TableRow>
-                                    )})}
+                                    )}) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center">Tidak ada data.</TableCell>
+                                        </TableRow>
+                                    )}
                                 </TableBody>
                             </Table>
                             {errors?.tarif && (

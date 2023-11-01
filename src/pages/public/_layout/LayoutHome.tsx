@@ -127,7 +127,7 @@ function generateNavSM() {
                 <MenuIcon className="w-6 h-6" />
             </Button>
         </SheetTrigger>
-        <SheetContent className="w-full">
+        <SheetContent className="w-full" side="left">
             <div className='flex justify-between items-center mb-3'>
                 <Link to="/">
                     <img src={Logo} className="h-12" />

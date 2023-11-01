@@ -149,6 +149,10 @@ export default function ModalCUKamar({
     }, [id])
 
     useEffect(() => {
+        setErrors(null)
+    }, [open])
+
+    useEffect(() => {
         getJenisKamar()
     }, [])
 

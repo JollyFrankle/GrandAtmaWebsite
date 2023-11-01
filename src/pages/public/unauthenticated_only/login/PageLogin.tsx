@@ -27,10 +27,10 @@ export default function PageLogin() {
 
     usePageTitle("Masuk - Grand Atma Hotel")
 
-    const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const formSubmitHandler = (e?: React.FormEvent<HTMLFormElement>, loginUrl = `${BASE_URL}/login-customer`) => {
+        e?.preventDefault()
         setIsLoading(true)
-        axios.post(`${BASE_URL}/login`, {
+        axios.post(loginUrl, {
             username: email,
             password,
             recaptcha_token: captcha
@@ -117,7 +117,8 @@ export default function PageLogin() {
                                 )}
                             </div>
 
-                            <Button className="w-full h-14 text-lg font-bold mb-3" type="submit" disabled={isLoading}>Masuk</Button>
+                            <Button className="w-full h-14 text-lg font-bold mb-2" type="submit" disabled={isLoading}>Masuk sebagai Customer</Button>
+                            <Button className="w-full mb-2" type="button" onClick={() => formSubmitHandler(undefined, `${BASE_URL}/login-pegawai`)} variant="link" disabled={isLoading}>Masuk sebagai Pegawai</Button>
 
                             <div className="text-center">
                                 Belum punya akun?

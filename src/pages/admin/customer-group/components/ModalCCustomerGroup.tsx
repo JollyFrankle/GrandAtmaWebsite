@@ -119,6 +119,10 @@ export default function ModalCCustomerGroup({
         }
     }, [id])
 
+    useEffect(() => {
+        setErrors(null)
+    }, [open])
+
     return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>

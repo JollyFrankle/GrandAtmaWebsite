@@ -157,8 +157,12 @@ export default function ModalCUFasilitas({
         } else {
             setData(emptyLTB)
         }
-        setFGambar(null)
     }, [id])
+
+    useEffect(() => {
+        setFGambar(null)
+        setErrors(null)
+    }, [open])
 
     return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
@@ -175,7 +179,7 @@ export default function ModalCUFasilitas({
                     </DialogTitle>
                     {data.gambar && (
                         <div className="flex justify-center">
-                            <img src={getImage(data.gambar)} className="w-full aspect-video rounded mb-4" alt="Gambar Fasilitas" />
+                            <img src={getImage(data.gambar)} className="w-full aspect-video rounded mb-4 object-cover" alt="Gambar Fasilitas" />
                         </div>
                     )}
                     <div className="lg:grid grid-cols-2 gap-4">
