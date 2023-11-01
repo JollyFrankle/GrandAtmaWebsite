@@ -42,7 +42,8 @@ interface ColumnRules<T> {
     header: string
     cell?: (row: T) => React.ReactNode
     enableSorting?: boolean
-    enableHiding?: boolean
+    enableHiding?: boolean,
+    accessorFn?: (row: T) => string
 }
 
 interface RowActions<T> {
@@ -84,6 +85,7 @@ function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][
     for (const column of columns) {
         headers.push({
             accessorKey: column.id ?? column.field,
+            accessorFn: column.accessorFn,
             header: ({ column: col }) => {
                 return column.enableSorting ? (
                     <Button
@@ -140,12 +142,14 @@ export default function DataTable<T>({
     data,
     columns,
     actions,
-    select
+    select,
+    searchableColumns,
 }: {
     data: T[]
     columns: ColumnRules<T>[],
     actions?: RowActions<T>[][],
-    select?: boolean
+    select?: boolean,
+    searchableColumns?: string[],
 }) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -180,7 +184,16 @@ export default function DataTable<T>({
                 <Input
                     placeholder="Cari..."
                     value={globalFilter}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    onChange={(event) => {
+                        if (searchableColumns) {
+                            // for (const col of searchableColumns) {
+                            //     table.getColumn(col)?.setFilterValue(event.target.value)
+                            // }
+                            setGlobalFilter(event.target.value)
+                        } else {
+                            setGlobalFilter(event.target.value)
+                        }
+                    }}
                     className="max-w-sm"
                 />
                 <DropdownMenu>

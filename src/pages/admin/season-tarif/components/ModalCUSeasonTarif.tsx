@@ -12,6 +12,7 @@ import axios from "axios";
 import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
 
 const emptySeason: Season = {
     id: 0,
@@ -42,6 +43,7 @@ export default function ModalCUSeasonTarif({
     const [data, setData] = useState<Season>(emptySeason)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
     const [listJenis, setListJenis] = useState<JenisKamar[]>()
+    const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
     const getDetail = () => {
         setLoading(true)
@@ -70,8 +72,12 @@ export default function ModalCUSeasonTarif({
         })
     }
 
-    const saveData = (e: React.FormEvent<HTMLFormElement>) => {
+    const showConfirmModalBeforeSaving = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setOpenModalConfirm(true)
+    }
+
+    const saveData = () => {
         const url = id ? `${BASE_URL}/pegawai/season/${id}` : `${BASE_URL}/pegawai/season`
         const method = id ? "PUT" : "POST"
 
@@ -179,7 +185,7 @@ export default function ModalCUSeasonTarif({
         getJenisKamar()
     }, [])
 
-    return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
+    return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>
                 <Skeleton className="w-full h-16 mb-2" />
@@ -188,7 +194,7 @@ export default function ModalCUSeasonTarif({
             </DialogContent>
         ) : (
             <DialogContent className={dialogSizeByClass("lg")}>
-                <form onSubmit={saveData}>
+                <form onSubmit={showConfirmModalBeforeSaving}>
                     <DialogTitle>
                         {editable ? id !== undefined ? "Edit Season" : "Tambah Season" : "Detail Season"}
                     </DialogTitle>
@@ -332,4 +338,7 @@ export default function ModalCUSeasonTarif({
             </DialogContent>
             )}
     </Dialog>
+
+    <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} />
+    </>
 }

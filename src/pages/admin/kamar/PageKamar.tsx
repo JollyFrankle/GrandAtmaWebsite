@@ -91,7 +91,8 @@ export default function PageKamar() {
                 field: "id_jenis_kamar",
                 header: "Jenis Kamar",
                 enableSorting: true,
-                cell: (row) => <Button variant="link" className="h-fit p-0" asChild><a href={`/kamar/${row.id_jenis_kamar}`} target="_blank">{row.jenis_kamar?.nama}</a></Button>
+                cell: (row) => <Button variant="link" className="h-fit p-0" asChild><a href={`/kamar/${row.id_jenis_kamar}`} target="_blank">{row.jenis_kamar?.nama}</a></Button>,
+                accessorFn: (row) => row.jenis_kamar?.nama ?? ""
             },
             {
                 field: "jenis_bed",

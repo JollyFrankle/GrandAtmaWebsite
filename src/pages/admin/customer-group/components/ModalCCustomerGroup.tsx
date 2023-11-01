@@ -11,6 +11,7 @@ import axios from "axios";
 import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
 
 const emptyLTB: UserCustomer = {
     id: 0,
@@ -40,6 +41,7 @@ export default function ModalCCustomerGroup({
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<UserCustomer>(emptyLTB)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
+    const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
     const getDetail = () => {
         setLoading(true)
@@ -67,8 +69,12 @@ export default function ModalCCustomerGroup({
         })
     }
 
-    const saveData = (e: React.FormEvent<HTMLFormElement>) => {
+    const showConfirmModalBeforeSaving = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setOpenModalConfirm(true)
+    }
+
+    const saveData = () => {
         const url = id ? `${BASE_URL}/pegawai/user/${id}` : `${BASE_URL}/pegawai/user`
         const method = id ? "PUT" : "POST"
 
@@ -123,7 +129,7 @@ export default function ModalCCustomerGroup({
         setErrors(null)
     }, [open])
 
-    return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
+    return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>
                 <Skeleton className="w-full h-16 mb-2" />
@@ -132,7 +138,7 @@ export default function ModalCCustomerGroup({
             </DialogContent>
         ) : (
             <DialogContent className={dialogSizeByClass("lg")}>
-                <form onSubmit={saveData}>
+                <form onSubmit={showConfirmModalBeforeSaving}>
                     <DialogTitle>
                         {editable ? id !== undefined ? "Edit Customer" : "Tambah Customer" : "Detail Customer"}
                     </DialogTitle>
@@ -233,4 +239,7 @@ export default function ModalCCustomerGroup({
             </DialogContent>
             )}
     </Dialog>
+
+    <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} />
+    </>
 }

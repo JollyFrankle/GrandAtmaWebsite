@@ -115,18 +115,21 @@ export default function PageSeasonTarif() {
                 field: "tanggal_start",
                 header: "Tanggal mulai",
                 enableSorting: true,
-                cell: (row) => Formatter.formatDate(new Date(row.tanggal_start))
+                cell: (row) => Formatter.formatDate(new Date(row.tanggal_start)),
+                accessorFn: (row) => Formatter.formatDate(new Date(row.tanggal_start))
             },
             {
                 field: "tanggal_end",
                 header: "Tanggal berakhir",
                 enableSorting: true,
-                cell: (row) => Formatter.formatDate(new Date(row.tanggal_end))
+                cell: (row) => Formatter.formatDate(new Date(row.tanggal_end)),
+                accessorFn: (row) => Formatter.formatDate(new Date(row.tanggal_end))
             },
             {
                 field: "tarif",
                 header: "Tarif",
-                cell: (row) => row.tarif?.map((tarif) => <div><strong>{tarif.jenis_kamar?.nama}</strong> - {Formatter.formatCurrency(tarif.harga)}</div>)
+                cell: (row) => row.tarif?.map((tarif) => <div><strong>{tarif.jenis_kamar?.nama}</strong> - {Formatter.formatCurrency(tarif.harga)}</div>),
+                accessorFn: (row) => row.tarif?.map((tarif) => tarif.jenis_kamar?.nama).join(", ") ?? ""
             }
         ]} actions={[[
             {

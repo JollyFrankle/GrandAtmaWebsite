@@ -12,6 +12,7 @@ import axios from "axios";
 import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
 
 const emptyLTB: FasilitasLayananTambahan = {
     id: 0,
@@ -41,6 +42,7 @@ export default function ModalCUFasilitas({
     const [data, setData] = useState<FasilitasLayananTambahan>(emptyLTB)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
     const [fGambar, setFGambar] = useState<File|null>(null)
+    const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
     const getDetail = () => {
         setLoading(true)
@@ -103,8 +105,12 @@ export default function ModalCUFasilitas({
         })
     }
 
-    const saveData = (e: React.FormEvent<HTMLFormElement>) => {
+    const showConfirmModalBeforeSaving = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setOpenModalConfirm(true)
+    }
+
+    const saveData = () => {
         const url = id ? `${BASE_URL}/pegawai/fasilitas/${id}` : `${BASE_URL}/pegawai/fasilitas`
         const method = id ? "PUT" : "POST"
 
@@ -164,7 +170,7 @@ export default function ModalCUFasilitas({
         setErrors(null)
     }, [open])
 
-    return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
+    return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>
                 <Skeleton className="w-full h-16 mb-2" />
@@ -173,7 +179,7 @@ export default function ModalCUFasilitas({
             </DialogContent>
         ) : (
             <DialogContent className={dialogSizeByClass("lg")}>
-                <form onSubmit={saveData}>
+                <form onSubmit={showConfirmModalBeforeSaving}>
                     <DialogTitle>
                         {editable ? id !== undefined ? "Edit Fasilitas" : "Tambah Fasilitas" : "Detail Fasilitas"}
                     </DialogTitle>
@@ -258,4 +264,7 @@ export default function ModalCUFasilitas({
             </DialogContent>
             )}
     </Dialog>
+
+<ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} />
+</>
 }
