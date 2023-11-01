@@ -3,6 +3,7 @@ import IconInput from "@/components/IconInput"
 import IconSelect from "@/components/IconSelect"
 import IconTextarea from "@/components/IconTextarea"
 import usePageTitle from "@/hooks/usePageTitle"
+import ModalSaveConfirm from "@/pages/admin/_layout/components/ModalSaveConfirm"
 import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import Formatter from "@/utils/Formatter"
@@ -22,6 +23,7 @@ export default function PageProfileCustomer() {
     const [oldPassword, setOldPassword] = useState("")
     const [changePassword, setChangePassword] = useState(false)
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
+    const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
     usePageTitle("Profil - Grand Atma Hotel")
 
@@ -37,8 +39,12 @@ export default function PageProfileCustomer() {
         setIsEditing(false)
     }
 
-    const saveProfile = (e: React.FormEvent<HTMLFormElement>) => {
+    const showConfirmModalBeforeSaving = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setOpenModalConfirm(true)
+    }
+
+    const saveProfile = () => {
         if (data.password !== passwordConfirmation) {
             setErrors(prev => ({
                 ...prev,
@@ -100,7 +106,7 @@ export default function PageProfileCustomer() {
 
                 <hr className="my-6" />
 
-                <form className="grid grid-cols-1 md:grid-cols-3 gap-6" onSubmit={saveProfile}>
+                <form className="grid grid-cols-1 md:grid-cols-3 gap-6" onSubmit={showConfirmModalBeforeSaving}>
                     <div className="col-span-1">
                         <h4 className="text-xl font-bold mb-2">Otentikasi</h4>
                         <IconInput
@@ -219,5 +225,7 @@ export default function PageProfileCustomer() {
                 </form>
             </div>
         </section>
+
+        <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveProfile} />
     </>
 }
