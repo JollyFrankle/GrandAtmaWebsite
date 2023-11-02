@@ -9,7 +9,7 @@ import AuthHelper from "@/utils/AuthHelper";
 import Formatter from "@/utils/Formatter";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, Trash2Icon } from "lucide-react";
+import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
@@ -44,6 +44,8 @@ export default function ModalCUSeasonTarif({
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
     const [listJenis, setListJenis] = useState<JenisKamar[]>()
     const [openModalConfirm, setOpenModalConfirm] = useState(false)
+    const [searchTarif, setSearchTarif] = useState("")
+    const [filteredTarif, setFilteredTarif] = useState<Tarif[]>()
 
     const getDetail = () => {
         setLoading(true)
@@ -179,11 +181,23 @@ export default function ModalCUSeasonTarif({
 
     useEffect(() => {
         setErrors(null)
+        setSearchTarif("")
     }, [open])
 
     useEffect(() => {
         getJenisKamar()
     }, [])
+
+    useEffect(() => {
+        if (searchTarif.length > 0) {
+            setFilteredTarif(data.tarif?.filter((tarif) => {
+                const jenis = listJenis?.find((jenis) => jenis.id === +tarif.id_jenis_kamar ?? 0)
+                return jenis?.nama.toLowerCase().includes(searchTarif.toLowerCase()) ?? false
+            }))
+        } else {
+            setFilteredTarif(data.tarif)
+        }
+    }, [searchTarif, data.tarif])
 
     return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
@@ -250,11 +264,17 @@ export default function ModalCUSeasonTarif({
                         <div className="col-span-2">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-bold">Tarif</h3>
-                                {editable && (
+                                {editable && <div className="flex">
+                                    <IconInput
+                                        value={searchTarif}
+                                        icon={<SearchIcon />}
+                                        type="text"
+                                        placeholder="Cari Jenis Kamar"
+                                        onValueChange={(value) => setSearchTarif(value)} />
                                     <Button variant="link" onClick={addTarif} type="button" >
                                         <PlusIcon className="w-4 h-4 me-2" /> Tambah
                                     </Button>
-                                )}
+                                </div>}
                             </div>
                             <Table className="mb-4 min-w-[480px]">
                                 <TableHeader>
@@ -269,7 +289,7 @@ export default function ModalCUSeasonTarif({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {data.tarif?.length ?? 0 > 0 ? data.tarif?.map((tarif, index) => {
+                                    {(filteredTarif?.length ?? 0) > 0 ? filteredTarif?.map((tarif, index) => {
                                         const selectedJenis = listJenis?.find((jenis) => jenis.id === +tarif.id_jenis_kamar ?? 0)
                                         return (
                                         <TableRow key={index}>
