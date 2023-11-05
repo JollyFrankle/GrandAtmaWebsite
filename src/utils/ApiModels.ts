@@ -67,6 +67,7 @@ export interface Reservasi {
     id_sm: number|null
     id_booking: string|null
     arrival_date: string
+    departure_date: string
     checked_in: string|null
     checked_out: string|null
     jumlah_malam: number
@@ -150,6 +151,12 @@ export interface Tarif {
     harga: number
     jenis_kamar?: JenisKamar
     season?: Season
+}
+
+export interface RincianTarif {
+    jumlah_kamar: number
+    harga: number
+    catatan: { type: "w" | "e", message: string }[]
 }
 
 export interface KeyValue<T> {

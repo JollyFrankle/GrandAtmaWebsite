@@ -1,5 +1,5 @@
-import { Button } from "@/cn/components/ui/button"
-import { Dialog, DialogFooter, DialogContent, DialogTitle } from "@/cn/components/ui/dialog"
+
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "@/cn/components/ui/alert-dialog"
 import { BanIcon, CheckIcon } from "lucide-react"
 
 
@@ -23,16 +23,16 @@ export default function ModalSaveConfirm({
         onOpenChange(false)
     }
 
-    return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
-        <DialogContent>
-            <DialogTitle>{title}</DialogTitle>
+    return <AlertDialog open={open} onOpenChange={onOpenChange}>
+        <AlertDialogContent>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
             <div>
                 {children}
             </div>
-            <DialogFooter>
-                <Button type="button" onClick={() => onOpenChange(false)} variant="secondary" className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
-                <Button type="button" variant="default" onClick={onConfirm}><CheckIcon className="h-4 w-4 me-2" /> {btnText}</Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
+            <AlertDialogFooter>
+                <AlertDialogCancel type="button" onClick={() => onOpenChange(false)} className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</AlertDialogCancel>
+                <AlertDialogAction autoFocus type="button" onClick={onConfirm}><CheckIcon className="h-4 w-4 me-2" /> {btnText}</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
 }

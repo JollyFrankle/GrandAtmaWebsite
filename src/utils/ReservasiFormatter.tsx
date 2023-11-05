@@ -20,10 +20,4 @@ export default class ReservasiFormatter {
                 return <Badge>Tidak Diketahui</Badge>
         }
     }
-
-    static getTanggalDeparture(arrivalDate: Date, jumlahMalam: number) {
-        const date = new Date(arrivalDate)
-        date.setDate(date.getDate() + jumlahMalam)
-        return date
-    }
 }

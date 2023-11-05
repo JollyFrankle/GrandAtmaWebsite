@@ -41,8 +41,8 @@ export default function ModalDetailReservasiCG({
                 }} />
                 <CardWithIcon className="col-span-1" item={{
                     icon: <TvIcon className="w-full h-full" />,
-                    title: "Tanggal Pesan",
-                    content: data?.arrival_date && Formatter.formatDate(new Date(data.created_at))
+                    title: "Tanggal Pemesanan",
+                    content: data?.created_at && Formatter.formatDate(new Date(data.created_at))
                 }} />
             </div>
             <div>
@@ -71,7 +71,7 @@ export default function ModalDetailReservasiCG({
                         <div className="mb-2">
                             <p className="text-sm text-muted-foreground">Tanggal menginap</p>
                             <p className="font-bold">{data && (
-                                Formatter.formatDate(new Date(data.arrival_date)) + " - " + Formatter.formatDate(ReservasiFormatter.getTanggalDeparture(new Date(data.arrival_date), data.jumlah_malam ?? 0)) + " (" + data.jumlah_malam + " malam)"
+                                Formatter.formatDate(new Date(data.arrival_date)) + " - " + Formatter.formatDate(new Date(data.departure_date)) + " (" + data.jumlah_malam + " malam)"
                             )}</p>
                         </div>
                         <div className="mb-2">

@@ -120,7 +120,7 @@ export default function PageReservasiCG() {
                 header: "Tanggal Menginap",
                 enableSorting: true,
                 cell(row) {
-                    return Formatter.formatDate(new Date(row.arrival_date)) + " - " + Formatter.formatDate(ReservasiFormatter.getTanggalDeparture(new Date(row.arrival_date), row.jumlah_malam ?? 0))
+                    return Formatter.formatDate(new Date(row.arrival_date)) + " - " + Formatter.formatDate(new Date(row.departure_date))
                 },
             },
             {

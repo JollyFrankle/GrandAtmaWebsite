@@ -1,5 +1,4 @@
-import { Button } from "@/cn/components/ui/button"
-import { Dialog, DialogFooter, DialogContent, DialogTitle } from "@/cn/components/ui/dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "@/cn/components/ui/alert-dialog"
 import { BanIcon, Trash2Icon } from "lucide-react"
 
 
@@ -21,16 +20,16 @@ export default function ModalDelete({
         onOpenChange(false)
     }
 
-    return <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
-        <DialogContent>
-            <DialogTitle>{title}</DialogTitle>
+    return <AlertDialog open={open} onOpenChange={onOpenChange}>
+        <AlertDialogContent>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
             <div>
                 {children}
             </div>
-            <DialogFooter>
-                <Button type="button" onClick={() => onOpenChange(false)} variant="secondary" className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
-                <Button type="button" variant="destructive" onClick={onDeleteConfirmed}><Trash2Icon className="h-4 w-4 me-2" /> Hapus</Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
+            <AlertDialogFooter>
+                <AlertDialogCancel type="button" onClick={() => onOpenChange(false)} className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</AlertDialogCancel>
+                <AlertDialogAction type="button" onClick={onDeleteConfirmed}><Trash2Icon className="h-4 w-4 me-2" /> Hapus</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
 }
