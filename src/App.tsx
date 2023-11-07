@@ -19,6 +19,7 @@ import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
 import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
 import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
 import PageReservasiCG from './pages/admin/reservasi/PageReservasiCG'
+import PageRoomSearch from './pages/public/room-search/PageRoomSearch'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <PageHome /> },
       { path: "kamar/:id", element: <PageDetailKamar /> },
+      { path: "search", element: <PageRoomSearch /> },
       { path: "", element: <UnauthenticatedMiddleware />, children: [
         { path: "login", element: <PageLogin /> },
         { path: "register", element: <PageRegister /> },

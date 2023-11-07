@@ -26,6 +26,7 @@ export interface JenisKamar {
     ukuran: number
     kapasitas: number
     harga_dasar: number
+    tipe_bed: string
 }
 
 export interface FasilitasLayananTambahan {
@@ -155,6 +156,7 @@ export interface Tarif {
 
 export interface RincianTarif {
     jumlah_kamar: number
+    harga_diskon: number
     harga: number
     catatan: { type: "w" | "e", message: string }[]
 }

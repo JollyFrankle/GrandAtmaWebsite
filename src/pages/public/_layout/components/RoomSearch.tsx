@@ -4,13 +4,31 @@ import ReservationDatePicker from "./ReservationDatePicker";
 import GuestAmountPicker from "./GuestAmountPicker";
 import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+export interface RoomSearchData {
+    date?: DateRange,
+    dewasa?: string,
+    anak?: string,
+    jumlahKamar?: string
+}
 
-export default function RoomSearch() {
+export default function RoomSearch({
+    initData,
+    showIntro = true,
+    className = "rounded-3xl shadow-lg",
+    innerClassName = "",
+    onClickSearch
+} : {
+    initData?: RoomSearchData,
+    showIntro?: boolean,
+    className?: string,
+    innerClassName?: string,
+    onClickSearch?: () => void
+}) {
     const [inDate, setInDate] = useState<DateRange | undefined>({
         from: new Date(),
         to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
@@ -19,15 +37,44 @@ export default function RoomSearch() {
     const [inAnak, setInAnak] = useState<string>("0")
     const [inJumlahKamar, setInJumlahKamar] = useState<string>("1")
 
+    const navigate = useNavigate()
+
     const onSubmit = () => {
-        toast(<>Data input: {inDewasa} dewasa, {inAnak} anak, {inJumlahKamar} kamar, tanggal: {inDate?.from?.toLocaleDateString()} - {inDate?.to?.toLocaleDateString()}</>, {
-            type: "success"
-        })
+        if (!inDate) {
+            toast.error("Mohon pilih tanggal terlebih dahulu.")
+            return
+        }
+        if (+inJumlahKamar < 1) {
+            toast.error("Jumlah kamar minimal 1.")
+            return
+        }
+        if (+inDewasa < 1) {
+            toast.error("Jumlah dewasa minimal 1.")
+            return
+        }
+        navigate(`/search?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
+        onClickSearch?.()
     }
 
-    return <Card className="w-full h-full rounded-3xl shadow-lg">
-        <CardContent className="py-6 h-full text-center">
-            <p className="mb-3 text-xl md:text-start">
+    useEffect(() => {
+        const { date, dewasa, anak, jumlahKamar } = initData ?? {}
+        if (date) {
+            setInDate(date)
+        }
+        if (dewasa) {
+            setInDewasa(dewasa)
+        }
+        if (anak) {
+            setInAnak(anak)
+        }
+        if (jumlahKamar) {
+            setInJumlahKamar(jumlahKamar)
+        }
+    }, [initData])
+
+    return <Card className={`w-full h-full ${className}`}>
+        <CardContent className={`py-6 h-full text-center ${innerClassName}`}>
+            <p className="mb-3 text-xl md:text-start" hidden={!showIntro}>
                 <mark className="font-bold"><em>Sugeng rawuh!</em></mark> Rencanakan liburan Anda selanjutnya ditemani kami!
             </p>
             <div className="grid grid-cols-12 grid-flow-row gap-4 items-center">

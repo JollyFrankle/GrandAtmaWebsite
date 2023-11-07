@@ -4,7 +4,9 @@ export default class Formatter {
     }
 
     static formatNumber(value: number): string {
-        return new Intl.NumberFormat('id-ID').format(value);
+        return new Intl.NumberFormat('id-ID', {
+            maximumFractionDigits: 1
+        }).format(value);
     }
 
     static formatDate(value: Date): string {
@@ -24,6 +26,12 @@ export default class Formatter {
     }
 
     static dateToYMD(date: Date): string {
+        const tzOffset = date.getTimezoneOffset() * 60000;
+        date = new Date(date.getTime() - tzOffset);
         return date.toISOString().slice(0, 10);
+    }
+
+    static capitalizeFirstLetter(value: string): string {
+        return value.charAt(0).toUpperCase() + value.slice(1);
     }
 }

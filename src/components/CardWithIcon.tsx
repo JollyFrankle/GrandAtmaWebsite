@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/cn/components/ui/card"
 
 export default function CardWithIcon({
     item,
-    className = ""
+    className = "hover:scale-105"
 }: {
     item: {
         icon: React.ReactNode,
@@ -12,7 +12,7 @@ export default function CardWithIcon({
     },
     className?: string
 }) {
-    return item.content && <Card className={`w-full text-start transition-all hover:scale-105 ${className}`}>
+    return item.content && <Card className={`w-full text-start transition-all ${className}`}>
     <CardContent className="p-4 flex items-center relative overflow-hidden h-full">
         <div className="mb-0 mx-0 h-8 w-8 flex-shrink-0">
             {item.icon}

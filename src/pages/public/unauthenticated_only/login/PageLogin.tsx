@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom"
 import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
 import IconInput from "@/components/IconInput"
+import useQuery from "@/hooks/useQuery"
 
 const recaptchaRef = createRef<ReCAPTCHA>()
 
@@ -24,12 +25,14 @@ export default function PageLogin() {
     const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
+    const query = useQuery()
 
     usePageTitle("Masuk - Grand Atma Hotel")
 
     const formSubmitHandler = (e?: React.FormEvent<HTMLFormElement>, loginUrl = `${BASE_URL}/login-customer`) => {
         e?.preventDefault()
         setIsLoading(true)
+        let redirectUrl = query.get("redirect")
         axios.post(loginUrl, {
             username: email,
             password,
@@ -42,7 +45,9 @@ export default function PageLogin() {
                 toast(data.message, {
                     type: "success"
                 })
-                navigate("/admin/")
+                if (!redirectUrl) {
+                    redirectUrl = "/admin"
+                }
             } else {
                 const data = res.data as ApiResponse<{user: UserCustomer, token: string }>
                 AuthHelper.setToken(data.data.token)
@@ -50,8 +55,11 @@ export default function PageLogin() {
                 toast(data.message, {
                     type: "success"
                 })
-                navigate("/customer")
+                if (!redirectUrl) {
+                    redirectUrl = "/customer"
+                }
             }
+            navigate(redirectUrl)
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
                 const data = err.response.data as ApiErrorResponse

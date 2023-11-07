@@ -1,17 +1,19 @@
 import { JenisKamar } from "@/utils/ApiModels";
 import CardWithIcon from "../../../../components/CardWithIcon";
-import { LandPlotIcon, StarIcon, UserIcon } from "lucide-react";
+import { BedSingleIcon, LandPlotIcon, UserIcon } from "lucide-react";
 import Formatter from "@/utils/Formatter";
+import Converter from "@/utils/Converter";
 
 
 export default function InfoPentingRow({
     data,
-    className
+    className = ""
 }: {
     data?: JenisKamar,
     className?: string
 }) {
-    return <div className={`grid grid-cols-1 lg:grid-cols-3 gap-4 ${className}`}>
+    const jenisBed = Formatter.formatJSON<string[]>(data?.tipe_bed)
+    return <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3 ${className}`}>
         <div className="col-span-1">
             <CardWithIcon item={{
                 icon: <UserIcon className="w-full h-full" />,
@@ -23,14 +25,14 @@ export default function InfoPentingRow({
             <CardWithIcon item={{
                 icon: <LandPlotIcon className="w-full h-full" />,
                 title: "Ukuran Kamar",
-                content: <>{data?.ukuran} m<sup>2</sup></>
+                content: <>{data?.ukuran} m<sup>2</sup> ({data?.ukuran && Formatter.formatNumber(Converter.mToFt(data?.ukuran))} ft<sup>2</sup>)</>
             }} />
         </div>
         <div className="col-span-1">
             <CardWithIcon item={{
-                icon: <StarIcon className="w-full h-full" />,
-                title: "Rating",
-                content: Formatter.formatNumber(data?.rating!!) + " / 5"
+                icon: <BedSingleIcon className="w-full h-full" />,
+                title: "Jenis Bed",
+                content: jenisBed?.map((bed) => Formatter.capitalizeFirstLetter(bed)).join(", ")
             }} />
         </div>
     </div>
