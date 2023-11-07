@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/car
 import { Link, useSearchParams } from "react-router-dom";
 import { createRef, useState } from "react";
 import { AsteriskIcon, CheckCircleIcon, Loader2Icon } from "lucide-react";
-import axios, { AxiosError } from "axios";
-import { ApiErrorResponse, BASE_URL, KeyValue } from "@/utils/ApiModels";
+import { AxiosError } from "axios";
+import { ApiErrorResponse, ApiResponse, KeyValue, apiPublic } from "@/utils/ApiModels";
 import { Button } from "@/cn/components/ui/button";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
@@ -39,7 +39,7 @@ export default function PageChangePassword() {
             }))
             return
         }
-        axios.patch(`${BASE_URL}/reset-password/${token}`, {
+        apiPublic.patch<ApiResponse<unknown>>(`reset-password/${token}`, {
             password: password,
             recaptcha_token: captcha
         }).then((_) => {

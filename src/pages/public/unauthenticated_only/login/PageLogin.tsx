@@ -2,8 +2,8 @@ import { AsteriskIcon, MailIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import ReCAPTCHA from "react-google-recaptcha"
 import { createRef, useState } from "react"
-import axios, { AxiosError } from "axios"
-import { ApiErrorResponse as ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer, UserPegawai } from "@/utils/ApiModels"
+import { AxiosError } from "axios"
+import { ApiErrorResponse as ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, UserPegawai, apiPublic } from "@/utils/ApiModels"
 import usePageTitle from "@/hooks/usePageTitle"
 
 import Tugu from "@/assets/images/tugu-crop.png"
@@ -29,11 +29,11 @@ export default function PageLogin() {
 
     usePageTitle("Masuk - Grand Atma Hotel")
 
-    const formSubmitHandler = (e?: React.FormEvent<HTMLFormElement>, loginUrl = `${BASE_URL}/login-customer`) => {
+    const formSubmitHandler = (e?: React.FormEvent<HTMLFormElement>, loginUrl = `login-customer`) => {
         e?.preventDefault()
         setIsLoading(true)
         let redirectUrl = query.get("redirect")
-        axios.post(loginUrl, {
+        apiPublic.post<ApiResponse<{user: UserPegawai & UserCustomer, token: string }>>(loginUrl, {
             username: email,
             password,
             recaptcha_token: captcha
@@ -126,7 +126,7 @@ export default function PageLogin() {
                             </div>
 
                             <Button className="w-full h-14 text-lg font-bold mb-2" type="submit" disabled={isLoading}>Masuk sebagai Customer</Button>
-                            <Button className="w-full mb-2" type="button" onClick={() => formSubmitHandler(undefined, `${BASE_URL}/login-pegawai`)} variant="link" disabled={isLoading}>Masuk sebagai Pegawai</Button>
+                            <Button className="w-full mb-2" type="button" onClick={() => formSubmitHandler(undefined, `login-pegawai`)} variant="link" disabled={isLoading}>Masuk sebagai Pegawai</Button>
 
                             <div className="text-center">
                                 Belum punya akun?

@@ -4,11 +4,9 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconTextarea from "@/components/IconTextarea";
 import ImagePreview from "@/components/ImagePreview";
-import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, FasilitasLayananTambahan, getImage } from "@/utils/ApiModels";
-import AuthHelper from "@/utils/AuthHelper";
+import { ApiErrorResponse, ApiResponse, KeyValue, FasilitasLayananTambahan, getImage, apiAuthenticated } from "@/utils/ApiModels";
 import FormHelper from "@/utils/FormHelper";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import axios from "axios";
 import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -46,12 +44,8 @@ export default function ModalCUFasilitas({
 
     const getDetail = () => {
         setLoading(true)
-        axios.get(`${BASE_URL}/pegawai/fasilitas/${id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+        apiAuthenticated.get<ApiResponse<FasilitasLayananTambahan>>(`pegawai/fasilitas/${id}`).then((res) => {
+            const data = res.data
             setData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -76,12 +70,8 @@ export default function ModalCUFasilitas({
             formData.append("gambar", fGambar)
         }
 
-        axios.post(`${BASE_URL}/pegawai/fasilitas`, formData, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
-        }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+        apiAuthenticated.post<ApiResponse<FasilitasLayananTambahan>>(`pegawai/fasilitas`, formData).then((res) => {
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })
@@ -111,22 +101,19 @@ export default function ModalCUFasilitas({
     }
 
     const saveData = () => {
-        const url = id ? `${BASE_URL}/pegawai/fasilitas/${id}` : `${BASE_URL}/pegawai/fasilitas`
+        const url = id ? `pegawai/fasilitas/${id}` : `pegawai/fasilitas`
         const method = id ? "PUT" : "POST"
 
         if (!id) {
             return postData()
         }
 
-        axios({
+        apiAuthenticated<ApiResponse<FasilitasLayananTambahan>>({
             method,
             url,
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
             data: data
         }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan>
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

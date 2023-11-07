@@ -1,9 +1,8 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiResponse, BASE_URL, Kamar } from "@/utils/ApiModels";
+import { ApiResponse, Kamar, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import axios from "axios";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -23,12 +22,8 @@ export default function PageKamar() {
     usePageTitle("Kamar - Grand Atma Hotel")
 
     const fetchTableData = () => {
-        axios.get(`${BASE_URL}/pegawai/kamar`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Kamar[]>
+        apiAuthenticated.get<ApiResponse<Kamar[]>>(`pegawai/kamar`).then((res) => {
+            const data = res.data
             setTableData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -39,12 +34,8 @@ export default function PageKamar() {
     }
 
     const deleteKamar = () => {
-        axios.delete(`${BASE_URL}/pegawai/kamar/${currentData?.no_kamar}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<null>
+        apiAuthenticated.delete<ApiResponse<null>>(`pegawai/kamar/${currentData?.no_kamar}`).then((res) => {
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

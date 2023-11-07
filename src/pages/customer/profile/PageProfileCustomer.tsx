@@ -4,10 +4,10 @@ import IconSelect from "@/components/IconSelect"
 import IconTextarea from "@/components/IconTextarea"
 import usePageTitle from "@/hooks/usePageTitle"
 import ModalSaveConfirm from "@/pages/admin/_layout/components/ModalSaveConfirm"
-import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import Formatter from "@/utils/Formatter"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, EditIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
@@ -53,15 +53,11 @@ export default function PageProfileCustomer() {
             }))
             return
         }
-        axios.put(`${BASE_URL}/customer/user`, {
+        apiAuthenticated.put<ApiResponse<UserCustomer>>(`customer/user`, {
             ...data,
             old_password: oldPassword,
-        }, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
         }).then((res) => {
-            const data = res.data as ApiResponse<UserCustomer>
+            const data = res.data
             data.data.password = ""
             AuthHelper.setUserCustomer(data.data)
             setData(data.data)

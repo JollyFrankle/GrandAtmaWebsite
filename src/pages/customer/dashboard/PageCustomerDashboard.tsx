@@ -1,7 +1,7 @@
 import AuthHelper from "@/utils/AuthHelper"
 import DataTable from "@/components/DataTable"
-import axios, { AxiosError } from "axios"
-import { ApiResponse, BASE_URL, Reservasi } from "@/utils/ApiModels"
+import { AxiosError } from "axios"
+import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import Formatter from "@/utils/Formatter"
 import ModalDetailReservasi from "./components/ModalDetailReservasi"
@@ -23,12 +23,8 @@ export default function PageCustomerDashboard() {
     usePageTitle("Dashboard - Grand Atma Hotel")
 
     const fetchReservations = () => {
-        axios.get(`${BASE_URL}/customer/reservasi`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Reservasi[]>
+        apiAuthenticated.get<ApiResponse<Reservasi[]>>(`customer/reservasi`).then((res) => {
+            const data = res.data
             setReservations(data.data)
         }).catch((err) => {
             console.log(err)
@@ -41,12 +37,8 @@ export default function PageCustomerDashboard() {
     const getDetailReservasi = (id: number) => {
         setDetailLoading(true)
         setShowDialog(true)
-        axios.get(`${BASE_URL}/customer/reservasi/${id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Reservasi>
+        apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+            const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)
         }).catch((err: AxiosError) => {

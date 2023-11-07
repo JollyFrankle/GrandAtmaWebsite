@@ -9,9 +9,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/cn/components/ui/ca
 import { Button } from "@/cn/components/ui/button";
 import { Link } from "react-router-dom";
 import { Grid2X2Icon, StarIcon, UserIcon } from "lucide-react";
-import axios from "axios";
 
-import { ApiResponse, BASE_URL, JenisKamar, getImage } from "@/utils/ApiModels";
+import { ApiResponse, JenisKamar, apiPublic, getImage } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import { toast } from "@/cn/components/ui/use-toast";
@@ -21,8 +20,8 @@ export default function SwiperListJenisKamar() {
     const [isLoading, setIsLoading] = useState(true)
 
     const fetchData = () => {
-        axios.get(BASE_URL + "/public/jenis-kamar").then((res) => {
-            const data = res.data as ApiResponse<Partial<JenisKamar>[]>
+        apiPublic.get<ApiResponse<Partial<JenisKamar>[]>>("public/jenis-kamar").then((res) => {
+            const data = res.data
             setData(data.data)
             setIsLoading(false)
         }).catch((err) => {
@@ -56,7 +55,7 @@ export default function SwiperListJenisKamar() {
         {!isLoading ? data.map((it, _) => (
             <SwiperSlide className="w-full max-w-sm" key={it.id}>
                 <Card className="h-full overflow-auto">
-                    <img src={getImage(it.gambar!!)} className="w-full h-60 object-cover" />
+                    <img src={getImage(it.gambar)} className="w-full h-60 object-cover" />
                     <CardHeader className="flex flex-row justify-between items-center">
                         <h3 className="text-lg font-bold">{it.nama}</h3>
                         <div className="flex items-center">

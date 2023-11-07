@@ -1,9 +1,8 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiResponse, BASE_URL, FasilitasLayananTambahan, getImage } from "@/utils/ApiModels";
+import { ApiResponse, FasilitasLayananTambahan, apiAuthenticated, getImage } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import axios from "axios";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -24,12 +23,8 @@ export default function PageFasilitas() {
     usePageTitle("Fasilitas dan Layanan Berbayar - Grand Atma Hotel")
 
     const fetchTableData = () => {
-        axios.get(`${BASE_URL}/pegawai/fasilitas`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<FasilitasLayananTambahan[]>
+        apiAuthenticated.get<ApiResponse<FasilitasLayananTambahan[]>>(`pegawai/fasilitas`).then((res) => {
+            const data = res.data
             setTableData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -40,12 +35,8 @@ export default function PageFasilitas() {
     }
 
     const deleteFasilitas = () => {
-        axios.delete(`${BASE_URL}/pegawai/fasilitas/${currentData?.id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<null>
+        apiAuthenticated.delete<ApiResponse<null>>(`pegawai/fasilitas/${currentData?.id}`).then((res) => {
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

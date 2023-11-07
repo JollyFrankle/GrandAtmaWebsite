@@ -41,7 +41,7 @@ export default function PageHome() {
             </div>
         </section>
 
-        <section>
+        <section className="overflow-hidden">
             <div className="container relative py-10">
                 <div className="shadow-xl md:my-12 p-5 px-14 md:py-10 md:px-20 md:w-1/2 relative">
                     <img src={Tugu} className="h-full absolute left-0 top-0 pointer-events-none opacity-75" />

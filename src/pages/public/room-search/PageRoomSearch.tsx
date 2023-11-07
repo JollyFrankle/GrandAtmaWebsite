@@ -7,14 +7,15 @@ import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
-import axios, { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, BASE_URL, JenisKamar, RincianTarif, getImage } from "@/utils/ApiModels"
-import { ArrowRightIcon, BanIcon, HelpCircleIcon, InfoIcon, MinusIcon, PlusIcon } from "lucide-react"
+import { AxiosError } from "axios"
+import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, apiPublic, getImage } from "@/utils/ApiModels"
+import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter } from "@/cn/components/ui/dialog"
 import { Alert, AlertDescription } from "@/cn/components/ui/alert"
 import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
+import Lottie from "lottie-react";
 
 import AbstractBG from "@/assets/images/abstract-bg.jpg"
 // import PetunjukPenggunaan from "@/assets/images/petunjuk-penggunaan.jpg"
@@ -22,6 +23,7 @@ import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import { Separator } from "@/cn/components/ui/separator"
 import TarifKamarCard from "./components/TarifKamarCard"
 import SummaryFooter from "./components/SummaryFooter"
+import LottieNoData from "@/assets/lottie/Animation - 1699364588857.json"
 
 export interface KamarDipesan {
     idJK: number,
@@ -53,6 +55,7 @@ export default function PageRoomSearch() {
     const [isReady, setIsReady] = useState(false)
     const [showDialogConfirm, setShowDialogConfirm] = useState(false)
     const [showDialogLogin, setShowDialogLogin] = useState(false)
+    const [showDialogMengamankanHarga, setShowDialogMengamankanHarga] = useState(false)
     const [jumlahMalam, setJumlahMalam] = useState(0)
     const [summaryKamarDipesan, setSummaryKamarDipesan] = useState<SummaryKamarDipesan>({
         hargaDiskon: 0,
@@ -72,7 +75,7 @@ export default function PageRoomSearch() {
         }
         setIsLoading(true)
         setIsReady(false)
-        axios.post(`${BASE_URL}/public/booking/search`, {
+        apiPublic.post(`public/booking/search`, {
             check_in: Formatter.dateToYMD(initData.date.from!!),
             check_out: Formatter.dateToYMD(initData.date.to!!),
             jumlah_kamar: +initData.jumlahKamar,
@@ -100,6 +103,7 @@ export default function PageRoomSearch() {
 
             setIsReady(true)
         }).catch((err: AxiosError) => {
+            setData([])
             if (err.response?.data) {
                 const data = err.response?.data as ApiErrorResponse
                 toast(data.message, {
@@ -117,8 +121,8 @@ export default function PageRoomSearch() {
 
     const createBooking = async () => {
         if (userType === "c") {
-            setIsLoading(true)
-            axios.post(`${BASE_URL}/customer/booking`, {
+            setShowDialogMengamankanHarga(true)
+            apiAuthenticated.post(`customer/booking`, {
                 jenis_kamar: kamarDipesan.map(item => ({
                     id_jk: item.idJK,
                     jumlah: item.count,
@@ -136,12 +140,19 @@ export default function PageRoomSearch() {
                     Authorization: `Bearer ${AuthHelper.getToken()}`
                 }
             }).then(res => {
-                const data = res.data as ApiResponse<TarifKamar[]>
-                console.log(data)
+                const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
+                navigate(`/booking/${data.data.reservasi.id}/step-1`)
             }).catch(err => {
-                console.log(err)
-            }).finally(() => {
-                setIsLoading(false)
+                if (err.response?.data) {
+                    const data = err.response?.data as ApiErrorResponse
+                    toast(data.message, {
+                        type: "error"
+                    })
+                } else {
+                    toast(err.message, {
+                        type: "error"
+                    })
+                }
             })
         } else if (userType === "p") {
             toast("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.", {
@@ -196,14 +207,14 @@ export default function PageRoomSearch() {
         const fromAsTime = +(memoizedParams.get("from") ?? new Date().getTime())
         const toAsTime = +(memoizedParams.get("to") ?? new Date().getTime())
         const fromDate = new Date(fromAsTime)
-        const toDate = toAsTime < fromAsTime ? new Date(fromAsTime + 24 * 60 * 60 * 1000) : new Date(toAsTime)
+        const toDate = (toAsTime <= fromAsTime) ? new Date(fromAsTime + 24 * 60 * 60 * 1000) : new Date(toAsTime)
         setInitData({
             date: {
                 from: fromDate,
                 to: toDate
             },
             dewasa: memoizedParams.get("dewasa") ?? "2",
-            anak: memoizedParams.get("anak") ?? "1",
+            anak: memoizedParams.get("anak") ?? "0",
             jumlahKamar: memoizedParams.get("jumlahKamar") ?? "2"
         })
         setJumlahMalam(Converter.jumlahMalamFromDateRange(fromDate, toDate))
@@ -213,7 +224,7 @@ export default function PageRoomSearch() {
             setKamarDipesan(kamarDipesanFromLS)
         }
 
-        setPageTitle(`Grand Atma Hotel - Cari Kamar ${Formatter.formatDate(fromDate)} - ${Formatter.formatDate(toDate)}`)
+        setPageTitle(`Cari Kamar ${Formatter.formatDateShort(fromDate)} - ${Formatter.formatDateShort(toDate)}`)
     }, [memoizedParams])
 
     useEffect(() => {
@@ -271,27 +282,20 @@ export default function PageRoomSearch() {
 
         <section className="py-8">
             <div className="container relative">
-                {/* Petunjuk penggunaan: klik "+" atau "-" pada jumlah kamar */}
-                <Card className="mb-4 lg:flex flex-row shadow-lg items-center overflow-auto">
-                    <div className="flex-1">
-                        <CardHeader className="pb-2 font-bold text-lg">
-                            <h2><HelpCircleIcon className="h-4 w-4 inline" /> Petunjuk</h2>
+                {!isLoading ? data.length > 0 ? data.map((item) => (
+                    <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} />
+                )) : (
+                    <Card className="shadow-lg mb-8 overflow-auto text-center relative">
+                        <CardHeader>
+                            <Lottie animationData={LottieNoData} className="w-32 h-32 mx-auto" />
                         </CardHeader>
                         <CardContent>
-                            <p className="mb-2">Klik <PlusIcon className="w-4 h-4 inline" /> atau <MinusIcon className="w-4 h-4 inline" /> pada jumlah kamar untuk menambah atau mengurangi jumlah kamar yang ingin dipesan.</p>
-                            <p>Setelah itu, akan muncul tombol <mark>Pesan</mark> untuk melanjutkan ke halaman pemesanan.</p>
+                            <p className="mb-2 text-lg font-bold">Tidak ada kamar yang tersedia untuk tanggal yang Anda pilih.</p>
+                            <p className="mb-4">Pastikan kembali data yang telah Anda isi.</p>
+                            <Button variant="default"><HomeIcon className="w-4 h-4 me-2" />Kembali ke halaman utama</Button>
                         </CardContent>
-                    </div>
-                    <div className="relative">
-                        {/* <img src={PetunjukPenggunaan} className="w-full lg:w-auto lg:h-36" /> */}
-                        {/* foreground transparent left to right */}
-                        <div className="hidden lg:block absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-background to-transparent" />
-                    </div>
-                </Card>
-
-                {!isLoading ? data.map((item) => (
-                    <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} />
-                )) : [...Array(3)].map((_, index) => (
+                    </Card>
+                ) : [...Array(3)].map((_, index) => (
                     <Card className="shadow-lg mb-8 overflow-auto" key={index}>
                         <Skeleton className="col-span-1 min-h-[18rem] object-cover w-full h-full rounded-none" />
                     </Card>
@@ -373,5 +377,20 @@ export default function PageRoomSearch() {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        <div className={`fixed inset-0 z-50 bg-background/80 flex backdrop-blur-sm items-center justify-center ${showDialogMengamankanHarga ? '' : 'hidden'}`}>
+            <div className="bg-background rounded-xl shadow-lg p-6">
+
+                <div role="status" className="mx-auto w-fit mb-4">
+                    <svg aria-hidden="true" className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                    </svg>
+                    <span className="sr-only">Loading...</span>
+                </div>
+
+                Mengamankan harga untuk Anda…
+            </div>
+        </div>
     </>
 }

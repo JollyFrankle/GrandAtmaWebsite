@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/car
 import { Link } from "react-router-dom";
 import { createRef, useState } from "react";
 import {  CheckCircleIcon, Loader2Icon, MailIcon } from "lucide-react";
-import axios, { AxiosError } from "axios";
-import { ApiErrorResponse, BASE_URL, KeyValue } from "@/utils/ApiModels";
+import { AxiosError } from "axios";
+import { ApiErrorResponse, ApiResponse, KeyValue, apiPublic } from "@/utils/ApiModels";
 import { Button } from "@/cn/components/ui/button";
 import { toast } from "react-toastify";
 import { RadioGroup, RadioGroupItem } from "@/cn/components/ui/radio-group";
@@ -31,7 +31,7 @@ export default function PageResetPassword() {
         // Send email
         e.preventDefault()
         setIsLoading(true)
-        axios.post(`${BASE_URL}/reset-password`, {
+        apiPublic.post<ApiResponse<unknown>>(`reset-password`, {
             email,
             type,
             recaptcha_token: captcha

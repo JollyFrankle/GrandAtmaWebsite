@@ -1,5 +1,4 @@
-import { ApiResponse, BASE_URL, JenisKamar, KeyValue, getImage } from "@/utils/ApiModels";
-import axios from "axios";
+import { ApiResponse, JenisKamar, KeyValue, apiPublic, getImage } from "@/utils/ApiModels";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import RoomSearch from "../_layout/components/RoomSearch";
@@ -22,8 +21,8 @@ export default function PageDetailKamar() {
     usePageTitle(pageTitle)
 
     const fetchData = () => {
-        axios.get(BASE_URL + "/public/jenis-kamar/" + id).then((res) => {
-            const data = res.data as ApiResponse<JenisKamar>
+        apiPublic.get<ApiResponse<JenisKamar>>("public/jenis-kamar/" + id).then((res) => {
+            const data = res.data
             data.data.fasilitas = Formatter.formatJSON<KeyValue<string>>(data.data.fasilitas)
             data.data.rincian = Formatter.formatJSON<string[]>(data.data.rincian)
             data.data.fasilitas_unggulan = Formatter.formatJSON<KeyValue<string>>(data.data.fasilitas_unggulan)
@@ -46,7 +45,7 @@ export default function PageDetailKamar() {
             {isLoading ? (
                 <Skeleton className="w-full h-full bg-gray-300" />
             ) : (
-                <img src={getImage(data?.gambar!!)} className="absolute top-0 left-0 w-full h-full pointer-events-none rounded-b-3xl shadow-lg object-cover" />
+                <img src={getImage(data?.gambar)} className="absolute top-0 left-0 w-full h-full pointer-events-none rounded-b-3xl shadow-lg object-cover" />
             )}
             <div className="absolute left-0 w-full z-10 bottom-32">
                 <div className="container">

@@ -1,7 +1,7 @@
 import AuthHelper from "@/utils/AuthHelper"
 import DataTable from "@/components/DataTable"
-import axios, { AxiosError } from "axios"
-import { ApiResponse, BASE_URL, Reservasi, UserCustomer } from "@/utils/ApiModels"
+import { AxiosError } from "axios"
+import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
@@ -29,12 +29,8 @@ export default function PageReservasiCG() {
     usePageTitle("Riwayat Reservasi - Grand Atma Hotel")
 
     const fetchTableData = () => {
-        axios.get(`${BASE_URL}/pegawai/reservasi/${idC}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<{ list: Reservasi[], customer: UserCustomer }>
+        apiAuthenticated.get<ApiResponse<{ list: Reservasi[], customer: UserCustomer }>>(`pegawai/reservasi/${idC}`).then((res) => {
+            const data = res.data
             setReservations(data.data.list)
             setUser(data.data.customer)
         }).catch((err) => {
@@ -48,12 +44,8 @@ export default function PageReservasiCG() {
     const getDetailReservasi = (idRes: number) => {
         setDetailLoading(true)
         setShowDialog(true)
-        axios.get(`${BASE_URL}/pegawai/reservasi/${idC}/${idRes}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Reservasi>
+        apiAuthenticated.get<ApiResponse<Reservasi>>(`pegawai/reservasi/${idC}/${idRes}`).then((res) => {
+            const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)
         }).catch((err: AxiosError) => {

@@ -13,6 +13,10 @@ export default class Formatter {
         return new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(value);
     }
 
+    static formatDateShort(value: Date): string {
+        return new Intl.DateTimeFormat('id-ID', { dateStyle: 'short' }).format(value);
+    }
+
     static formatDateTime(value: Date): string {
         return new Intl.DateTimeFormat('id-ID', { dateStyle: 'long', timeStyle: 'short' }).format(value);
     }

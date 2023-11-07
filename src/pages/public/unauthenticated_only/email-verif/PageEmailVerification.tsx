@@ -7,8 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/car
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AlertCircleIcon, CheckCircleIcon, Loader2Icon, UserIcon } from "lucide-react";
-import axios from "axios";
-import { BASE_URL } from "@/utils/ApiModels";
+import { apiPublic } from "@/utils/ApiModels";
 import { Button } from "@/cn/components/ui/button";
 
 export default function PageEmailVerification() {
@@ -21,7 +20,7 @@ export default function PageEmailVerification() {
     usePageTitle("Verifikasi Email - Grand Atma Hotel")
 
     const fetchData = () => {
-        axios.post(`${BASE_URL}/confirm-email`, {
+        apiPublic.post(`confirm-email`, {
             token
         }).then((_) => {
             setIsLoading(false)

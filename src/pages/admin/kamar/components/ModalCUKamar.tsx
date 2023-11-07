@@ -3,10 +3,8 @@ import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/com
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
-import { ApiErrorResponse, ApiResponse, BASE_URL, JenisKamar, Kamar, KeyValue } from "@/utils/ApiModels";
-import AuthHelper from "@/utils/AuthHelper";
+import { ApiErrorResponse, ApiResponse, JenisKamar, Kamar, KeyValue, apiAuthenticated } from "@/utils/ApiModels";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import axios from "axios";
 import { BanIcon, BedIcon, CigaretteIcon, FootprintsIcon, HashIcon, HotelIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -46,12 +44,8 @@ export default function ModalCUKamar({
 
     const getDetail = () => {
         setLoading(true)
-        axios.get(`${BASE_URL}/pegawai/kamar/${id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Kamar>
+        apiAuthenticated.get<ApiResponse<Kamar>>(`pegawai/kamar/${id}`).then((res) => {
+            const data = res.data
             setData(data.data)
             setErrors(null)
         }).catch((err) => {
@@ -72,12 +66,8 @@ export default function ModalCUKamar({
     }
 
     const getJenisKamar = () => {
-        axios.get(`${BASE_URL}/pegawai/kamar/jenis`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<JenisKamar[]>
+        apiAuthenticated.get<ApiResponse<JenisKamar[]>>(`pegawai/kamar/jenis`).then((res) => {
+            const data = res.data
             setListJenis(data.data)
         }).catch((err) => {
             if (err.response) {
@@ -99,15 +89,12 @@ export default function ModalCUKamar({
     }
 
     const saveData = () => {
-        const url = id ? `${BASE_URL}/pegawai/kamar/${id}` : `${BASE_URL}/pegawai/kamar`
+        const url = id ? `pegawai/kamar/${id}` : `pegawai/kamar`
         const method = id ? "PUT" : "POST"
 
-        axios({
+        apiAuthenticated<ApiResponse<Kamar>>({
             method,
             url,
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
             data: {
                 ...data,
                 no_lantai: parseInt(data.no_lantai.toString()),
@@ -115,7 +102,7 @@ export default function ModalCUKamar({
                 id_jenis_kamar: parseInt(data.id_jenis_kamar.toString())
             }
         }).then((_) => {
-            // const data = res.data as ApiResponse<Kamar>
+            // const data = res.data
             toast("Berhasil menyimpan data kamar.", {
                 type: "success"
             })

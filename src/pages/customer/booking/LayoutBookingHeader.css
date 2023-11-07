@@ -1,0 +1,15 @@
+.steps-breadcrumb.active {
+  color: hsl(var(--primary));
+  border-color: #f5a623;
+  font-weight: bold;
+}
+
+.steps-breadcrumb .steps-number {
+  background-color: #fff;
+}
+
+.steps-breadcrumb.active .steps-number {
+  background-color: hsl(var(--primary));
+  color: #fff;
+  border-color: hsl(var(--primary));
+}

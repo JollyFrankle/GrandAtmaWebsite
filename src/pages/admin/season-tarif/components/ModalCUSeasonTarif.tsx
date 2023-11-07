@@ -4,11 +4,9 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
-import { ApiErrorResponse, ApiResponse, BASE_URL, JenisKamar, KeyValue, Season, Tarif } from "@/utils/ApiModels";
-import AuthHelper from "@/utils/AuthHelper";
+import { ApiErrorResponse, ApiResponse, JenisKamar, KeyValue, Season, Tarif, apiAuthenticated } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import axios from "axios";
 import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -49,12 +47,8 @@ export default function ModalCUSeasonTarif({
 
     const getDetail = () => {
         setLoading(true)
-        axios.get(`${BASE_URL}/pegawai/season/${id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Season>
+        apiAuthenticated.get<ApiResponse<Season>>(`pegawai/season/${id}`).then((res) => {
+            const data = res.data
             setData(data.data)
             setErrors(null)
         }).catch((err) => {
@@ -80,18 +74,15 @@ export default function ModalCUSeasonTarif({
     }
 
     const saveData = () => {
-        const url = id ? `${BASE_URL}/pegawai/season/${id}` : `${BASE_URL}/pegawai/season`
+        const url = id ? `pegawai/season/${id}` : `pegawai/season`
         const method = id ? "PUT" : "POST"
 
-        axios({
+        apiAuthenticated<ApiResponse<Season>>({
             method,
             url,
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
             data: data
         }).then((res) => {
-            const data = res.data as ApiResponse<Season>
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })
@@ -116,12 +107,8 @@ export default function ModalCUSeasonTarif({
     }
 
     const getJenisKamar = () => {
-        axios.get(`${BASE_URL}/pegawai/kamar/jenis`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<JenisKamar[]>
+        apiAuthenticated.get<ApiResponse<JenisKamar[]>>(`pegawai/kamar/jenis`).then((res) => {
+            const data = res.data
             setListJenis(data.data)
         }).catch((err) => {
             console.log(err)

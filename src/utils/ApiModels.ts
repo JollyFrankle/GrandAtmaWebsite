@@ -1,8 +1,26 @@
+import axios from "axios";
+import AuthHelper from "./AuthHelper";
+
 export const BASE_URL = import.meta.env.VITE_API_URL;
 
-export function getImage(uid: string) {
+export function getImage(uid?: string | null) {
     return `${BASE_URL}/public/image/${uid}`;
 }
+
+export const apiPublic = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        Accept: 'application/json'
+    }
+});
+
+export const apiAuthenticated = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${AuthHelper.getToken()}`
+    }
+});
 
 export interface ApiResponse<T> {
     message: string

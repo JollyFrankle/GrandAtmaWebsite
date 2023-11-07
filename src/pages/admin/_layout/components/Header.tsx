@@ -4,8 +4,7 @@ import DarkModeSwitcher from "./DarkModeSwitcher";
 import { LogOutIcon, MenuIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
 import AuthHelper from "@/utils/AuthHelper";
-import { BASE_URL } from "@/utils/ApiModels";
-import axios from "axios";
+import { ApiResponse, apiAuthenticated } from "@/utils/ApiModels";
 import { toast } from "react-toastify";
 
 export default function Header(props: {
@@ -15,22 +14,17 @@ export default function Header(props: {
     const navigate = useNavigate()
 
     const logout = () => {
-        const token = AuthHelper.getToken()
-        AuthHelper.logout()
-        navigate('/login')
-
-        const logoutUrl = `${BASE_URL}/pegawai/logout`
-        axios.post(logoutUrl, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }).then(() => {
+        const logoutUrl = `pegawai/logout`
+        apiAuthenticated.post<ApiResponse<unknown>>(logoutUrl).then(() => {
             toast("Berhasil log out.", {
                 type: "success"
             })
         }).catch((err) => {
             console.log(err)
         })
+
+        AuthHelper.logout()
+        navigate('/login')
     }
 
     return (

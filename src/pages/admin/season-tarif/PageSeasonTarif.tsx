@@ -1,9 +1,9 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiErrorResponse, ApiResponse, BASE_URL, Season } from "@/utils/ApiModels";
+import { ApiErrorResponse, ApiResponse, Season, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -32,12 +32,8 @@ export default function PageSeasonTarif() {
     usePageTitle("Season dan Tarif - Grand Atma Hotel")
 
     const fetchTableData = () => {
-        axios.get(`${BASE_URL}/pegawai/season`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<Season[]>
+        apiAuthenticated.get<ApiResponse<Season[]>>(`pegawai/season`).then((res) => {
+            const data = res.data
             setTableData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -48,12 +44,8 @@ export default function PageSeasonTarif() {
     }
 
     const deleteSeason = () => {
-        axios.delete(`${BASE_URL}/pegawai/season/${currentData?.id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<null>
+        apiAuthenticated.delete<ApiResponse<null>>(`pegawai/season/${currentData?.id}`).then((res) => {
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

@@ -20,6 +20,8 @@ import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
 import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
 import PageReservasiCG from './pages/admin/reservasi/PageReservasiCG'
 import PageRoomSearch from './pages/public/room-search/PageRoomSearch'
+import PageBookingStep1 from './pages/customer/booking/step1/PageBookingStep1'
+import LayoutBookingHeader from './pages/customer/booking/LayoutBookingHeader'
 
 const router = createBrowserRouter([
   {
@@ -44,7 +46,12 @@ const router = createBrowserRouter([
     element: <LayoutCustomer />,
     children: [
       { index: true, element: <PageCustomerDashboard /> },
-      { path: "profile", element: <PageProfileCustomer /> }
+      { path: "profile", element: <PageProfileCustomer /> },
+      { path: "booking/:id", element: <LayoutBookingHeader />, children: [
+        { path: "step-1", element: <PageBookingStep1 /> },
+        { path: "step-2", element: <PageBookingStep1 /> },
+        { path: "step-3", element: <PageBookingStep1 /> },
+      ]}
     ]
   },
   {

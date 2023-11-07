@@ -1,9 +1,8 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiResponse, BASE_URL, UserCustomer } from "@/utils/ApiModels";
+import { ApiResponse, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import axios from "axios";
 import { CalendarCheck2Icon, EyeIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -22,12 +21,8 @@ export default function PageCustomerGroup() {
     usePageTitle("Customer Group - Grand Atma Hotel")
 
     const fetchTableData = () => {
-        axios.get(`${BASE_URL}/pegawai/user`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<UserCustomer[]>
+        apiAuthenticated.get<ApiResponse<UserCustomer[]>>(`pegawai/user`).then((res) => {
+            const data = res.data
             setTableData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -38,12 +33,8 @@ export default function PageCustomerGroup() {
     }
 
     // const deleteCustomer = () => {
-    //     axios.delete(`${BASE_URL}/pegawai/user/${currentData?.id}`, {
-    //         headers: {
-    //             Authorization: `Bearer ${AuthHelper.getToken()}`
-    //         }
-    //     }).then((res) => {
-    //         const data = res.data as ApiResponse<null>
+    //     apiAuthenticated.delete<ApiResponse<null>>(`pegawai/user/${currentData?.id}`).then((res) => {
+    //         const data = res.data
     //         toast(data.message, {
     //             type: "success"
     //         })

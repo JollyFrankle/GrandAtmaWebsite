@@ -4,10 +4,8 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
 import IconTextarea from "@/components/IconTextarea";
-import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels";
-import AuthHelper from "@/utils/AuthHelper";
+import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import axios from "axios";
 import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -45,12 +43,8 @@ export default function ModalCCustomerGroup({
 
     const getDetail = () => {
         setLoading(true)
-        axios.get(`${BASE_URL}/pegawai/user/${id}`, {
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            }
-        }).then((res) => {
-            const data = res.data as ApiResponse<UserCustomer>
+        apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/user/${id}`).then((res) => {
+            const data = res.data
             setData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -75,18 +69,15 @@ export default function ModalCCustomerGroup({
     }
 
     const saveData = () => {
-        const url = id ? `${BASE_URL}/pegawai/user/${id}` : `${BASE_URL}/pegawai/user`
+        const url = id ? `pegawai/user/${id}` : `pegawai/user`
         const method = id ? "PUT" : "POST"
 
-        axios({
+        apiAuthenticated<ApiResponse<UserCustomer>>({
             method,
             url,
-            headers: {
-                Authorization: `Bearer ${AuthHelper.getToken()}`
-            },
             data: data
         }).then((res) => {
-            const data = res.data as ApiResponse<UserCustomer>
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

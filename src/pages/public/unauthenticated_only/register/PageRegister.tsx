@@ -1,5 +1,5 @@
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiErrorResponse, ApiResponse, BASE_URL, KeyValue, UserCustomer } from "@/utils/ApiModels";
+import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiPublic } from "@/utils/ApiModels";
 import { createRef, useState } from "react";
 import { AsteriskIcon, BookUserIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, UserIcon } from "lucide-react";
 
@@ -10,7 +10,7 @@ import { Checkbox } from "@/cn/components/ui/checkbox";
 import { Button } from "@/cn/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/card";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
@@ -57,11 +57,11 @@ export default function PageRegister() {
         }
 
         setIsLoading(true)
-        axios.post(`${BASE_URL}/register`, {
+        apiPublic.post<ApiResponse<UserCustomer>>(`register`, {
             ...data,
             recaptcha_token: captcha,
         }).then((res) => {
-            const data = res.data as ApiResponse<UserCustomer>
+            const data = res.data
             toast(data.message, {
                 type: "success"
             })

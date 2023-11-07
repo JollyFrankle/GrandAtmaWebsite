@@ -10,9 +10,8 @@ import { Button } from '@/cn/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
 import ScrollToTop from '@/utils/ScrollToTop';
-import { BASE_URL, UserCustomer, UserPegawai } from '@/utils/ApiModels';
+import { UserCustomer, UserPegawai, apiAuthenticated } from '@/utils/ApiModels';
 import AuthHelper from '@/utils/AuthHelper';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 
 interface MenuItemProps {
@@ -160,23 +159,18 @@ export default function LayoutHome() {
     const navigate = useNavigate()
 
     const logout = () => {
-        const token = AuthHelper.getToken()
         const type = localStorage.getItem("type")
-        AuthHelper.logout()
-        navigate('/login')
-
-        const logoutUrl = type === "c" ? `${BASE_URL}/customer/logout` : `${BASE_URL}/pegawai/logout`
-        axios.post(logoutUrl, {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }).then(() => {
+        const logoutUrl = type === "c" ? `customer/logout` : `pegawai/logout`
+        apiAuthenticated.post(logoutUrl).then(() => {
             toast("Berhasil log out.", {
                 type: "success"
             })
         }).catch((err) => {
             console.log(err)
         })
+
+        AuthHelper.logout()
+        navigate('/login')
     }
 
     useEffect(() => {
