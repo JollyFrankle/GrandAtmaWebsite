@@ -22,6 +22,8 @@ import PageReservasiCG from './pages/admin/reservasi/PageReservasiCG'
 import PageRoomSearch from './pages/public/room-search/PageRoomSearch'
 import PageBookingStep1 from './pages/customer/booking/step1/PageBookingStep1'
 import LayoutBookingHeader from './pages/customer/booking/LayoutBookingHeader'
+import PageBookingStep2 from './pages/customer/booking/step2/PageBookingStep2'
+import PageBookingStep3 from './pages/customer/booking/step3/PageBookingStep3'
 
 const router = createBrowserRouter([
   {
@@ -49,8 +51,8 @@ const router = createBrowserRouter([
       { path: "profile", element: <PageProfileCustomer /> },
       { path: "booking/:id", element: <LayoutBookingHeader />, children: [
         { path: "step-1", element: <PageBookingStep1 /> },
-        { path: "step-2", element: <PageBookingStep1 /> },
-        { path: "step-3", element: <PageBookingStep1 /> },
+        { path: "step-2", element: <PageBookingStep2 /> },
+        { path: "step-3", element: <PageBookingStep3 /> },
       ]}
     ]
   },

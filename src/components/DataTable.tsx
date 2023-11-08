@@ -35,8 +35,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/cn/components/ui/table"
+import LoadingSpinner from "./LoadingSpinner"
 
-interface ColumnRules<T> {
+export interface ColumnRules<T> {
     id?: string
     field: keyof T
     header: string
@@ -46,7 +47,7 @@ interface ColumnRules<T> {
     accessorFn?: (row: T) => string
 }
 
-interface RowActions<T> {
+export interface RowActions<T> {
     action: string | React.ReactNode
     onClick: (row: T) => void
 }
@@ -144,12 +145,14 @@ export default function DataTable<T>({
     actions,
     select,
     searchableColumns,
+    isLoading
 }: {
     data: T[]
     columns: ColumnRules<T>[],
     actions?: RowActions<T>[][],
     select?: boolean,
     searchableColumns?: string[],
+    isLoading?: boolean,
 }) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -241,7 +244,17 @@ export default function DataTable<T>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length + 1}
+                                    className="text-center py-6"
+                                >
+                                    <LoadingSpinner />
+                                    Memuat…
+                                </TableCell>
+                            </TableRow>
+                        ) : table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -260,10 +273,10 @@ export default function DataTable<T>({
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={columns.length}
+                                    colSpan={columns.length + 1}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    Tidak ada data.
                                 </TableCell>
                             </TableRow>
                         )}

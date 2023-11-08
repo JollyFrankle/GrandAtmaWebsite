@@ -37,7 +37,7 @@ export default function ModalDetailReservasiCG({
                 <CardWithIcon className="col-span-1" item={{
                     icon: <BadgeInfoIcon className="w-full h-full" />,
                     title: "Status",
-                    content: ReservasiFormatter.generateStatusBadge(data?.status ?? "")
+                    content: ReservasiFormatter.generateStatusBadge(data?.status ?? "", data?.tanggal_dl_booking)
                 }} />
                 <CardWithIcon className="col-span-1" item={{
                     icon: <TvIcon className="w-full h-full" />,
@@ -95,8 +95,9 @@ export default function ModalDetailReservasiCG({
                             <TableHead className="w-[48px]">No.</TableHead>
                             <TableHead>Jenis Kamar</TableHead>
                             <TableHead>No. Kamar</TableHead>
-                            <TableHead>Kapasitas</TableHead>
+                            <TableHead>Jumlah Malam</TableHead>
                             <TableHead>Harga per Malam</TableHead>
+                            <TableHead>Total</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -105,8 +106,9 @@ export default function ModalDetailReservasiCG({
                                 <TableCell className="text-center">{i + 1}</TableCell>
                                 <TableCell>{it.jenis_kamar?.nama}</TableCell>
                                 <TableCell>{it.no_kamar ? <strong>{it.no_kamar}</strong> : "-"}</TableCell>
-                                <TableCell>{it.jenis_kamar?.kapasitas} dewasa</TableCell>
+                                <TableCell>{data.jumlah_malam} malam</TableCell>
                                 <TableCell>{Formatter.formatCurrency(it.harga_per_malam)}</TableCell>
+                                <TableCell>{Formatter.formatCurrency(it.harga_per_malam * data.jumlah_malam)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -119,7 +121,9 @@ export default function ModalDetailReservasiCG({
                             <TableHead className="w-[48px]">No.</TableHead>
                             <TableHead>Nama</TableHead>
                             <TableHead>Tanggal</TableHead>
+                            <TableHead>Kuantitas</TableHead>
                             <TableHead>Harga</TableHead>
+                            <TableHead>Total</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -128,6 +132,8 @@ export default function ModalDetailReservasiCG({
                                 <TableCell className="text-center">{i + 1}</TableCell>
                                 <TableCell>{it.layanan_tambahan?.nama}</TableCell>
                                 <TableCell>{Formatter.formatDateTime(new Date(it.tanggal_pakai))}</TableCell>
+                                <TableCell>{it.qty} {it.layanan_tambahan?.satuan}</TableCell>
+                                <TableCell>{Formatter.formatCurrency(it.total / it.qty)}</TableCell>
                                 <TableCell>{Formatter.formatCurrency(it.total)}</TableCell>
                             </TableRow>
                         )) : (

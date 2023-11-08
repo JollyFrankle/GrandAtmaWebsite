@@ -17,11 +17,13 @@ export default function PageKamar() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
     usePageTitle("Kamar - Grand Atma Hotel")
 
     const fetchTableData = () => {
+        setTableLoading(true)
         apiAuthenticated.get<ApiResponse<Kamar[]>>(`pegawai/kamar`).then((res) => {
             const data = res.data
             setTableData(data.data)
@@ -30,6 +32,8 @@ export default function PageKamar() {
             toast("Gagal memuat data kamar.", {
                 type: "error"
             })
+        }).finally(() => {
+            setTableLoading(false)
         })
     }
 
@@ -120,7 +124,7 @@ export default function PageKamar() {
                     setOpenModalDelete(true)
                 },
             }
-        ]]} />
+        ]]} isLoading={tableLoading} />
 
         <ModalCUKamar id={currentData?.no_kamar} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
         <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteKamar}>

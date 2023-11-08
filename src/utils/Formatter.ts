@@ -38,4 +38,8 @@ export default class Formatter {
     static capitalizeFirstLetter(value: string): string {
         return value.charAt(0).toUpperCase() + value.slice(1);
     }
+
+    static padZero(value: number, padAmount: number = 2): string {
+        return value.toString().padStart(padAmount, '0');
+    }
 }

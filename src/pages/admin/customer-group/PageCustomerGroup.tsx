@@ -15,12 +15,14 @@ export default function PageCustomerGroup() {
     const [currentData, setCurrentData] = useState<UserCustomer>()
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
+    const [tableLoading, setTableLoading] = useState(false)
     // const [openModalDelete, setOpenModalDelete] = useState(false)
     const navigate = useNavigate()
 
     usePageTitle("Customer Group - Grand Atma Hotel")
 
     const fetchTableData = () => {
+        setTableLoading(true)
         apiAuthenticated.get<ApiResponse<UserCustomer[]>>(`pegawai/user`).then((res) => {
             const data = res.data
             setTableData(data.data)
@@ -29,6 +31,8 @@ export default function PageCustomerGroup() {
             toast("Gagal memuat data customer.", {
                 type: "error"
             })
+        }).finally(() => {
+            setTableLoading(false)
         })
     }
 
@@ -106,7 +110,7 @@ export default function PageCustomerGroup() {
                     navigate(`/admin/cg/reservasi/${row.id}`)
                 }
             }
-        ]]} />
+        ]]} isLoading={tableLoading} />
 
         <ModalCCustomerGroup id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
     </>

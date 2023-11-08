@@ -27,11 +27,13 @@ export default function PageSeasonTarif() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
     usePageTitle("Season dan Tarif - Grand Atma Hotel")
 
     const fetchTableData = () => {
+        setTableLoading(true)
         apiAuthenticated.get<ApiResponse<Season[]>>(`pegawai/season`).then((res) => {
             const data = res.data
             setTableData(data.data)
@@ -40,6 +42,8 @@ export default function PageSeasonTarif() {
             toast("Gagal memuat data season.", {
                 type: "error"
             })
+        }).finally(() => {
+            setTableLoading(false)
         })
     }
 
@@ -147,7 +151,7 @@ export default function PageSeasonTarif() {
                     setOpenModalDelete(true)
                 },
             }
-        ]]} />
+        ]]} isLoading={tableLoading} />
 
         <ModalCUSeasonTarif id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
         <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteSeason}>

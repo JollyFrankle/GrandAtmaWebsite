@@ -92,6 +92,7 @@ export interface Reservasi {
     jumlah_malam: number
     jumlah_dewasa: number
     jumlah_anak: number
+    tanggal_dl_booking: string|null
     tanggal_dp: string|null
     jumlah_dp: number|null
     status: string

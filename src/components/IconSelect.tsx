@@ -13,7 +13,7 @@ export default function IconSelect({
     required = false,
     disabled = false,
     placeholder = label,
-    className = "mb-4 block",
+    className = "mb-4",
 }: {
     icon: React.ReactNode,
     values?: { value: string, label: string }[],
@@ -28,7 +28,7 @@ export default function IconSelect({
     className?: string
 }) {
     return (
-        <label className={className}>
+        <label className={`${className} block`}>
         {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
         <InputWithIcon icon={icon}>
             <Select required={required} disabled={disabled} value={value} onValueChange={onValueChange}>

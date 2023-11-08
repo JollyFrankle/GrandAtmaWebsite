@@ -14,7 +14,7 @@ export default function IconTextarea({
     required = false,
     disabled = false,
     placeholder = label,
-    className = "mb-4 block",
+    className = "mb-4",
 }: {
     icon: React.ReactNode,
     size?: "md" | "lg",
@@ -30,7 +30,7 @@ export default function IconTextarea({
     className?: string
 }) {
     return (
-        <label className={className}>
+        <label className={`${className} block`}>
             {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
             <InputWithIcon icon={icon} className="w-full">
                 <Textarea required={required} disabled={disabled} maxLength={maxLength} rows={rows} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`} placeholder={placeholder} value={value} onChange={(e) => onValueChange?.(e.target.value)} />

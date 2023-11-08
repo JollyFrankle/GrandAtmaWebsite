@@ -18,11 +18,13 @@ export default function PageFasilitas() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
+    const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
     usePageTitle("Fasilitas dan Layanan Berbayar - Grand Atma Hotel")
 
     const fetchTableData = () => {
+        setTableLoading(true)
         apiAuthenticated.get<ApiResponse<FasilitasLayananTambahan[]>>(`pegawai/fasilitas`).then((res) => {
             const data = res.data
             setTableData(data.data)
@@ -31,6 +33,8 @@ export default function PageFasilitas() {
             toast("Gagal memuat data fasilitas.", {
                 type: "error"
             })
+        }).finally(() => {
+            setTableLoading(false)
         })
     }
 
@@ -118,7 +122,7 @@ export default function PageFasilitas() {
                     setOpenModalDelete(true)
                 },
             }
-        ]]} />
+        ]]} isLoading={tableLoading} />
 
         <ModalCUFasilitas id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
         <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteFasilitas}>

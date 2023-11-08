@@ -1,10 +1,7 @@
 import AuthHelper from "@/utils/AuthHelper"
-import DataTable from "@/components/DataTable"
 import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
-import Formatter from "@/utils/Formatter"
-import ReservasiFormatter from "@/utils/ReservasiFormatter"
 import { PlusIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import usePageTitle from "@/hooks/usePageTitle"
@@ -12,14 +9,14 @@ import { toast } from "react-toastify"
 import { useNavigate, useParams } from "react-router-dom"
 import ModalDetailReservasi from "@/pages/customer/dashboard/components/ModalDetailReservasi"
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/cn/components/ui/table"
+import ReservasiHistoryTab from "@/pages/customer/dashboard/components/ReservasiHistoryTab"
 
 
 export default function PageReservasiCG() {
     const params = useParams<{ id: string }>()
     const { id: idC } = params
 
-    const [userP] = useState(AuthHelper.getUserPegawai()!!)
-    const [reservations, setReservations] = useState<Reservasi[]>([])
+    // const [userP] = useState(AuthHelper.getUserPegawai()!!)
     const [user, setUser] = useState<UserCustomer>()
     const [showDialog, setShowDialog] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
@@ -27,19 +24,6 @@ export default function PageReservasiCG() {
     const navigate = useNavigate()
 
     usePageTitle("Riwayat Reservasi - Grand Atma Hotel")
-
-    const fetchTableData = () => {
-        apiAuthenticated.get<ApiResponse<{ list: Reservasi[], customer: UserCustomer }>>(`pegawai/reservasi/${idC}`).then((res) => {
-            const data = res.data
-            setReservations(data.data.list)
-            setUser(data.data.customer)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data reservasi.", {
-                type: "error"
-            })
-        })
-    }
 
     const getDetailReservasi = (idRes: number) => {
         setDetailLoading(true)
@@ -55,7 +39,7 @@ export default function PageReservasiCG() {
 
     useEffect(() => {
         if(AuthHelper.authorize(["sm"])) {
-            fetchTableData()
+            // fetchTableData()
         } else {
             toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
                 type: "error"
@@ -96,61 +80,7 @@ export default function PageReservasiCG() {
             </Table>
         </>}
 
-        <DataTable<Reservasi> data={reservations} columns={[
-            {
-                field: "id_booking",
-                header: "Booking ID",
-                enableSorting: true,
-                cell: (row) => row.id_booking ? (
-                    <span className="text-lg font-bold">{row.id_booking}</span>
-                ) : (
-                    <span className="text-muted-foreground">Belum digenerate</span>
-                )
-            },
-            {
-                field: "arrival_date",
-                header: "Tanggal Menginap",
-                enableSorting: true,
-                cell(row) {
-                    return Formatter.formatDate(new Date(row.arrival_date)) + " - " + Formatter.formatDate(new Date(row.departure_date))
-                },
-            },
-            {
-                field: "id_sm",
-                header: "Penanggungjawab S&M",
-                cell: (row) => <>{row?.user_pegawai?.nama} {row?.id_sm === userP.id && (<strong>(Anda)</strong>) }</>
-            },
-            {
-                field: "jumlah_malam",
-                header: "Detail",
-                enableSorting: false,
-                cell: (row) => (
-                    <div>
-                        <p>{row.jumlah_malam} malam</p>
-                        <p>{row.jumlah_dewasa} dewasa &bull; {row.jumlah_anak} anak-anak</p>
-                    </div>
-                )
-            },
-            {
-                field: "total",
-                header: "Total Harga Kamar",
-                enableSorting: true,
-                cell: (row) => Formatter.formatCurrency(row.total)
-            },
-            {
-                field: "status",
-                header: "Status",
-                enableSorting: true,
-                cell: (row) => ReservasiFormatter.generateStatusBadge(row.status),
-            },
-        ]} actions={[[
-            {
-                action: "Lihat Detail",
-                onClick: (item) => {
-                    getDetailReservasi(item.id)
-                }
-            }
-        ]]} />
+        <ReservasiHistoryTab idCustomer={+(idC ?? 0)} onDetailClick={getDetailReservasi} onUserFetched={setUser} />
 
         <ModalDetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} />
     </>
