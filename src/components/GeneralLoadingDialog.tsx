@@ -1,12 +1,12 @@
+import React from "react";
 import LoadingSpinner from "./LoadingSpinner";
-
 
 export default function GeneralLoadingDialog({
     show,
     text = "Memuat…",
 }: {
     show: boolean,
-    text?: string,
+    text?: string | React.ReactNode,
 }) {
     return (
         <div className={`fixed inset-0 z-50 bg-background/80 flex backdrop-blur-sm items-center justify-center ${show ? '' : 'hidden'}`}>

@@ -24,6 +24,7 @@ import PageBookingStep1 from './pages/customer/booking/step1/PageBookingStep1'
 import LayoutBookingHeader from './pages/customer/booking/LayoutBookingHeader'
 import PageBookingStep2 from './pages/customer/booking/step2/PageBookingStep2'
 import PageBookingStep3 from './pages/customer/booking/step3/PageBookingStep3'
+import PageBookingStep4 from './pages/customer/booking/step4/PageBookingStep4'
 
 const router = createBrowserRouter([
   {
@@ -48,14 +49,19 @@ const router = createBrowserRouter([
     element: <LayoutCustomer />,
     children: [
       { index: true, element: <PageCustomerDashboard /> },
-      { path: "profile", element: <PageProfileCustomer /> },
-      { path: "booking/:id", element: <LayoutBookingHeader />, children: [
-        { path: "step-1", element: <PageBookingStep1 /> },
-        { path: "step-2", element: <PageBookingStep2 /> },
-        { path: "step-3", element: <PageBookingStep3 /> },
-      ]}
+      { path: "profile", element: <PageProfileCustomer /> }
     ]
   },
+  {
+    path: "booking/:id",
+    element: <LayoutBookingHeader />,
+    children: [
+      { path: "step-1", element: <PageBookingStep1 /> },
+      { path: "step-2", element: <PageBookingStep2 /> },
+      { path: "step-3", element: <PageBookingStep3 /> },
+      { path: "step-4", element: <PageBookingStep4 /> },
+    ]
+},
   {
     path: "/admin",
     element: <LayoutAdmin />,

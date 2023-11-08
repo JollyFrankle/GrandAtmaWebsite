@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { BanknoteIcon, CopyIcon, InfoIcon, Trash2Icon } from "lucide-react"
+import { BanknoteIcon, BedSingleIcon, CopyIcon, InfoIcon, Trash2Icon, UserIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
@@ -13,6 +13,7 @@ import BankDiamond from "@/assets/images/bank-diamond.png"
 import { Input } from "@/cn/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import IconInput from "@/components/IconInput"
+import usePageTitle from "@/hooks/usePageTitle"
 
 export default function PageBookingStep3() {
     const params = useParams<{ id: string }>()
@@ -24,6 +25,7 @@ export default function PageBookingStep3() {
     const [fileBukti, setFileBukti] = useState<File>()
 
     const navigate = useNavigate()
+    usePageTitle(`Pembayaran #${detail?.id_booking} – Grand Atma Hotel`)
 
     const getDetailReservasi = async () => {
         return apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
@@ -77,6 +79,7 @@ export default function PageBookingStep3() {
         ).then((res) => {
             const data = res.data
             setDetail(data.data.reservasi)
+            toast.success("Reservasi berhasil dibuat.")
             navigate(`../step-4`)
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
@@ -148,7 +151,7 @@ export default function PageBookingStep3() {
 
                 <div className="mb-4">
                     <h2 className="text-xl font-bold mb-2">Unggah Bukti Transfer</h2>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1">
                             <Alert className="mb-4 shadow">
                                 <InfoIcon className="w-4 h-4 me-2" />
@@ -157,17 +160,18 @@ export default function PageBookingStep3() {
                                     Setelah transfer, silakan unggah bukti transfer melalui tombol di bawah. Kami akan memverifikasi pembayaran Anda dalam waktu 1x24 jam.
                                 </AlertDescription>
                             </Alert>
-                            <IconInput
-                                icon={<BanknoteIcon className="w-6 h-6" />}
-                                type="file"
-                                accept="image/jpeg,image/png"
-                                onChange={onBuktiSelected} />
-                            {fileBukti && (
+                            {fileBukti ? (
                                 <div className="mt-2">
                                     <Button className="w-full" onClick={() => setFileBukti(undefined)} variant="outline">
                                         Hapus Bukti Transfer <Trash2Icon className="w-4 h-4 ms-2" />
                                     </Button>
                                 </div>
+                            ) : (
+                                <IconInput
+                                    icon={<BanknoteIcon className="w-6 h-6" />}
+                                    type="file"
+                                    accept="image/jpeg,image/png"
+                                    onChange={onBuktiSelected} />
                             )}
                         </div>
                         <div className="flex-1 rounded shadow overflow-auto aspect-square bg-secondary">
@@ -224,21 +228,30 @@ export default function PageBookingStep3() {
                                 </div>
                                 <hr className="my-2" />
                                 <ul className="list-none">
+                                    <li>Rincian kamar:</li>
                                     {kamarGroupedByJenis?.map((item, index) => (
                                         <li key={index} className="flex border-b items-center">
-                                            <div className="py-2 flex-1">
+                                            <div className="py-4 flex-1">
                                                 <div className="font-bold">{item.amount} {item.jenis_kamar?.nama}</div>
-                                                <div className="text-sm">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
+                                                <div className="text-sm flex flex-wrap gap-2 lg:gap-4 mt-1">
+                                                    <div className="flex gap-2 items-center">
+                                                        <UserIcon className="w-4 h-4" /> {item.jenis_kamar?.kapasitas} Dewasa
+                                                    </div>
+                                                    <div className="flex gap-2 items-center">
+                                                        <BedSingleIcon className="w-4 h-4" /> {Formatter.formatJSON<[]>(item.jenis_kamar?.tipe_bed)?.join(" atau ")}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                {Formatter.formatCurrency(item.harga * item.amount)}
+                                            <div className="text-end">
+                                                <div>{Formatter.formatCurrency(item.harga * item.amount)}</div>
+                                                <div className="text-sm text-secondary-foreground">per malam</div>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Total harga kamar:</span>
-                                    <span className="font-bold">{Formatter.formatCurrency(detail.total)}</span>
+                                    <span className="text-secondary-foreground">Harga per malam:</span>
+                                    <span className="font-bold">{Formatter.formatCurrency(detail.total / detail.jumlah_malam)}</span>
                                 </div>
                             </div>
                         </CardContent>

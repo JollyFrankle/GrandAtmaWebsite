@@ -97,6 +97,11 @@ export default function PageRoomSearch() {
                         newKamarDipesan[index].harga_diskon = item.rincian_tarif.harga_diskon
                         newKamarDipesan[index].nama = item.jenis_kamar.nama
                         newKamarDipesan[index].gambar = item.jenis_kamar.gambar
+
+                        // If lebih banyak dari jumlah kamar yang tersedia, set ke jumlah kamar yang tersedia
+                        if (newKamarDipesan[index].count > item.rincian_tarif.jumlah_kamar) {
+                            newKamarDipesan[index].count = item.rincian_tarif.jumlah_kamar
+                        }
                     }
                 })
                 return newKamarDipesan
@@ -149,6 +154,7 @@ export default function PageRoomSearch() {
                         type: "error"
                     })
                 }
+                setShowDialogMengamankanHarga(false)
             })
         } else if (userType === "p") {
             toast("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.", {

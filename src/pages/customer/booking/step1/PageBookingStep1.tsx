@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { ApiErrorResponse, ApiResponse, FasilitasLayananTambahan, JenisKamar, Reservasi, apiAuthenticated, apiPublic } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { AlertOctagonIcon, ArrowRightIcon, BanIcon, Clock11Icon, Clock4Icon, HelpingHandIcon } from "lucide-react"
+import { AlertOctagonIcon, ArrowRightIcon, BanIcon, BedSingleIcon, Clock11Icon, Clock4Icon, HelpingHandIcon, UserIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import BookingS1FasiltasItem from "./components/BookingS1FasiltasItem"
@@ -14,6 +14,7 @@ import { Checkbox } from "@/cn/components/ui/checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/cn/components/ui/dialog"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { toast } from "react-toastify"
+import usePageTitle from "@/hooks/usePageTitle"
 
 export interface PBS1SelectedFasilitas {
     id: number,
@@ -51,6 +52,7 @@ export default function PageBookingStep1() {
     const [showDialogConfirm, setShowDialogConfirm] = useState(false)
 
     const navigate = useNavigate()
+    usePageTitle(`Pengisian Data #${Formatter.padZero(+(id ?? 0), 8)} – Grand Atma Hotel`)
 
     const fetchFasilitas = async () => {
         return apiPublic.get<ApiResponse<FasilitasLayananTambahan[]>>(`public/layanan-tambahan`).then((res) => {
@@ -291,21 +293,30 @@ export default function PageBookingStep1() {
                                 </div>
                                 <hr className="my-2" />
                                 <ul className="list-none">
+                                    <li>Rincian kamar:</li>
                                     {kamarGroupedByJenis?.map((item, index) => (
                                         <li key={index} className="flex border-b items-center">
-                                            <div className="py-2 flex-1">
+                                            <div className="py-4 flex-1">
                                                 <div className="font-bold">{item.amount} {item.jenis_kamar?.nama}</div>
-                                                <div className="text-sm">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
+                                                <div className="text-sm flex flex-wrap gap-2 lg:gap-4 mt-1">
+                                                    <div className="flex gap-2 items-center">
+                                                        <UserIcon className="w-4 h-4" /> {item.jenis_kamar?.kapasitas} Dewasa
+                                                    </div>
+                                                    <div className="flex gap-2 items-center">
+                                                        <BedSingleIcon className="w-4 h-4" /> {Formatter.formatJSON<[]>(item.jenis_kamar?.tipe_bed)?.join(" atau ")}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                {Formatter.formatCurrency(item.harga * item.amount)}
+                                            <div className="text-end">
+                                                <div>{Formatter.formatCurrency(item.harga * item.amount)}</div>
+                                                <div className="text-sm text-secondary-foreground">per malam</div>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Total harga kamar:</span>
-                                    <span className="font-bold">{Formatter.formatCurrency(detail.total)}</span>
+                                    <span className="text-secondary-foreground">Harga per malam:</span>
+                                    <span className="font-bold">{Formatter.formatCurrency(detail.total / detail.jumlah_malam)}</span>
                                 </div>
                             </div>
                         </CardContent>

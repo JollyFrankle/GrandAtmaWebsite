@@ -52,6 +52,10 @@ export default function RoomSearch({
             toast.error("Jumlah dewasa minimal 1.")
             return
         }
+        if (+inDewasa < +inJumlahKamar) {
+            toast.error("Jumlah dewasa tidak boleh kurang dari jumlah kamar.")
+            return
+        }
         navigate(`/search?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
         onClickSearch?.()
     }

@@ -3,7 +3,7 @@ import { KamarDipesan, TarifKamar } from "../PageRoomSearch"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
-import { AlertOctagonIcon, ArrowRightIcon, BedDoubleIcon, CheckIcon, LandPlotIcon, MinusIcon, PlusIcon, StarIcon, UserIcon } from "lucide-react"
+import { AlertOctagonIcon, ArrowRightIcon, BedDoubleIcon, CheckIcon, LandPlotIcon, MinusIcon, PlusIcon, StarIcon, UserIcon, XCircleIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { getImage } from "@/utils/ApiModels"
 
@@ -78,8 +78,8 @@ export default function TarifKamarCard({
                                             <AlertOctagonIcon className="w-4 h-4 me-1" /> {catatan.message}
                                         </p>
                                     ) : (
-                                        <p key={index} className="text-sm text-green-600 flex items-center">
-                                            <CheckIcon className="w-4 h-4 me-1" /> {catatan.message}
+                                        <p key={index} className="text-sm text-red-600 font-bold flex items-center">
+                                            <XCircleIcon className="w-4 h-4 me-1" /> {catatan.message}
                                         </p>
                                     )
                                 ))}
