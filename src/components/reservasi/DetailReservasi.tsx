@@ -30,7 +30,7 @@ export default function DetailReservasi({
             }} />
         </div>
         <div>
-            <div className="lg:grid grid-cols-2 gap-4 mb-2">
+            <div className="lg:grid grid-cols-2 gap-4">
                 <div className="col-span-1">
                     <h4 className="font-bold mb-2">Pemesan</h4>
                     <div className="mb-2">
@@ -72,8 +72,14 @@ export default function DetailReservasi({
                     </div>
                 </div>
             </div>
-            <h4 className="text-xl font-bold mb-2">Kamar</h4>
-            <Table className="mb-4">
+
+            {data?.permintaan_tambahan && <>
+                <p className="text-sm text-muted-foreground">Permintaan tambahan</p>
+                <p className="font-bold whitespace-pre mb-4">{data.permintaan_tambahan}</p>
+            </>}
+
+            <h4 className="text-xl font-bold mt-4 mb-2">Kamar</h4>
+            <Table className="mb-4 min-w-[600px]">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[48px]">No.</TableHead>
@@ -99,7 +105,7 @@ export default function DetailReservasi({
             </Table>
 
             <h4 className="text-xl font-bold mb-2">Layanan Berbayar</h4>
-            <Table className="mb-4">
+            <Table className="mb-4 min-w-[600px]">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[48px]">No.</TableHead>

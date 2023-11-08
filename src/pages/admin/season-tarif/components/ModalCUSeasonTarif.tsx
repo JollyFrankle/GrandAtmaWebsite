@@ -10,7 +10,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
+import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
 
 const emptySeason: Season = {
     id: 0,

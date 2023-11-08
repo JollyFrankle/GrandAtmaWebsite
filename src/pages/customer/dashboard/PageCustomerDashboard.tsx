@@ -2,12 +2,12 @@ import AuthHelper from "@/utils/AuthHelper"
 import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import { useState } from "react"
-import ModalDetailReservasi from "./components/ModalDetailReservasi"
+import ModalDetailReservasi from "../../../components/modals/ModalDetailReservasi"
 import { BookmarkCheckIcon, UserIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
 import usePageTitle from "@/hooks/usePageTitle"
-import ReservasiHistoryTab from "./components/ReservasiHistoryTab"
+import ReservasiHistoryTab from "../../../components/reservasi/ReservasiHistoryTab"
 
 
 export default function PageCustomerDashboard() {

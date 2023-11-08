@@ -18,8 +18,12 @@ export const apiAuthenticated = axios.create({
     baseURL: BASE_URL,
     headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthHelper.getToken()}`
     }
+});
+
+apiAuthenticated.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${AuthHelper.getToken()}`;
+    return config;
 });
 
 export interface ApiResponse<T> {

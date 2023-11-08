@@ -9,7 +9,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
+import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
 
 const emptyLTB: UserCustomer = {
     id: 0,

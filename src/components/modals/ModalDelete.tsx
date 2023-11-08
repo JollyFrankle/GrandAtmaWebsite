@@ -7,12 +7,14 @@ export default function ModalDelete({
     onOpenChange,
     onConfirmed,
     title = "Konfirmasi Penghapusan",
+    deleteButton = <><Trash2Icon className="h-4 w-4 me-2" /> Hapus</>,
     children
 }: {
     open: boolean,
     onOpenChange: (open: boolean) => void,
     onConfirmed: () => void
     title?: string,
+    deleteButton?: React.ReactNode,
     children: React.ReactNode,
 }) {
     const onDeleteConfirmed = () => {
@@ -28,7 +30,7 @@ export default function ModalDelete({
             </div>
             <AlertDialogFooter>
                 <AlertDialogCancel type="button" onClick={() => onOpenChange(false)} className="me-2"><BanIcon className="h-4 w-4 me-2" /> Batal</AlertDialogCancel>
-                <AlertDialogAction type="button" onClick={onDeleteConfirmed}><Trash2Icon className="h-4 w-4 me-2" /> Hapus</AlertDialogAction>
+                <AlertDialogAction type="button" onClick={onDeleteConfirmed}>{deleteButton}</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>

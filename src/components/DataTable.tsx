@@ -48,13 +48,14 @@ export interface ColumnRules<T> {
 }
 
 export interface RowActions<T> {
-    action: string | React.ReactNode
-    onClick: (row: T) => void
+    action: string | React.ReactNode,
+    onClick: (row: T) => void,
+    enabled?: (row: T) => boolean
 }
 
 function generateActionChildren<T>(actions: RowActions<T>[], row: T) {
     return actions.map((action, i) => (
-        <DropdownMenuItem onClick={() => action.onClick(row)} key={i}>{action.action}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => action.onClick(row)} key={i} disabled={!(action.enabled?.(row) ?? true)}>{action.action}</DropdownMenuItem>
     ))
 }
 

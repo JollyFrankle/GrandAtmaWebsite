@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Reservasi } from "@/utils/ApiModels"
-import DetailReservasi from "./DetailReservasi"
+import DetailReservasi from "../reservasi/DetailReservasi"
 
 export default function ModalDetailReservasi({
     loading,

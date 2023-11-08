@@ -313,15 +313,15 @@ export default function PageRoomSearch() {
                     <p>Rincian reservasi:</p>
                     <ul className="list-none mb-4">
                         <li className="flex items-center">
-                            <span className="w-28 text-secondary-foreground">Check in:</span>
+                            <span className="w-28 text-muted-foreground">Check in:</span>
                             <strong>{Formatter.formatDate(initData?.date.from!!)}</strong>
                         </li>
                         <li className="flex items-center">
-                            <span className="w-28 text-secondary-foreground">Check out:</span>
+                            <span className="w-28 text-muted-foreground">Check out:</span>
                             <strong>{Formatter.formatDate(initData?.date.to!!)} ({jumlahMalam} malam)</strong>
                         </li>
                         <li className="flex items-center">
-                            <span className="w-28 text-secondary-foreground">Jumlah tamu:</span>
+                            <span className="w-28 text-muted-foreground">Jumlah tamu:</span>
                             <strong>{initData?.dewasa} dewasa, {initData?.anak} anak</strong>
                         </li>
                     </ul>

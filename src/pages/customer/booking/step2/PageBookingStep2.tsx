@@ -95,27 +95,27 @@ export default function PageBookingStep2() {
 
                 <div className="flex flex-col md:grid md:grid-cols-2 gap-4 mb-4">
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nama lengkap:</div>
+                        <div className="text-muted-foreground">Nama lengkap:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.nama}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nomor identitas:</div>
+                        <div className="text-muted-foreground">Nomor identitas:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.jenis_identitas.toUpperCase()} &ndash; {detail?.user_customer?.no_identitas}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Email:</div>
+                        <div className="text-muted-foreground">Email:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.email}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nomor telepon:</div>
+                        <div className="text-muted-foreground">Nomor telepon:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.no_telp}</div>
                     </div>
 
                     <div className="col-span-2">
-                        <div className="text-secondary-foreground">Alamat:</div>
+                        <div className="text-muted-foreground">Alamat:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.alamat}</div>
                     </div>
                 </div>
@@ -124,9 +124,11 @@ export default function PageBookingStep2() {
                 <h2 className="text-xl font-bold mb-2">Layanan Tambahan</h2>
 
                 <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
-                    {layananGrouped?.map((item) => (
+                    {layananGrouped.length > 0 ? layananGrouped?.map((item) => (
                         <BookingS2FasiltasItem groupedFasilitas={item} />
-                    ))}
+                    )) : (
+                        <li className="p-4">Tidak ada layanan tambahan</li>
+                    )}
                 </ul>
 
                 <hr className="my-4" />
@@ -135,7 +137,7 @@ export default function PageBookingStep2() {
 
                 <Card className="shadow">
                     <CardContent className="whitespace-pre p-4">
-                        {detail?.permintaan_tambahan ?? "(Tidak ada)"}
+                        {detail?.permintaan_tambahan ?? "Tidak ada permintaan khusus"}
                     </CardContent>
                 </Card>
 
@@ -244,8 +246,8 @@ export default function PageBookingStep2() {
                         <li className="p-4 border-b flex justify-between">
                             <div className="flex-1">
                                 <div className="font-bold">{item.jenis_kamar?.nama}</div>
-                                <div className="text-secondary-foreground text-sm">{item.amount} kamar &times; {detail?.jumlah_malam} malam</div>
-                                <div className="text-secondary-foreground">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
+                                <div className="text-muted-foreground text-sm">{item.amount} kamar &times; {detail?.jumlah_malam} malam</div>
+                                <div className="text-muted-foreground">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
                             </div>
                             <div className="font-bold">
                                 {Formatter.formatCurrency(item.harga * item.amount * (detail?.jumlah_malam ?? 0))}
@@ -256,15 +258,15 @@ export default function PageBookingStep2() {
                     <li className="p-4">
                         {/* <div className="font-bold">Biaya Lain</div> */}
                         <div className="flex justify-between">
-                            <div className="text-secondary-foreground">Pajak</div>
+                            <div className="text-muted-foreground">Pajak</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="text-secondary-foreground">Biaya Layanan</div>
+                            <div className="text-muted-foreground">Biaya Layanan</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="text-secondary-foreground">Biaya Penelitian & Pengembangan Sistem</div>
+                            <div className="text-muted-foreground">Biaya Penelitian & Pengembangan Sistem</div>
                             <div className="text-green-600 font-bold">GRATIS</div>
                         </div>
                     </li>
@@ -281,7 +283,7 @@ export default function PageBookingStep2() {
                 </ul>
 
                 <div className="md:flex justify-between mt-4">
-                    <div>
+                    <div className="mb-4 lg:mb-0">
                         <div className="mb-1 font-bold">Persetujuan</div>
                         <div className="flex items-center space-x-2">
                             <Checkbox id="waktuCI" checked={checkSudahBaca} onCheckedChange={(checked) => setCheckSudahBaca(checked === true)} />
@@ -305,23 +307,23 @@ export default function PageBookingStep2() {
                         <CardContent>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check in:</span>
+                                    <span className="text-muted-foreground">Check in:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.arrival_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check out:</span>
+                                    <span className="text-muted-foreground">Check out:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.departure_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah malam:</span>
+                                    <span className="text-muted-foreground">Jumlah malam:</span>
                                     <span className="font-bold">{detail?.jumlah_malam} malam</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah kamar:</span>
+                                    <span className="text-muted-foreground">Jumlah kamar:</span>
                                     <span className="font-bold">{detail.reservasi_rooms?.length ?? "Tidak ada"} kamar</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah tamu:</span>
+                                    <span className="text-muted-foreground">Jumlah tamu:</span>
                                     <span className="font-bold">{detail.jumlah_dewasa} dewasa &bull; {detail.jumlah_anak} anak</span>
                                 </div>
                                 <hr className="my-2" />
@@ -342,13 +344,13 @@ export default function PageBookingStep2() {
                                             </div>
                                             <div className="text-end">
                                                 <div>{Formatter.formatCurrency(item.harga * item.amount)}</div>
-                                                <div className="text-sm text-secondary-foreground">per malam</div>
+                                                <div className="text-sm text-muted-foreground">per malam</div>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Harga per malam:</span>
+                                    <span className="text-muted-foreground">Harga per malam:</span>
                                     <span className="font-bold">{Formatter.formatCurrency(detail.total / detail.jumlah_malam)}</span>
                                 </div>
                             </div>

@@ -10,7 +10,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ModalSaveConfirm from "../../_layout/components/ModalSaveConfirm";
+import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
 
 const emptyLTB: FasilitasLayananTambahan = {
     id: 0,

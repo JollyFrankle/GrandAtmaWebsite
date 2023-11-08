@@ -102,8 +102,8 @@ export default function PageBookingStep3() {
         <section className="container py-8 flex flex-col-reverse lg:flex-row gap-6 mb-4">
             <div className="flex-1">
                 <h2 className="text-xl font-bold mb-2">Pembayaran</h2>
-                <Card className="flex flex-row items-center mb-4 overflow-auto">
-                    <img src={BankDiamond} className="h-36 aspect-video" />
+                <Card className="flex flex-col md:flex-row items-center mb-4 overflow-auto">
+                    <img src={BankDiamond} className="w-full lg:h-36 lg:w-auto aspect-video" />
                     <div className="p-4">
                         <div>Silakan transfer ke:</div>
                         <div className="font-bold text-xl">Bank Diamond</div>
@@ -183,15 +183,6 @@ export default function PageBookingStep3() {
                 </div>
 
                 <div className="md:flex mt-4">
-                    {/* <div>
-                        <div className="mb-1 font-bold">Persetujuan</div>
-                        <div className="flex items-center space-x-2">
-                            <Checkbox id="waktuCI" checked={checkSudahBaca} onCheckedChange={(checked) => setCheckSudahBaca(checked === true)} />
-                            <label htmlFor="waktuCI" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Saya sudah membaca dan menyetujui semua aturan akomodasi
-                            </label>
-                        </div>
-                    </div> */}
                     <Button className="flex-1 text-lg h-14 px-6" onClick={submitData} disabled={isLoading || !fileBukti}>
                         Saya Sudah Membayar <BanknoteIcon className="w-6 h-6 ms-2" />
                     </Button>
@@ -207,23 +198,23 @@ export default function PageBookingStep3() {
                         <CardContent>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check in:</span>
+                                    <span className="text-muted-foreground">Check in:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.arrival_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check out:</span>
+                                    <span className="text-muted-foreground">Check out:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.departure_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah malam:</span>
+                                    <span className="text-muted-foreground">Jumlah malam:</span>
                                     <span className="font-bold">{detail?.jumlah_malam} malam</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah kamar:</span>
+                                    <span className="text-muted-foreground">Jumlah kamar:</span>
                                     <span className="font-bold">{detail.reservasi_rooms?.length ?? "Tidak ada"} kamar</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah tamu:</span>
+                                    <span className="text-muted-foreground">Jumlah tamu:</span>
                                     <span className="font-bold">{detail.jumlah_dewasa} dewasa &bull; {detail.jumlah_anak} anak</span>
                                 </div>
                                 <hr className="my-2" />
@@ -244,13 +235,13 @@ export default function PageBookingStep3() {
                                             </div>
                                             <div className="text-end">
                                                 <div>{Formatter.formatCurrency(item.harga * item.amount)}</div>
-                                                <div className="text-sm text-secondary-foreground">per malam</div>
+                                                <div className="text-sm text-muted-foreground">per malam</div>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Harga per malam:</span>
+                                    <span className="text-muted-foreground">Harga per malam:</span>
                                     <span className="font-bold">{Formatter.formatCurrency(detail.total / detail.jumlah_malam)}</span>
                                 </div>
                             </div>

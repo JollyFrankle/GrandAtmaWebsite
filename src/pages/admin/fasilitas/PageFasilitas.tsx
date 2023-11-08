@@ -7,7 +7,7 @@ import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalCUFasilitas from "./components/ModalCUFasilitas";
-import ModalDelete from "../_layout/components/ModalDelete";
+import ModalDelete from "../../../components/modals/ModalDelete";
 import Formatter from "@/utils/Formatter";
 import { useNavigate } from "react-router-dom";
 

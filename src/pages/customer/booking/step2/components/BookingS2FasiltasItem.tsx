@@ -16,7 +16,7 @@ export default function BookingS2FasiltasItem({
             <div className="col-span-4 md:col-span-5 flex flex-col xl:flex-row items-center gap-4 p-4">
                 <div className="flex-1">
                     <div className="font-bold">{item?.nama}</div>
-                    <div className="text-secondary-foreground">{groupedFasilitas?.amount} {item?.satuan} &times; {Formatter.formatCurrency((groupedFasilitas?.hargaTotal ?? 0) / (groupedFasilitas?.amount ?? 1))}</div>
+                    <div className="text-muted-foreground">{groupedFasilitas?.amount} {item?.satuan} &times; {Formatter.formatCurrency((groupedFasilitas?.hargaTotal ?? 0) / (groupedFasilitas?.amount ?? 1))}</div>
                 </div>
 
                 <div className="flex border rounded overflow-auto items-stretch w-fit h-fit">

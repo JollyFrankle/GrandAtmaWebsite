@@ -24,7 +24,7 @@ export default function BookingS1FasiltasItem({
                 <div className="flex-1">
                     <div className="font-bold">{item.nama}</div>
                     <div className="text-sm mb-2 lg:line-clamp-3">{item.short_desc}</div>
-                    <div className="text-secondary-foreground">{Formatter.formatCurrency(item.tarif)} per {item.satuan}</div>
+                    <div className="text-muted-foreground">{Formatter.formatCurrency(item.tarif)} per {item.satuan}</div>
                 </div>
 
                 <div className="flex border rounded overflow-auto items-stretch w-fit h-fit">

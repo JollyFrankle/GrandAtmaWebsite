@@ -61,7 +61,7 @@ const router = createBrowserRouter([
       { path: "step-3", element: <PageBookingStep3 /> },
       { path: "step-4", element: <PageBookingStep4 /> },
     ]
-},
+  },
   {
     path: "/admin",
     element: <LayoutAdmin />,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiErrorResponse, ApiResponse, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import { toast } from "react-toastify";
 import Formatter from "@/utils/Formatter";
@@ -27,16 +27,19 @@ export default function LayoutBookingHeader() {
         m: 0,
         s: 0
     });
+    const [showDeadline, setShowDeadline] = useState(false);
     const [ready, setReady] = useState(false);
     const [showModalExpired, setShowModalExpired] = useState(false);
 
     const navigate = useNavigate()
+    const { pathname } = useLocation()
 
     const getDeadline = () => {
         apiAuthenticated.get<ApiResponse<{ deadline: string, stage: number }>>(`customer/booking/${id}/deadline`).then((res) => {
             const data = res.data
             const deadline = new Date(data.data.deadline)
             setDeadline(deadline)
+            setShowDeadline(true)
 
             // Navigate to the correct stage
             navigate(`/booking/${id}/step-${data.data.stage}`)
@@ -67,7 +70,7 @@ export default function LayoutBookingHeader() {
             m: m,
             s: s
         })
-        if (diff <= 0) {
+        if (diff < 0) {
             setShowModalExpired(true)
         }
     }
@@ -106,11 +109,19 @@ export default function LayoutBookingHeader() {
         }
     }, [])
 
+    // if pathname ends-with 'step-4', remove the timer
+    useEffect(() => {
+        if (pathname.endsWith("step-4")) {
+            setShowDeadline(false)
+            clearInterval(interval)
+        }
+    }, [pathname])
+
     return user && <>
     <ScrollToTop />
     <header className="lg:sticky -top-24 transition-all z-50">
         <section className="pb-8 pt-8 shadow-lg data-[scrolled=true]:lg:pb-4 relative transition-all" data-scrolled={minimize}>
-            <img src={AbstractBG} className="absolute top-0 left-0 w-full h-full pointer-events-none rounded-b-3xl object-cover" />
+            <img src={AbstractBG} className="absolute top-0 left-0 w-full h-full pointer-events-none object-cover" />
             <div className="container relative block">
                 <img src={InlineLogo} className="w-48 h-12 object-contain mb-8" />
                 <div className="md:flex items-center justify-between">
@@ -146,7 +157,9 @@ export default function LayoutBookingHeader() {
                 </div>
             </div>
         </section>
-        <section className="sticky top-0 lg:static bg-red-500 hover:bg-red-600 transition-all py-2 text-white justify-center">
+    </header>
+    {showDeadline && (
+        <section className="sticky top-0 z-50 lg:top-[4.25rem] bg-red-500 hover:bg-red-600 transition-all py-2 text-white justify-center">
             <div className="container text-center text-sm flex">
                 <span className="me-2">Selesaikan pemesanan dalam</span>
                 <strong className="bg-white text-red-600 w-6 text-center rounded">{Formatter.padZero(deadlineHMS.h)}</strong>
@@ -156,7 +169,7 @@ export default function LayoutBookingHeader() {
                 <strong className="bg-white text-red-600 w-6 text-center rounded">{Formatter.padZero(deadlineHMS.s)}</strong>
             </div>
         </section>
-    </header>
+    )}
     {ready ? <Outlet /> : (
         <div className="container py-8">
             <div className="grid grid-cols-12 gap-4">

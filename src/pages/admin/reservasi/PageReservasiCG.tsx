@@ -7,9 +7,9 @@ import { Button } from "@/cn/components/ui/button"
 import usePageTitle from "@/hooks/usePageTitle"
 import { toast } from "react-toastify"
 import { useNavigate, useParams } from "react-router-dom"
-import ModalDetailReservasi from "@/pages/customer/dashboard/components/ModalDetailReservasi"
+import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/cn/components/ui/table"
-import ReservasiHistoryTab from "@/pages/customer/dashboard/components/ReservasiHistoryTab"
+import ReservasiHistoryTab from "@/components/reservasi/ReservasiHistoryTab"
 
 
 export default function PageReservasiCG() {

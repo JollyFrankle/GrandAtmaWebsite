@@ -137,7 +137,7 @@ export default function PageBookingStep1() {
         <section className="container py-8 flex flex-col-reverse lg:flex-row gap-6 mb-4">
             <div className="flex-1">
                 <h2 className="text-xl font-bold mb-2">Data Kontak & Tamu</h2>
-                <p className="text-secondary-foreground mb-2">Data kontak yang digunakan dalam pemesanan ini sesuai dengan profil Anda yang sedang masuk akun saat ini.</p>
+                <p className="text-muted-foreground mb-2">Data kontak yang digunakan dalam pemesanan ini sesuai dengan profil Anda yang sedang masuk akun saat ini.</p>
 
                 <Alert className="mb-4 shadow">
                     <AlertOctagonIcon className="w-4 h-4 me-2" />
@@ -149,34 +149,34 @@ export default function PageBookingStep1() {
 
                 <div className="flex flex-col md:grid md:grid-cols-2 gap-4 mb-4">
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nama lengkap:</div>
+                        <div className="text-muted-foreground">Nama lengkap:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.nama}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nomor identitas:</div>
+                        <div className="text-muted-foreground">Nomor identitas:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.jenis_identitas.toUpperCase()} &ndash; {detail?.user_customer?.no_identitas}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Email:</div>
+                        <div className="text-muted-foreground">Email:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.email}</div>
                     </div>
 
                     <div className="col-span-1">
-                        <div className="text-secondary-foreground">Nomor telepon:</div>
+                        <div className="text-muted-foreground">Nomor telepon:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.no_telp}</div>
                     </div>
 
                     <div className="col-span-2">
-                        <div className="text-secondary-foreground">Alamat:</div>
+                        <div className="text-muted-foreground">Alamat:</div>
                         <div className="font-bold text-lg">{detail?.user_customer?.alamat}</div>
                     </div>
                 </div>
 
                 <hr className="my-4" />
                 <h2 className="text-xl font-bold mb-2">Layanan Tambahan</h2>
-                <p className="text-secondary-foreground mb-2">Layanan tambahan yang dapat Anda pesan sebelum check in.</p>
+                <p className="text-muted-foreground mb-2">Layanan tambahan yang dapat Anda pesan sebelum check in.</p>
 
                 <Alert className="mb-4 shadow">
                     <AlertOctagonIcon className="w-4 h-4 me-2" />
@@ -199,7 +199,7 @@ export default function PageBookingStep1() {
                 <hr className="my-4" />
 
                 <h2 className="text-xl font-bold mb-2">Permintaan Khusus</h2>
-                <p className="text-secondary-foreground mb-2">Anda dapat meminta waktu check in, check out, atau permintaan lain.</p>
+                <p className="text-muted-foreground mb-2">Anda dapat meminta waktu check in, check out, atau permintaan lain.</p>
 
                 <Alert className="mb-4 shadow">
                     <AlertOctagonIcon className="w-4 h-4 me-2" />
@@ -272,23 +272,23 @@ export default function PageBookingStep1() {
                         <CardContent>
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check in:</span>
+                                    <span className="text-muted-foreground">Check in:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.arrival_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Check out:</span>
+                                    <span className="text-muted-foreground">Check out:</span>
                                     <span className="font-bold">{Formatter.formatDate(new Date(detail.departure_date))}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah malam:</span>
+                                    <span className="text-muted-foreground">Jumlah malam:</span>
                                     <span className="font-bold">{detail?.jumlah_malam} malam</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah kamar:</span>
+                                    <span className="text-muted-foreground">Jumlah kamar:</span>
                                     <span className="font-bold">{detail.reservasi_rooms?.length ?? "Tidak ada"} kamar</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Jumlah tamu:</span>
+                                    <span className="text-muted-foreground">Jumlah tamu:</span>
                                     <span className="font-bold">{detail.jumlah_dewasa} dewasa &bull; {detail.jumlah_anak} anak</span>
                                 </div>
                                 <hr className="my-2" />
@@ -309,13 +309,13 @@ export default function PageBookingStep1() {
                                             </div>
                                             <div className="text-end">
                                                 <div>{Formatter.formatCurrency(item.harga * item.amount)}</div>
-                                                <div className="text-sm text-secondary-foreground">per malam</div>
+                                                <div className="text-sm text-muted-foreground">per malam</div>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-secondary-foreground">Harga per malam:</span>
+                                    <span className="text-muted-foreground">Harga per malam:</span>
                                     <span className="font-bold">{Formatter.formatCurrency(detail.total / detail.jumlah_malam)}</span>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@ export default function PageBookingStep1() {
                     <p className="mb-4">Mohon pastikan ulang data berikut. Setelah Anda melanjutkan, data berikut tidak dapat diubah lagi:</p>
                     <p className="font-bold text-lg">Layanan Tambahan</p>
                     {selectedFasilitas.length === 0 && (
-                        <div className="text-secondary-foreground">Tidak ada yang dipesan</div>
+                        <div className="text-muted-foreground">Tidak ada yang dipesan</div>
                     )}
                     <ul className="list-disc list-outside mb-4 ms-5">
                         {selectedFasilitas.map((item) => (
@@ -344,7 +344,7 @@ export default function PageBookingStep1() {
 
                     <p className="font-bold text-lg">Permintaan Khusus</p>
                     {!waktuCheckIn.value && !waktuCheckOut.value && !permintaanTambahan.trim() && (
-                        <div className="text-secondary-foreground">Tidak ada permintaan khusus</div>
+                        <div className="text-muted-foreground">Tidak ada permintaan khusus</div>
                     )}
                     <ul className="list-disc list-outside mb-4 ms-5">
                         {waktuCheckIn.value && (
@@ -357,7 +357,7 @@ export default function PageBookingStep1() {
                             <li>Permintaan tambahan: <pre>{permintaanTambahan}</pre></li>
                         )}
                     </ul>
-                    <p className="text-secondary-foreground ">Apakah Anda yakin ingin melanjutkan pemesanan?</p>
+                    <p className="text-muted-foreground ">Apakah Anda yakin ingin melanjutkan pemesanan?</p>
                 </div>
                 <DialogFooter className="pt-4">
                     <Button variant="secondary" onClick={() => setShowDialogConfirm(false)}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>

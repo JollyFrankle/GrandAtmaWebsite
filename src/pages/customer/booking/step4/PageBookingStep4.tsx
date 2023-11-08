@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
-import DetailReservasi from "../../dashboard/components/DetailReservasi"
+import DetailReservasi from "../../../../components/reservasi/DetailReservasi"
 
 export default function PageBookingStep4() {
     const params = useParams<{ id: string }>()
@@ -33,7 +33,7 @@ export default function PageBookingStep4() {
         <section className="container py-8 flex flex-col-reverse lg:flex-row gap-6 mb-4">
             <div className="flex-1">
                 <h2 className="text-xl font-bold mb-2">Anda Sudah Selesai!</h2>
-                <p className="text-secondary-foreground">Terima kasih telah melakukan reservasi di Grand Atma Hotel. Berikut adalah detail reservasi Anda.</p>
+                <p className="text-muted-foreground">Terima kasih telah melakukan reservasi di Grand Atma Hotel. Berikut adalah detail reservasi Anda.</p>
 
                 <DetailReservasi data={detail} />
 

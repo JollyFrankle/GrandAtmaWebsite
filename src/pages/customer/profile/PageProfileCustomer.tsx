@@ -3,7 +3,7 @@ import IconInput from "@/components/IconInput"
 import IconSelect from "@/components/IconSelect"
 import IconTextarea from "@/components/IconTextarea"
 import usePageTitle from "@/hooks/usePageTitle"
-import ModalSaveConfirm from "@/pages/admin/_layout/components/ModalSaveConfirm"
+import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
 import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import Formatter from "@/utils/Formatter"
@@ -15,10 +15,8 @@ import { toast } from "react-toastify"
 
 
 export default function PageProfileCustomer() {
-    const user = AuthHelper.getUserCustomer()!!
-    user.password = ""
     const [isEditing, setIsEditing] = useState(false)
-    const [data, setData] = useState(user)
+    const [data, setData] = useState<UserCustomer>(AuthHelper.getUserCustomer()!!)
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [oldPassword, setOldPassword] = useState("")
     const [changePassword, setChangePassword] = useState(false)
@@ -35,7 +33,7 @@ export default function PageProfileCustomer() {
     }
 
     const resetToDefault = () => {
-        setData(user)
+        setData(AuthHelper.getUserCustomer()!!)
         setIsEditing(false)
     }
 

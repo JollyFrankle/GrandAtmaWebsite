@@ -89,7 +89,7 @@ export default function PageHome() {
             </div>
         </section>
 
-        <section className="py-8 rounded-3xl shadow-lg bg-secondary text-secondary-foreground relative overflow-hidden">
+        <section className="py-8 rounded-3xl shadow-lg bg-secondary text-muted-foreground relative overflow-hidden">
             <div className="container">
                 <BackpackIcon className="absolute -bottom-14 w-96 h-96 left-0 opacity-10" />
                 <LuggageIcon className="absolute -bottom-14 w-96 h-96 right-0 opacity-10" />

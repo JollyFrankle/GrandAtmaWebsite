@@ -65,13 +65,13 @@ export default function TarifKamarCard({
                             </> : (
                                 <div className="font-bold text-xl">{Formatter.formatCurrency(item.rincian_tarif.harga_diskon)}</div>
                             )}
-                            <div className="text-secondary-foreground">/malam/kamar</div>
+                            <div className="text-muted-foreground">/malam/kamar</div>
                         </div>
                     </div>
                     <div className="block md:flex justify-between items-end">
                         <div>
                             {item.rincian_tarif.catatan.length > 0 && <>
-                                <p className="text-sm text-secondary-foreground font-bold">Catatan:</p>
+                                <p className="text-sm text-muted-foreground font-bold">Catatan:</p>
                                 {item.rincian_tarif.catatan.map((catatan, index) => (
                                     catatan.type === "w" ? (
                                         <p key={index} className="text-sm text-orange-600 flex items-center">

@@ -2,12 +2,14 @@ import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
 import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
-import { CircleSlashIcon, ClipboardListIcon } from "lucide-react"
+import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import ModalDelete from "../modals/ModalDelete"
+import { Card, CardContent } from "@/cn/components/ui/card"
+import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 
 type Status = "upcoming" | "completed" | "cancelled"
-
 
 function getColumns(idCustomer?: number) {
     const columns: ColumnRules<Reservasi>[] = [
@@ -80,7 +82,8 @@ function getActions(status?: Status, onDetailClick?: (id: number) => void, onCan
     if (status === "upcoming") {
         actions[0].push({
             action: <><CircleSlashIcon className="w-4 h-4 me-2" /> Batalkan</>,
-            onClick: (item) => onCancelClick?.(item)
+            onClick: (item) => onCancelClick?.(item),
+            enabled: (item) => new Date(item.arrival_date) > new Date()
         })
     }
 
@@ -104,9 +107,42 @@ export default function ListReservasi({
     const [reservations, setReservations] = useState<Reservasi[]>([])
     const [columns, setColumns] = useState<ColumnRules<Reservasi>[]>([])
     const [actions, setActions] = useState<RowActions<Reservasi>[][]>([])
+    const [currentData, setCurrentData] = useState<Reservasi>()
+    const [showCancelDialog, setShowCancelDialog] = useState(false)
+
+    const openCancelDialog = (item: Reservasi) => {
+        setCurrentData(item)
+        setShowCancelDialog(true)
+    }
+
+    const cancelReservation = () => {
+        if (!idCustomer) {
+            apiAuthenticated.delete<ApiResponse<Reservasi>>(`customer/reservasi/${currentData?.id}`).then((res) => {
+                const data = res.data
+                toast.success(data.message)
+                fetchReservations()
+            }).catch((err) => {
+                console.log(err)
+                toast.error("Gagal membatalkan reservasi.")
+            }).finally(() => {
+                setShowCancelDialog(false)
+            })
+        } else {
+            apiAuthenticated.delete<ApiResponse<Reservasi>>(`pegawai/reservasi/${idCustomer}/${currentData?.id}`).then((res) => {
+                const data = res.data
+                toast.success(data.message)
+                fetchReservations()
+            }).catch((err) => {
+                console.log(err)
+                toast.error("Gagal membatalkan reservasi.")
+            }).finally(() => {
+                setShowCancelDialog(false)
+            })
+        }
+    }
 
     useEffect(() => {
-        setActions(getActions(status, onDetailClick, () => toast.error("Not yet implemented")))
+        setActions(getActions(status, onDetailClick, openCancelDialog))
         setColumns(getColumns(idCustomer))
     }, [status])
 
@@ -143,7 +179,40 @@ export default function ListReservasi({
         fetchReservations()
     }, [])
 
-    return (
+    return <>
         <DataTable<Reservasi> data={reservations} columns={columns} isLoading={isLoading} actions={actions} />
-    )
+
+        <ModalDelete open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmed={cancelReservation} title="Batalkan Reservasi" deleteButton={<><CircleSlashIcon className="h-4 w-4 me-2" /> Batalkan Reservasi</>}>
+            <p className="mb-4">Apakah Anda yakin ingin membatalkan reservasi berikut:</p>
+            <Card className="mb-4">
+                <CardContent className="p-4">
+                    <p className="text-sm text-muted-foreground">Booking ID:</p>
+                    <p className="font-bold text-lg">{currentData?.id_booking}</p>
+                </CardContent>
+            </Card>
+            {/* {currentData?.arrival_date} {new Date(new Date().setDate(new Date().getDate() + 7)).toJSON()} */}
+            {currentData && new Date(currentData.arrival_date) > new Date(new Date().setDate(new Date().getDate() + 7)) ? (
+                <Alert>
+                    <CircleDollarSignIcon className="w-4 h-4 stroke-green-600" />
+                    <AlertTitle className="text-green-600">
+                        Anda akan mendapat <em>refund</em>.
+                    </AlertTitle>
+                    <AlertDescription>
+                        <p><em>Refund</em> diberikan sebesar 100% dari total harga kamar.</p>
+                        <p>Untuk tata cara melakukan <em>refund</em>, silakan hubungi kami.</p>
+                    </AlertDescription>
+                </Alert>
+            ) : (
+                <Alert variant="destructive">
+                    <CircleDollarSignIcon className="w-4 h-4 " />
+                    <AlertTitle>
+                        Anda tidak akan mendapat <em>refund</em>.
+                    </AlertTitle>
+                    <AlertDescription>
+                        <p>Uang Anda tidak akan kembali karena reservasi ini kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
+                    </AlertDescription>
+                </Alert>
+            )}
+        </ModalDelete>
+    </>
 }
