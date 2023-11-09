@@ -33,6 +33,9 @@ export default function PageLogin() {
         e?.preventDefault()
         setIsLoading(true)
         let redirectUrl = query.get("redirect")
+        if (!redirectUrl) {
+            redirectUrl = localStorage.getItem("afterLoginRedirect")
+        } // else go to dashboard normally
         apiPublic.post<ApiResponse<{user: UserPegawai & UserCustomer, token: string }>>(loginUrl, {
             username: email,
             password,
@@ -60,6 +63,7 @@ export default function PageLogin() {
                 }
             }
             navigate(redirectUrl)
+            localStorage.removeItem("afterLoginRedirect")
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
                 const data = err.response.data as ApiErrorResponse

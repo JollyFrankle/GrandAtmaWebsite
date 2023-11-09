@@ -24,12 +24,12 @@ export default function SummaryFooter({
         <footer className={`fixed left-0 bottom-0 w-full transition-transform duration-500 ease-in-out transform ${(kamarDipesan.length > 0 && show) ? 'translate-y-0' : 'translate-y-full'}`}>
             <div className="container py-4 rounded-xl bg-background shadow-lg mb-4">
                 <div className="md:flex justify-between items-center">
-                    <div>
+                    <div className="hidden md:block">
                         <div className="text-sm text-muted-foreground">Kamar yang dipesan:</div>
                         <div className="text-lg font-bold">{kamarDipesan.map((item) => `${item.count} ${item.nama}`).join(", ")}</div>
                     </div>
-                    <div className="md:flex items-center">
-                        <div className="md:me-6">
+                    <div className="flex justify-between items-center">
+                        <div className="hidden md:block md:me-6">
                             <div className="flex items-center">
                                 <span className="w-24 text-muted-foreground">Check in:</span>
                                 <strong>{Formatter.formatDate(initData?.date.from!!)}</strong>
@@ -42,8 +42,8 @@ export default function SummaryFooter({
                                 <span>{initData?.date && jumlahMalam} malam, {initData?.dewasa} dewasa, {initData?.anak} anak</span>
                             </div>
                         </div>
-                        <div className="text-center md:me-4 md:text-end">
-                            <div className="text-sm text-muted-foreground">Total harga:</div>
+                        <div className="md:me-4 md:text-end">
+                            <div className="text-sm text-muted-foreground">Harga per malam:</div>
                             {summaryKamarDipesan.hargaDiskon < summaryKamarDipesan.hargaNormal ? <>
                                 <div className="text-gray-400 -mb-1 line-through">{Formatter.formatCurrency(summaryKamarDipesan.hargaNormal)}</div>
                                 <div className="text-green-600 font-bold text-xl">{Formatter.formatCurrency(summaryKamarDipesan.hargaDiskon)}</div>

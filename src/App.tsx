@@ -18,13 +18,14 @@ import PageKamar from './pages/admin/kamar/PageKamar'
 import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
 import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
 import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
-import PageReservasiCG from './pages/admin/reservasi/PageReservasiCG'
+import PageReservasiCG from './pages/admin/customer-group/reservasi/PageReservasiCG'
 import PageRoomSearch from './pages/public/room-search/PageRoomSearch'
 import PageBookingStep1 from './pages/customer/booking/step1/PageBookingStep1'
 import LayoutBookingHeader from './pages/customer/booking/LayoutBookingHeader'
 import PageBookingStep2 from './pages/customer/booking/step2/PageBookingStep2'
 import PageBookingStep3 from './pages/customer/booking/step3/PageBookingStep3'
 import PageBookingStep4 from './pages/customer/booking/step4/PageBookingStep4'
+import PageRoomSearchCG from './pages/admin/customer-group/reservasi/new/PageRoomSearchCG'
 
 const router = createBrowserRouter([
   {
@@ -71,7 +72,8 @@ const router = createBrowserRouter([
       { path: "fasilitas", element: <PageFasilitas /> },
       { path: "season", element: <PageSeasonTarif /> },
       { path: "cg", element: <PageCustomerGroup /> },
-      { path: "cg/reservasi/:id", element: <PageReservasiCG /> }
+      { path: "cg/:id", element: <PageReservasiCG /> },
+      { path: "cg/:id/new", element: <PageRoomSearchCG /> }
     ]
   }
 ])

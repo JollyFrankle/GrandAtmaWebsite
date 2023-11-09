@@ -3,7 +3,7 @@ import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
 import { ApiResponse, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import { CalendarCheck2Icon, EyeIcon, PlusIcon } from "lucide-react";
+import { CalendarCheck2Icon, EyeIcon, UserPlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalCCustomerGroup from "./components/ModalCCustomerGroup";
@@ -70,7 +70,7 @@ export default function PageCustomerGroup() {
                 setIsEditing(true)
                 setOpenModalDetail(true)
             }}>
-                <PlusIcon className="w-4 h-4 me-2" /> Tambah
+                <UserPlusIcon className="w-4 h-4 me-2" /> Customer Baru
             </Button>
         </div>
 
@@ -107,7 +107,7 @@ export default function PageCustomerGroup() {
             {
                 action: <><CalendarCheck2Icon className="w-4 h-4 me-2" /> Riwayat Reservasi</>,
                 onClick(row) {
-                    navigate(`/admin/cg/reservasi/${row.id}`)
+                    navigate(`/admin/cg/${row.id}`)
                 }
             }
         ]]} isLoading={tableLoading} />

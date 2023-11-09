@@ -27,7 +27,7 @@ export default function RoomSearch({
     showIntro?: boolean,
     className?: string,
     innerClassName?: string,
-    onClickSearch?: () => void
+    onClickSearch?: (data: RoomSearchData) => void
 }) {
     const [inDate, setInDate] = useState<DateRange | undefined>({
         from: new Date(),
@@ -56,8 +56,16 @@ export default function RoomSearch({
             toast.error("Jumlah dewasa tidak boleh kurang dari jumlah kamar.")
             return
         }
-        navigate(`/search?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
-        onClickSearch?.()
+        if (onClickSearch) {
+            onClickSearch({
+                date: inDate,
+                dewasa: inDewasa,
+                anak: inAnak,
+                jumlahKamar: inJumlahKamar
+            })
+        } else {
+            navigate(`/search?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
+        }
     }
 
     useEffect(() => {

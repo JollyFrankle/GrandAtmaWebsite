@@ -2,11 +2,11 @@ import AuthHelper from "@/utils/AuthHelper"
 import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
-import { PlusIcon } from "lucide-react"
+import { BookmarkPlusIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import usePageTitle from "@/hooks/usePageTitle"
 import { toast } from "react-toastify"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/cn/components/ui/table"
 import ReservasiHistoryTab from "@/components/reservasi/ReservasiHistoryTab"
@@ -51,14 +51,16 @@ export default function PageReservasiCG() {
     return <>
         <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">Riwayat Reservasi</h1>
-            <Button disabled>
-                <PlusIcon className="w-4 h-4 me-2" /> Tambah
+            <Button asChild>
+                <Link to={`/admin/cg/${idC}/new`}>
+                    <BookmarkPlusIcon className="w-4 h-4 me-2" /> Reservasi Baru
+                </Link>
             </Button>
         </div>
 
         {user && <>
             <p>Menampilkan riwayat reservasi untuk:</p>
-            <Table className="w-fit">
+            <Table className="w-fit mb-4">
                 <TableBody>
                     <TableRow>
                         <TableHead>Nama</TableHead>

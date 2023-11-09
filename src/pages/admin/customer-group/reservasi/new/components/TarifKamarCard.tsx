@@ -1,5 +1,5 @@
 import Formatter from "@/utils/Formatter"
-import { KamarDipesan, TarifKamar } from "../PageRoomSearch"
+import { KamarDipesan, TarifKamar } from "../PageRoomSearchCG"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
@@ -19,11 +19,12 @@ export default function TarifKamarCard({
     item: TarifKamar,
     jumlahKamarYangDipesan: number,
     jumlahKamarSaatIni: number,
-    onKamarDipesanChange: (rincianTarif: TarifKamar, amount: 1 | -1) => void
+    onKamarDipesanChange: (rincianTarif: TarifKamar, amount: number) => void
 }) {
     const objKD = kamarDipesan.find(kamar => kamar.idJK === item.jenis_kamar.id)
     const btnMinusDisabled = (objKD?.count ?? 0) <= 0
     const btnPlusDisabled = jumlahKamarSaatIni >= jumlahKamarYangDipesan || (objKD?.count ?? 0) >= item.rincian_tarif.jumlah_kamar
+    const btnBulkAddDisabled = jumlahKamarSaatIni >= jumlahKamarYangDipesan || (objKD?.count ?? 0) >= item.rincian_tarif.jumlah_kamar
     return (
         <Card className={`shadow-lg mb-8 lg:grid grid-cols-3 overflow-auto ${item.rincian_tarif.jumlah_kamar <= 0 ? 'transition-all opacity-50' : ''}`}>
             <img src={getImage(item.jenis_kamar.gambar)} className="col-span-1 min-h-[18rem] object-cover w-full h-full" />
@@ -86,6 +87,9 @@ export default function TarifKamarCard({
                             </>}
                         </div>
                         <div className="flex border rounded overflow-auto items-stretch w-fit mx-auto md:me-0">
+                            <Button className="rounded-none px-3" onClick={() => onKamarDipesanChange(item, 0)} disabled={btnBulkAddDisabled}>
+                                Pilih Semua
+                            </Button>
                             <div className="flex items-center px-4 bg-secondary">Jumlah kamar:</div>
                             <Button variant="ghost" className="rounded-none px-3" onClick={() => onKamarDipesanChange(item, -1)} disabled={btnMinusDisabled}>
                                 <MinusIcon className="w-4 h-4" />

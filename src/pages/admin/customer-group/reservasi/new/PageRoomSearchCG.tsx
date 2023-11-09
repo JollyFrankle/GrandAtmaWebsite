@@ -1,14 +1,13 @@
 import useQuery from "@/hooks/useQuery"
 import { useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import RoomSearch, { RoomSearchData } from "../_layout/components/RoomSearch"
+import { useNavigate, useParams } from "react-router-dom"
 import usePageTitle from "@/hooks/usePageTitle"
 import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, apiPublic, getImage } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter } from "@/cn/components/ui/dialog"
@@ -17,14 +16,15 @@ import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
 import Lottie from "lottie-react";
 
-import AbstractBG from "@/assets/images/abstract-bg.jpg"
 // import PetunjukPenggunaan from "@/assets/images/petunjuk-penggunaan.jpg"
 import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import { Separator } from "@/cn/components/ui/separator"
 import TarifKamarCard from "./components/TarifKamarCard"
-import SummaryFooter from "./components/SummaryFooter"
+// import SummaryFooter from "./components/SummaryFooter"
 import LottieNoData from "@/assets/lottie/Animation - 1699364588857.json"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import { RoomSearchData } from "@/pages/public/_layout/components/RoomSearch"
+import RoomSearchCG from "./components/RoomSearchCG"
 
 export interface KamarDipesan {
     idJK: number,
@@ -46,8 +46,11 @@ export interface SummaryKamarDipesan {
     totalKamarSaatIni: number
 }
 
-export default function PageRoomSearch() {
-    const params = useQuery()
+export default function PageRoomSearchCG() {
+    const params = useParams<{ id: string }>()
+    const { id: idC } = params
+
+    const query = useQuery()
     const [userType, setUserType] = useState<"c" | "p" | null>(null)
     const [kamarDipesan, setKamarDipesan] = useState<KamarDipesan[]>([])
     const [initData, setInitData] = useState<Required<RoomSearchData>>()
@@ -65,7 +68,7 @@ export default function PageRoomSearch() {
     })
     const [pageTitle, setPageTitle] = useState("Grand Atma Hotel - Cari Kamar")
 
-    const memoizedParams = useMemo(() => params, [params.get('from'), params.get('to'), params.get('dewasa'), params.get('anak'), params.get('jumlahKamar')])
+    const memoizedParams = useMemo(() => query, [query.get('from'), query.get('to'), query.get('dewasa'), query.get('anak'), query.get('jumlahKamar')])
     const navigate = useNavigate()
 
     usePageTitle(pageTitle)
@@ -76,7 +79,7 @@ export default function PageRoomSearch() {
         }
         setIsLoading(true)
         setIsReady(false)
-        apiPublic.post(`public/booking/search`, {
+        apiAuthenticated.post(`pegawai/booking/search/${idC}`, {
             check_in: Formatter.dateToYMD(initData.date.from!!),
             check_out: Formatter.dateToYMD(initData.date.to!!),
             jumlah_kamar: +initData.jumlahKamar,
@@ -180,10 +183,23 @@ export default function PageRoomSearch() {
         localStorage.setItem("afterLoginRedirect", `/search?${param}`)
     }
 
-    const updateKamarDipesan = (tarifKamar: TarifKamar, count: -1 | 1) => {
+    const updateKamarDipesan = (tarifKamar: TarifKamar, count: number) => {
         const jenisKamar = tarifKamar.jenis_kamar
         const rincianTarif = tarifKamar.rincian_tarif
         const index = kamarDipesan.findIndex(item => item.idJK === jenisKamar.id)
+
+        let additionalKamarCount = 0
+        if (count === 0) {
+            // Bulk add this kamar
+            additionalKamarCount = +(initData?.jumlahKamar ?? 0) - summaryKamarDipesan.totalKamarSaatIni
+            const totalKamar = +(kamarDipesan[index]?.count ?? 0) + additionalKamarCount
+            console.log(totalKamar, rincianTarif.jumlah_kamar)
+            if (totalKamar > rincianTarif.jumlah_kamar) {
+                additionalKamarCount = rincianTarif.jumlah_kamar - (kamarDipesan[index]?.count ?? 0)
+            }
+        } else {
+            additionalKamarCount = count
+        }
         if (index === -1) {
             setKamarDipesan(prev => {
                 const newKamarDipesan = [...prev]
@@ -191,7 +207,7 @@ export default function PageRoomSearch() {
                     idJK: jenisKamar.id,
                     nama: jenisKamar.nama,
                     gambar: jenisKamar.gambar,
-                    count: 1,
+                    count: additionalKamarCount,
                     harga: rincianTarif.harga,
                     harga_diskon: rincianTarif.harga_diskon
                 })
@@ -200,7 +216,7 @@ export default function PageRoomSearch() {
         } else {
             setKamarDipesan(prev => {
                 const newKamarDipesan = [...prev]
-                newKamarDipesan[index].count += count
+                newKamarDipesan[index].count += additionalKamarCount
                 if (newKamarDipesan[index].count === 0) {
                     newKamarDipesan.splice(index, 1)
                 }
@@ -264,18 +280,13 @@ export default function PageRoomSearch() {
     }, [kamarDipesan])
 
     return <>
-        <section className="pb-8 pt-32 shadow-lg relative">
-            <img src={AbstractBG} className="absolute top-0 left-0 w-full h-full pointer-events-none rounded-b-3xl object-cover" />
-            <div className="container relative">
-                <h3 className="text-3xl font-bold mb-4">
-                    Temukan <mark>Kamar</mark> Anda
-                </h3>
-                <RoomSearch initData={initData} showIntro={false} className="shadow-none border-0 bg-transparent" innerClassName="p-0" />
-            </div>
-        </section>
+            <h3 className="text-3xl font-bold mb-4">
+                Pencarian Kamar
+            </h3>
+            <RoomSearchCG initData={initData} showIntro={false} className="shadow-none border-0 bg-transparent" innerClassName="p-0" />
 
         <section className="py-4 border-b">
-            <div className="container flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
+            <div className="flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
                 <p>Ketersediaan kamar untuk<span className="lg:hidden">:</span></p>
                 <Separator orientation="vertical" />
                 <strong>{Formatter.formatDate(initData?.date.from!!)} - {Formatter.formatDate(initData?.date.to!!)}<span className="ms-2 lg:hidden">&ndash;</span></strong>
@@ -287,7 +298,7 @@ export default function PageRoomSearch() {
         </section>
 
         <section className="py-8">
-            <div className="container relative">
+            <div className="relative">
                 {!isLoading ? data.length > 0 ? data.map((item) => (
                     <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} />
                 )) : (
@@ -309,7 +320,7 @@ export default function PageRoomSearch() {
             </div>
         </section>
 
-        <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} />
+        {/* <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} /> */}
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
             <DialogContent>
