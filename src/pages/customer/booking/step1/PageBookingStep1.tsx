@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/cn/componen
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 import usePageTitle from "@/hooks/usePageTitle"
+import AuthHelper from "@/utils/AuthHelper"
 
 export interface PBS1SelectedFasilitas {
     id: number,
@@ -31,9 +32,14 @@ const waktuCICO = [...Array(24).keys()].map((item) => {
     return { label: `${hour}:00`, value: `${hour}:00` }
 })
 
+const urls = {
+    getDetail: '',
+    submitData: ''
+}
+
 export default function PageBookingStep1() {
-    const params = useParams<{ id: string }>()
-    const { id } = params
+    const params = useParams<{ idR: string, idC: string }>()
+    const { idR, idC } = params
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
@@ -52,7 +58,7 @@ export default function PageBookingStep1() {
     const [showDialogConfirm, setShowDialogConfirm] = useState(false)
 
     const navigate = useNavigate()
-    usePageTitle(`Pengisian Data #${Formatter.padZero(+(id ?? 0), 8)} – Grand Atma Hotel`)
+    usePageTitle(`Pengisian Data #${Formatter.padZero(+(idR ?? 0), 8)} – Grand Atma Hotel`)
 
     const fetchFasilitas = async () => {
         return apiPublic.get<ApiResponse<FasilitasLayananTambahan[]>>(`public/layanan-tambahan`).then((res) => {
@@ -62,7 +68,7 @@ export default function PageBookingStep1() {
     }
 
     const getDetailReservasi = async () => {
-        return apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+        return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {
             const data = res.data
             setDetail(data.data)
 
@@ -85,7 +91,7 @@ export default function PageBookingStep1() {
     const submitData = () => {
         setShowDialogConfirm(false)
         setIsLoading(true)
-        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi, layanan_tambahan: FasilitasLayananTambahan[] }>>(`customer/booking/${id}/step-1`, {
+        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi, layanan_tambahan: FasilitasLayananTambahan[] }>>(urls.submitData, {
             layanan_tambahan: selectedFasilitas,
             permintaan_khusus: {
                 expected_check_in: waktuCheckIn.value,
@@ -128,7 +134,17 @@ export default function PageBookingStep1() {
     }
 
     useEffect(() => {
-        Promise.all([getDetailReservasi(), fetchFasilitas()]).finally(() => {
+        if (AuthHelper.getUserCustomer()) {
+            urls.getDetail = `customer/reservasi/${idR}`
+            urls.submitData = `customer/booking/${idR}/step-1`
+        } else if (AuthHelper.getUserPegawai()) {
+            urls.getDetail = `pegawai/reservasi/${idC}/${idR}`
+            urls.submitData = `pegawai/booking/${idR}/step-1`
+        }
+        Promise.all([
+            getDetailReservasi(),
+            fetchFasilitas()
+        ]).finally(() => {
             setIsLoading(false)
         })
     }, [])

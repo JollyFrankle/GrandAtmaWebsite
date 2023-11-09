@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/cn/components/ui/card";
 import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
 import { useEffect, useState } from "react";
@@ -12,15 +11,9 @@ import { RoomSearchData } from "@/pages/public/_layout/components/RoomSearch";
 
 
 export default function RoomSearchCG({
-    initData,
-    showIntro = true,
-    className = "rounded-3xl shadow-lg",
-    innerClassName = ""
+    initData
 } : {
-    initData?: RoomSearchData,
-    showIntro?: boolean,
-    className?: string,
-    innerClassName?: string
+    initData?: RoomSearchData
 }) {
     const [inDate, setInDate] = useState<DateRange | undefined>({
         from: new Date(),
@@ -32,7 +25,8 @@ export default function RoomSearchCG({
 
     const navigate = useNavigate()
 
-    const onSubmit = () => {
+    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         if (!inDate) {
             toast.error("Mohon pilih tanggal terlebih dahulu.")
             return
@@ -50,7 +44,15 @@ export default function RoomSearchCG({
             return
         }
 
-        navigate(`?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
+        const queryParam = new URLSearchParams({
+            from: inDate.from?.getTime().toString() ?? "",
+            to: inDate.to?.getTime().toString() ?? "",
+            dewasa: inDewasa,
+            anak: inAnak,
+            jumlahKamar: inJumlahKamar,
+            ts: Date.now().toString()
+        })
+        navigate(`?${queryParam.toString()}`)
     }
 
     useEffect(() => {
@@ -69,11 +71,8 @@ export default function RoomSearchCG({
         }
     }, [initData])
 
-    return <Card className={`w-full h-full ${className}`}>
-        <CardContent className={`py-6 h-full ${innerClassName}`}>
-            <p className="mb-3 text-xl md:text-start" hidden={!showIntro}>
-                <mark className="font-bold"><em>Sugeng rawuh!</em></mark> Rencanakan liburan Anda selanjutnya ditemani kami!
-            </p>
+    return (
+        <form onSubmit={onSubmitHandler}>
             <div className="grid grid-cols-12 grid-flow-row gap-4 items-end">
                 <label className="col-span-12 lg:col-span-4">
                     <div className="text-lg mb-1 block">Tanggal menginap</div>
@@ -117,7 +116,7 @@ export default function RoomSearchCG({
                         min={1}
                         max={20} />
                 </div>
-                <Button className="col-span-12 lg:col-span-2 text-lg h-14" onClick={onSubmit}>
+                <Button className="col-span-12 lg:col-span-2 text-lg h-14" type="submit">
                     <SearchIcon className="w-4 h-4 me-2" />
                     Cari Kamar
                 </Button>
@@ -127,6 +126,6 @@ export default function RoomSearchCG({
                     Catatan: Anak-anak dianggap berusia 12 tahun ke bawah, dibuktikan dengan KTP Anak.
                 </div>
             </div>
-        </CardContent>
-    </Card>
+        </form>
+    )
 }

@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "booking/:id",
+    path: "booking/:idC/:idR",
     element: <LayoutBookingHeader />,
     children: [
       { path: "step-1", element: <PageBookingStep1 /> },

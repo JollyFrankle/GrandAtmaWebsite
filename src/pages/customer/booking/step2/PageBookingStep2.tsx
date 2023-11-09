@@ -11,6 +11,7 @@ import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 import BookingS2FasiltasItem from "./components/BookingS2FasiltasItem"
 import usePageTitle from "@/hooks/usePageTitle"
+import AuthHelper from "@/utils/AuthHelper"
 
 export interface PBS2GroupedFasilitas {
     fasilitas?: FasilitasLayananTambahan,
@@ -18,9 +19,14 @@ export interface PBS2GroupedFasilitas {
     hargaTotal: number
 }
 
+const urls = {
+    getDetail: '',
+    submitData: ''
+}
+
 export default function PageBookingStep2() {
-    const params = useParams<{ id: string }>()
-    const { id } = params
+    const params = useParams<{ idR: string, idC: string }>()
+    const { idR, idC } = params
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
@@ -29,10 +35,10 @@ export default function PageBookingStep2() {
     const [checkSudahBaca, setCheckSudahBaca] = useState(false)
 
     const navigate = useNavigate()
-    usePageTitle(`Resume Pemesanan #${Formatter.padZero(+(id ?? 0), 8)} – Grand Atma Hotel`)
+    usePageTitle(`Resume Pemesanan #${Formatter.padZero(+(idR ?? 0), 8)} – Grand Atma Hotel`)
 
     const getDetailReservasi = async () => {
-        return apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+        return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {
             const data = res.data.data
             setDetail(data)
 
@@ -67,7 +73,7 @@ export default function PageBookingStep2() {
 
     const submitData = () => {
         setIsLoading(true)
-        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(`customer/booking/${id}/step-2`).then((res) => {
+        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(urls.submitData).then((res) => {
             const data = res.data
             setDetail(data.data.reservasi)
             navigate(`../step-3`)
@@ -83,6 +89,13 @@ export default function PageBookingStep2() {
     }
 
     useEffect(() => {
+        if (AuthHelper.getUserCustomer()) {
+            urls.getDetail = `customer/reservasi/${idR}`
+            urls.submitData = `customer/booking/${idR}/step-2`
+        } else if (AuthHelper.getUserPegawai()) {
+            urls.getDetail = `pegawai/reservasi/${idC}/${idR}`
+            urls.submitData = `pegawai/booking/${idR}/step-2`
+        }
         Promise.all([getDetailReservasi()]).finally(() => {
             setIsLoading(false)
         })
@@ -125,7 +138,7 @@ export default function PageBookingStep2() {
 
                 <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
                     {layananGrouped.length > 0 ? layananGrouped?.map((item) => (
-                        <BookingS2FasiltasItem groupedFasilitas={item} />
+                        <BookingS2FasiltasItem key={item.fasilitas?.id} groupedFasilitas={item} />
                     )) : (
                         <li className="p-4">Tidak ada layanan tambahan</li>
                     )}
@@ -243,7 +256,7 @@ export default function PageBookingStep2() {
                 <h2 className="text-xl font-bold mb-2">Rincian Harga</h2>
                 <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
                     {kamarGroupedByJenis?.map((item) => (
-                        <li className="p-4 border-b flex justify-between">
+                        <li className="p-4 border-b flex justify-between" key={item.jenis_kamar?.id}>
                             <div className="flex-1">
                                 <div className="font-bold">{item.jenis_kamar?.nama}</div>
                                 <div className="text-muted-foreground text-sm">{item.amount} kamar &times; {detail?.jumlah_malam} malam</div>

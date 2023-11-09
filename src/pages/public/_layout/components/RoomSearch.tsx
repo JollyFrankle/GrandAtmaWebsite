@@ -64,7 +64,15 @@ export default function RoomSearch({
                 jumlahKamar: inJumlahKamar
             })
         } else {
-            navigate(`/search?from=${inDate.from?.getTime()}&to=${inDate.to?.getTime()}&dewasa=${inDewasa}&anak=${inAnak}&jumlahKamar=${inJumlahKamar}`)
+            const queryParams = new URLSearchParams({
+                from: inDate.from?.getTime().toString() ?? "",
+                to: inDate.to?.getTime().toString() ?? "",
+                dewasa: inDewasa,
+                anak: inAnak,
+                jumlahKamar: inJumlahKamar,
+                ts: Date.now().toString()
+            })
+            navigate(`/search?${queryParams.toString()}`)
         }
     }
 

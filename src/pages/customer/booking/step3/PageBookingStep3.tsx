@@ -14,10 +14,16 @@ import { Input } from "@/cn/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import IconInput from "@/components/IconInput"
 import usePageTitle from "@/hooks/usePageTitle"
+import AuthHelper from "@/utils/AuthHelper"
+
+const urls = {
+    getDetail: '',
+    submitData: ''
+}
 
 export default function PageBookingStep3() {
-    const params = useParams<{ id: string }>()
-    const { id } = params
+    const params = useParams<{ idR: string, idC: string }>()
+    const { idR, idC } = params
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
@@ -28,7 +34,7 @@ export default function PageBookingStep3() {
     usePageTitle(`Pembayaran #${detail?.id_booking} – Grand Atma Hotel`)
 
     const getDetailReservasi = async () => {
-        return apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+        return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {
             const data = res.data.data
             setDetail(data)
 
@@ -69,7 +75,7 @@ export default function PageBookingStep3() {
         const formData = new FormData()
         formData.append("bukti", fileBukti as Blob)
 
-        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(`customer/booking/${id}/step-3`,
+        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(urls.submitData,
             formData,
             {
                 headers: {
@@ -93,6 +99,14 @@ export default function PageBookingStep3() {
     }
 
     useEffect(() => {
+        if (AuthHelper.getUserCustomer()) {
+            urls.getDetail = `customer/reservasi/${idR}`
+            urls.submitData = `customer/booking/${idR}/step-3`
+        } else if (AuthHelper.getUserPegawai()) {
+            urls.getDetail = `pegawai/reservasi/${idC}/${idR}`
+            urls.submitData = `pegawai/booking/${idR}/step-3`
+        }
+
         Promise.all([getDetailReservasi()]).finally(() => {
             setIsLoading(false)
         })

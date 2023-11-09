@@ -6,16 +6,22 @@ import { Link, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import DetailReservasi from "../../../../components/reservasi/DetailReservasi"
+import AuthHelper from "@/utils/AuthHelper"
+
+const urls = {
+    getDetail: '',
+    urlDashboard: ''
+}
 
 export default function PageBookingStep4() {
-    const params = useParams<{ id: string }>()
-    const { id } = params
+    const params = useParams<{ idR: string, idC: string }>()
+    const { idR, idC } = params
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
 
     const getDetailReservasi = async () => {
-        return apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+        return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {
             const data = res.data.data
             setDetail(data)
         }).catch((err: AxiosError) => {
@@ -24,6 +30,13 @@ export default function PageBookingStep4() {
     }
 
     useEffect(() => {
+        if (AuthHelper.getUserCustomer()) {
+            urls.getDetail = `customer/reservasi/${idR}`
+            urls.urlDashboard = "/customer"
+        } else if (AuthHelper.getUserPegawai()) {
+            urls.getDetail = `pegawai/reservasi/${idC}/${idR}`
+            urls.urlDashboard = `/admin/cg/${idC}`
+        }
         Promise.all([getDetailReservasi()]).finally(() => {
             setIsLoading(false)
         })
@@ -39,7 +52,7 @@ export default function PageBookingStep4() {
 
                 <div className="md:flex flex-end mt-4">
                     <Button className="text-lg h-14 px-6" asChild>
-                        <Link to="/customer">
+                        <Link to={urls.urlDashboard}>
                             Kembali ke Dashboard <ClipboardListIcon className="w-6 h-6 ms-2" />
                         </Link>
                     </Button>

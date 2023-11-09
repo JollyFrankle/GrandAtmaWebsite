@@ -12,12 +12,9 @@ import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter } from "@/cn/components/ui/dialog"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
-import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
 import Lottie from "lottie-react";
 
-// import PetunjukPenggunaan from "@/assets/images/petunjuk-penggunaan.jpg"
-import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import { Separator } from "@/cn/components/ui/separator"
 import TarifKamarCard from "./components/TarifKamarCard"
 // import SummaryFooter from "./components/SummaryFooter"
@@ -25,6 +22,7 @@ import LottieNoData from "@/assets/lottie/Animation - 1699364588857.json"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { RoomSearchData } from "@/pages/public/_layout/components/RoomSearch"
 import RoomSearchCG from "./components/RoomSearchCG"
+import SummaryFooter from "./components/SummaryFooter"
 
 export interface KamarDipesan {
     idJK: number,
@@ -51,14 +49,12 @@ export default function PageRoomSearchCG() {
     const { id: idC } = params
 
     const query = useQuery()
-    const [userType, setUserType] = useState<"c" | "p" | null>(null)
     const [kamarDipesan, setKamarDipesan] = useState<KamarDipesan[]>([])
     const [initData, setInitData] = useState<Required<RoomSearchData>>()
     const [data, setData] = useState<TarifKamar[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [isReady, setIsReady] = useState(false)
     const [showDialogConfirm, setShowDialogConfirm] = useState(false)
-    const [showDialogLogin, setShowDialogLogin] = useState(false)
     const [showDialogMengamankanHarga, setShowDialogMengamankanHarga] = useState(false)
     const [jumlahMalam, setJumlahMalam] = useState(0)
     const [summaryKamarDipesan, setSummaryKamarDipesan] = useState<SummaryKamarDipesan>({
@@ -68,7 +64,7 @@ export default function PageRoomSearchCG() {
     })
     const [pageTitle, setPageTitle] = useState("Grand Atma Hotel - Cari Kamar")
 
-    const memoizedParams = useMemo(() => query, [query.get('from'), query.get('to'), query.get('dewasa'), query.get('anak'), query.get('jumlahKamar')])
+    const memoizedParams = useMemo(() => query, [query.get('from'), query.get('to'), query.get('dewasa'), query.get('anak'), query.get('jumlahKamar'), query.get("ts")])
     const navigate = useNavigate()
 
     usePageTitle(pageTitle)
@@ -129,58 +125,35 @@ export default function PageRoomSearchCG() {
     }
 
     const createBooking = async () => {
-        if (userType === "c") {
-            setShowDialogMengamankanHarga(true)
-            apiAuthenticated.post(`customer/booking`, {
-                jenis_kamar: kamarDipesan.map(item => ({
-                    id_jk: item.idJK,
-                    jumlah: item.count,
-                    harga: item.harga_diskon,
-                })),
-                detail: {
-                    arrival_date: Formatter.dateToYMD(initData?.date.from!!),
-                    departure_date: Formatter.dateToYMD(initData?.date.to!!),
-                    jumlah_dewasa: +initData?.dewasa!!,
-                    jumlah_anak: +initData?.anak!!,
-                }
-            }).then(res => {
-                const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
-                navigate(`/booking/${data.data.reservasi.id}/step-1`)
-
-                // Delete kamarDipesan from localStorage
-                localStorage.removeItem("kamarDipesan")
-            }).catch(err => {
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
-                setShowDialogMengamankanHarga(false)
-            })
-        } else if (userType === "p") {
-            toast("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.", {
-                type: "error"
-            })
-        } else {
-            setShowDialogLogin(true)
-        }
-    }
-
-    const redirectToLoginWithParams = () => {
-        const redirectTo = new URLSearchParams()
-        redirectTo.set("from", (initData?.date.from?.getTime() ?? 0).toString())
-        redirectTo.set("to", (initData?.date.to?.getTime() ?? 0).toString())
-        redirectTo.set("dewasa", initData?.dewasa!!)
-        redirectTo.set("anak", initData?.anak!!)
-        redirectTo.set("jumlahKamar", initData?.jumlahKamar!!)
-        const param = redirectTo.toString()
-        navigate(`/login?${new URLSearchParams({ redirect: `/search?${param}` }).toString()}`)
-        localStorage.setItem("afterLoginRedirect", `/search?${param}`)
+        setShowDialogMengamankanHarga(true)
+        apiAuthenticated.post(`pegawai/booking/${idC}`, {
+            jenis_kamar: kamarDipesan.map(item => ({
+                id_jk: item.idJK,
+                jumlah: item.count,
+                harga: item.harga_diskon,
+            })),
+            detail: {
+                arrival_date: Formatter.dateToYMD(initData?.date.from!!),
+                departure_date: Formatter.dateToYMD(initData?.date.to!!),
+                jumlah_dewasa: +initData?.dewasa!!,
+                jumlah_anak: +initData?.anak!!,
+            }
+        }).then(res => {
+            const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
+            navigate(`/booking/${data.data.reservasi.id_customer}/${data.data.reservasi.id}/step-1`)
+        }).catch(err => {
+            if (err.response?.data) {
+                const data = err.response?.data as ApiErrorResponse
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast(err.message, {
+                    type: "error"
+                })
+            }
+            setShowDialogMengamankanHarga(false)
+        })
     }
 
     const updateKamarDipesan = (tarifKamar: TarifKamar, count: number) => {
@@ -241,28 +214,14 @@ export default function PageRoomSearchCG() {
         })
         setJumlahMalam(Converter.jumlahMalamFromDateRange(fromDate, toDate))
 
-        const kamarDipesanFromLS = Formatter.formatJSON<KamarDipesan[]>(localStorage.getItem("kamarDipesan") ?? "[]")
-        if (Array.isArray(kamarDipesanFromLS)) {
-            setKamarDipesan(kamarDipesanFromLS)
-        }
-
         setPageTitle(`Cari Kamar ${Formatter.formatDateShort(fromDate)} - ${Formatter.formatDateShort(toDate)}`)
     }, [memoizedParams])
 
     useEffect(() => {
-        if (AuthHelper.getUserCustomer()) {
-            setUserType("c")
-        } else if (AuthHelper.getUserPegawai()) {
-            setUserType("p")
-        } else {
-            setUserType(null)
-        }
         fetchData()
     }, [initData])
 
     useEffect(() => {
-        localStorage.setItem("kamarDipesan", JSON.stringify(kamarDipesan.map(item => ({ idJK: item.idJK, count: item.count }))))
-
         let hargaDiskon = 0
         let hargaNormal = 0
         let totalKamarSaatIni = 0
@@ -280,10 +239,10 @@ export default function PageRoomSearchCG() {
     }, [kamarDipesan])
 
     return <>
-            <h3 className="text-3xl font-bold mb-4">
-                Pencarian Kamar
-            </h3>
-            <RoomSearchCG initData={initData} showIntro={false} className="shadow-none border-0 bg-transparent" innerClassName="p-0" />
+        <h3 className="text-3xl font-bold mb-4">
+            Pencarian Kamar
+        </h3>
+        <RoomSearchCG initData={initData} />
 
         <section className="py-4 border-b">
             <div className="flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
@@ -297,7 +256,7 @@ export default function PageRoomSearchCG() {
             </div>
         </section>
 
-        <section className="py-8">
+        <section className="pt-8">
             <div className="relative">
                 {!isLoading ? data.length > 0 ? data.map((item) => (
                     <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} />
@@ -320,7 +279,7 @@ export default function PageRoomSearchCG() {
             </div>
         </section>
 
-        {/* <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} /> */}
+        <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} />
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
             <DialogContent>
@@ -371,7 +330,8 @@ export default function PageRoomSearchCG() {
                             Pastikan rincian di atas sudah benar sebelum melanjutkan ke halaman booking.
                         </AlertTitle>
                         <AlertDescription>
-                            <p>Setelah melanjutkan ke halaman booking, kami akan mengunci harga ini untuk Anda dan Anda diberi waktu 20 menit untuk menyelesaikan pembayaran.</p>
+                            <p>Pastikan tamu ini telah setuju dengan rincian ini.</p>
+                            <p>Akan diberi waktu 60 menit untuk menyelesaikan booking ini.</p>
                         </AlertDescription>
                     </Alert>
                 </div>
@@ -384,19 +344,6 @@ export default function PageRoomSearchCG() {
             </DialogContent>
         </Dialog>
 
-        <Dialog modal={true} open={showDialogLogin} onOpenChange={setShowDialogLogin}>
-            <DialogContent className="text-center">
-                <div>
-                    <img src={InlineLogo} className="w-48 h-auto mx-auto mb-4" />
-                    <p>Anda harus masuk ke <strong>Grand Atma Account</strong> terlebih dahulu untuk melanjutkan ke halaman booking.</p>
-                </div>
-                <DialogFooter className="!justify-center mt-4">
-                    <Button variant="secondary" onClick={() => setShowDialogLogin(false)}><BanIcon className="w-4 h-4 me-2" /> Batal</Button>
-                    <Button variant="default" onClick={redirectToLoginWithParams}>Login <ArrowRightIcon className="ms-2 w-4 h-4" /></Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengamankan harga untuk Anda…" />
+        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengamankan harga…" />
     </>
 }

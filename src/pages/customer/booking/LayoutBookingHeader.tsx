@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ApiErrorResponse, ApiResponse, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiErrorResponse, ApiResponse, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import { toast } from "react-toastify";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
@@ -13,12 +13,16 @@ import GeneralLoadingDialog from "@/components/GeneralLoadingDialog";
 import { Button } from "@/cn/components/ui/button";
 import ScrollToTop from "@/utils/ScrollToTop";
 
+const urls = {
+    getDeadline: ''
+}
+
 let interval: NodeJS.Timeout
 export default function LayoutBookingHeader() {
-    const params = useParams<{ id: string }>()
-    const { id } = params
+    const params = useParams<{ idR: string, idC: string }>()
+    const { idR, idC } = params
 
-    const [user, setUser] = useState<UserCustomer | null>(null);
+    const [user, setUser] = useState<UserCustomer | UserPegawai | null>(null);
     const [minimize, setMinimized] = useState(false);
     const [lastScrollY, setLastScrollY] = useState(0);
     const [deadline, setDeadline] = useState<Date>(new Date());
@@ -35,14 +39,14 @@ export default function LayoutBookingHeader() {
     const { pathname } = useLocation()
 
     const getDeadline = () => {
-        apiAuthenticated.get<ApiResponse<{ deadline: string, stage: number }>>(`customer/booking/${id}/deadline`).then((res) => {
+        apiAuthenticated.get<ApiResponse<{ deadline: string, stage: number }>>(urls.getDeadline).then((res) => {
             const data = res.data
             const deadline = new Date(data.data.deadline)
             setDeadline(deadline)
             setShowDeadline(true)
 
             // Navigate to the correct stage
-            navigate(`/booking/${id}/step-${data.data.stage}`)
+            navigate(`/booking/${idC}/${idR}/step-${data.data.stage}`)
 
             setReady(true)
         }).catch((err) => {
@@ -101,11 +105,17 @@ export default function LayoutBookingHeader() {
 
     useEffect(() => {
         const userC = AuthHelper.getUserCustomer()
-        setUser(userC)
-        if (!userC) {
-            navigate("/login")
-        } else {
+        const userP = AuthHelper.getUserPegawai()
+        if (userC) {
+            urls.getDeadline = `customer/booking/${idR}/deadline`
+            setUser(userC)
             getDeadline()
+        } else if (userP) {
+            urls.getDeadline = `pegawai/booking/${idR}/deadline`
+            setUser(userP)
+            getDeadline()
+        } else {
+            navigate("/login")
         }
     }, [])
 

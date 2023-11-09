@@ -65,7 +65,7 @@ export default function PageRoomSearch() {
     })
     const [pageTitle, setPageTitle] = useState("Grand Atma Hotel - Cari Kamar")
 
-    const memoizedParams = useMemo(() => params, [params.get('from'), params.get('to'), params.get('dewasa'), params.get('anak'), params.get('jumlahKamar')])
+    const memoizedParams = useMemo(() => params, [params.get('from'), params.get('to'), params.get('dewasa'), params.get('anak'), params.get('jumlahKamar'), params.get('ts')])
     const navigate = useNavigate()
 
     usePageTitle(pageTitle)
@@ -142,7 +142,7 @@ export default function PageRoomSearch() {
                 }
             }).then(res => {
                 const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
-                navigate(`/booking/${data.data.reservasi.id}/step-1`)
+                navigate(`/booking/${data.data.reservasi.id_customer}/${data.data.reservasi.id}/step-1`)
 
                 // Delete kamarDipesan from localStorage
                 localStorage.removeItem("kamarDipesan")

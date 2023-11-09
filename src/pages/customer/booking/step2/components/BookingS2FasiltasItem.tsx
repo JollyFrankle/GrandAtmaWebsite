@@ -19,7 +19,7 @@ export default function BookingS2FasiltasItem({
                     <div className="text-muted-foreground">{groupedFasilitas?.amount} {item?.satuan} &times; {Formatter.formatCurrency((groupedFasilitas?.hargaTotal ?? 0) / (groupedFasilitas?.amount ?? 1))}</div>
                 </div>
 
-                <div className="flex border rounded overflow-auto items-stretch w-fit h-fit">
+                <div>
                     {Formatter.formatCurrency(groupedFasilitas?.hargaTotal ?? 0)}
                 </div>
             </div>
