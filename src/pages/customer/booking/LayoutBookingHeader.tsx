@@ -25,7 +25,7 @@ export default function LayoutBookingHeader() {
     const [user, setUser] = useState<UserCustomer | UserPegawai | null>(null);
     const [minimize, setMinimized] = useState(false);
     const [lastScrollY, setLastScrollY] = useState(0);
-    const [deadline, setDeadline] = useState<Date>(new Date());
+    const [deadline, setDeadline] = useState<Date>();
     const [deadlineHMS, setDeadlineHMS] = useState({
         h: 0,
         m: 0,
@@ -42,8 +42,14 @@ export default function LayoutBookingHeader() {
         apiAuthenticated.get<ApiResponse<{ deadline: string, stage: number }>>(urls.getDeadline).then((res) => {
             const data = res.data
             const deadline = new Date(data.data.deadline)
-            setDeadline(deadline)
-            setShowDeadline(true)
+            if (deadline.getTime() - new Date().getTime() > 24 * 60 * 60 * 1000) {
+                // if > 24 hours, don't show the timer
+                setShowDeadline(false)
+            } else {
+                // if < 24 hours, show the timer
+                setDeadline(deadline)
+                setShowDeadline(true)
+            }
 
             // Navigate to the correct stage
             navigate(`/booking/${idC}/${idR}/step-${data.data.stage}`)
@@ -64,6 +70,9 @@ export default function LayoutBookingHeader() {
     }
 
     const getDeadlineHMS = () => {
+        if (!deadline) {
+            return
+        }
         const now = new Date()
         const diff = deadline.getTime() - now.getTime()
         const h = Math.floor(diff / 1000 / 60 / 60)
@@ -96,9 +105,12 @@ export default function LayoutBookingHeader() {
     }, [lastScrollY]);
 
     useEffect(() => {
-        interval = setInterval(() => {
+        if (deadline) {
+            interval = setInterval(() => {
+                getDeadlineHMS()
+            }, 1000)
             getDeadlineHMS()
-        }, 1000)
+        }
 
         return () => clearInterval(interval)
     }, [deadline])
@@ -135,7 +147,7 @@ export default function LayoutBookingHeader() {
             <div className="container relative block">
                 <img src={InlineLogo} className="w-48 h-12 object-contain mb-8" />
                 <div className="md:flex items-center justify-between">
-                    <h3 className="text-3xl font-bold mb-4 lg:mb-0">
+                    <h3 className="text-3xl font-bold mb-4 md:mb-0">
                         <mark>Pemesanan</mark> Kamar
                     </h3>
 
@@ -169,7 +181,7 @@ export default function LayoutBookingHeader() {
         </section>
     </header>
     {showDeadline && (
-        <section className="sticky top-0 z-50 lg:top-[4.25rem] bg-red-500 hover:bg-red-600 transition-all py-2 text-white justify-center">
+        <section className="sticky top-0 z-50 lg:top-[4.25rem] bg-red-500 transition-all py-2 text-white justify-center">
             <div className="container text-center text-sm flex">
                 <span className="me-2">Selesaikan pemesanan dalam</span>
                 <strong className="bg-white text-red-600 w-6 text-center rounded">{Formatter.padZero(deadlineHMS.h)}</strong>

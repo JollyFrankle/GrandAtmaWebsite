@@ -15,10 +15,8 @@ export default function RoomSearchCG({
 } : {
     initData?: RoomSearchData
 }) {
-    const [inDate, setInDate] = useState<DateRange | undefined>({
-        from: new Date(),
-        to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
-    })
+    const [minDate, setMinDate] = useState<Date>(new Date())
+    const [inDate, setInDate] = useState<DateRange>()
     const [inDewasa, setInDewasa] = useState<string>("2")
     const [inAnak, setInAnak] = useState<string>("0")
     const [inJumlahKamar, setInJumlahKamar] = useState<string>("1")
@@ -71,13 +69,18 @@ export default function RoomSearchCG({
         }
     }, [initData])
 
+    useEffect(() => {
+        const newMinDate = new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000)
+        setMinDate(newMinDate)
+    }, [])
+
     return (
         <form onSubmit={onSubmitHandler}>
             <div className="grid grid-cols-12 grid-flow-row gap-4 items-end">
                 <label className="col-span-12 lg:col-span-4">
                     <div className="text-lg mb-1 block">Tanggal menginap</div>
                     <InputWithIcon icon={<CalendarIcon />}>
-                        <ReservationDatePicker className="ps-9" value={inDate} onChange={setInDate} />
+                        <ReservationDatePicker className="ps-9" value={inDate} onChange={setInDate} minDate={minDate} />
                     </InputWithIcon>
                 </label>
                 <div className="col-span-12 md:col-span-4 lg:col-span-2">

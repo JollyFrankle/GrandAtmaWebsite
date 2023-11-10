@@ -36,7 +36,7 @@ export default function PageRegister() {
     const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
-    usePageTitle("Registrasi - Grand Atma Hotel")
+    usePageTitle("Registrasi – Grand Atma Hotel")
 
     const onInputChangeHandler = (value: string, key: keyof typeof data) => {
         setData(prev => ({

@@ -90,7 +90,7 @@ function getColumns(idCustomer?: number) {
 
 function getActions(
     status?: Status,
-    onDetailClick?: (id: number) => void,
+    onDetailClick?: (item: Reservasi) => void,
     onCancelClick?: (item: Reservasi) => void,
     onContinueClick?: (item: Reservasi) => void,
     onTandaTerimaClick?: (item: Reservasi) => void
@@ -98,7 +98,7 @@ function getActions(
     const actions: RowActions<Reservasi>[][] = [[
         {
             action: <><ClipboardListIcon className="w-4 h-4 me-2" /> Lihat Detail</>,
-            onClick: (item) => onDetailClick?.(item.id)
+            onClick: (item) => onDetailClick?.(item)
         }
     ]]
 
@@ -106,7 +106,7 @@ function getActions(
         actions[0].push({
             action: <><CircleSlashIcon className="w-4 h-4 me-2" /> Batalkan</>,
             onClick: (item) => onCancelClick?.(item),
-            enabled: (item) => new Date(item.arrival_date) > new Date() && !item.status.startsWith("pending-")
+            enabled: (item) => new Date(item.arrival_date) > new Date()
         })
         actions[0].push({
             action: <><StepForwardIcon className="w-4 h-4 me-2" /> Lanjutkan</>,
@@ -134,7 +134,7 @@ const ListReservasi = forwardRef(({
     // idPegawai?: number,
     status?: Status,
     onUserFetched?: (user: UserCustomer | null) => void,
-    onDetailClick?: (id: number) => void
+    onDetailClick?: (reservasi: Reservasi) => void
 }, ref: React.Ref<ListReservasiRef | undefined>) => {
     const [isLoading, setIsLoading] = useState(false)
     const [reservations, setReservations] = useState<Reservasi[]>([])
@@ -174,7 +174,7 @@ const ListReservasi = forwardRef(({
                 setShowCancelDialog(false)
             })
         } else {
-            apiAuthenticated.delete<ApiResponse<Reservasi>>(`pegawai/reservasi/${idCustomer}/${currentData?.id}`).then((res) => {
+            apiAuthenticated.delete<ApiResponse<Reservasi>>(`pegawai/reservasi/${currentData?.id_customer}/${currentData?.id}`).then((res) => {
                 const data = res.data
                 toast.success(data.message)
                 fetchReservations()
@@ -253,15 +253,27 @@ const ListReservasi = forwardRef(({
         <DataTable<Reservasi> data={reservations} columns={columns} isLoading={isLoading} actions={actions} />
 
         <ModalDelete open={showCancelDialog} onOpenChange={setShowCancelDialog} onConfirmed={cancelReservation} title="Batalkan Reservasi" deleteButton={<><CircleSlashIcon className="h-4 w-4 me-2" /> Batalkan Reservasi</>}>
-            <p className="mb-4">Apakah Anda yakin ingin membatalkan reservasi berikut:</p>
-            <Card className="mb-4">
-                <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">Booking ID:</p>
-                    <p className="font-bold text-lg">{currentData?.id_booking}</p>
-                </CardContent>
-            </Card>
+            <p className="mb-4">Apakah Anda yakin ingin membatalkan reservasi berikut</p>
+            {currentData?.id_booking && (
+                <Card className="mb-4">
+                    <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground">Booking ID:</p>
+                        <p className="font-bold text-lg">{currentData?.id_booking}</p>
+                    </CardContent>
+                </Card>
+            )}
             {/* {currentData?.arrival_date} {new Date(new Date().setDate(new Date().getDate() + 7)).toJSON()} */}
-            {currentData && new Date(currentData.arrival_date) > new Date(new Date().setDate(new Date().getDate() + 7)) ? (
+            {currentData && (currentData.status.startsWith("pending-") ? (
+                <Alert>
+                    <CircleDollarSignIcon className="w-4 h-4" />
+                    <AlertTitle>
+                        Reservasi ini belum diselesaikan
+                    </AlertTitle>
+                    <AlertDescription>
+                        <p>Anda dapat menghapus reservasi ini tanpa konsekuensi.</p>
+                    </AlertDescription>
+                </Alert>
+            ) : new Date(currentData.arrival_date) > new Date(new Date().setDate(new Date().getDate() + 7)) ? (
                 <Alert>
                     <CircleDollarSignIcon className="w-4 h-4 stroke-green-600" />
                     <AlertTitle className="text-green-600">
@@ -282,7 +294,7 @@ const ListReservasi = forwardRef(({
                         <p>Uang tidak akan dikembalikan karena reservasi ini kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
                     </AlertDescription>
                 </Alert>
-            )}
+            ))}
         </ModalDelete>
     </>
 })

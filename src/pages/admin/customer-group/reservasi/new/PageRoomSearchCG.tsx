@@ -225,10 +225,11 @@ export default function PageRoomSearchCG() {
     }
 
     useEffect(() => {
-        const fromAsTime = +(memoizedParams.get("from") ?? new Date().getTime())
-        const toAsTime = +(memoizedParams.get("to") ?? new Date().getTime())
+        const minDate = new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000)
+        const fromAsTime = +(memoizedParams.get("from") ?? minDate.getTime())
+        const toAsTime = +(memoizedParams.get("to") ?? minDate.getTime())
         const fromDate = new Date(fromAsTime)
-        const toDate = (toAsTime <= fromAsTime) ? new Date(fromAsTime + 24 * 60 * 60 * 1000) : new Date(toAsTime)
+        const toDate = (toAsTime <= fromAsTime) ? new Date(minDate.getTime() + 24 * 60 * 60 * 1000) : new Date(toAsTime)
         setInitData({
             date: {
                 from: fromDate,
@@ -397,7 +398,7 @@ export default function PageRoomSearchCG() {
                         </AlertTitle>
                         <AlertDescription>
                             <p>Pastikan tamu ini sudah setuju dengan rincian ini.</p>
-                            <p>Anda dan tamu diberi waktu <strong>3 jam</strong> untuk menyelesaikan booking ini.</p>
+                            <p>Anda dan tamu diberi waktu <strong>hingga 7 hari sebelum kedatangan</strong> untuk menyelesaikan booking ini.</p>
                         </AlertDescription>
                     </Alert>
                 </div>
@@ -410,6 +411,6 @@ export default function PageRoomSearchCG() {
             </DialogContent>
         </Dialog>
 
-        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengamankan harga…" />
+        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengunci harga…" />
     </>
 }

@@ -368,7 +368,7 @@ export default function PageRoomSearch() {
                             Pastikan rincian di atas sudah benar sebelum melanjutkan ke halaman booking.
                         </AlertTitle>
                         <AlertDescription>
-                            <p>Setelah melanjutkan ke halaman booking, kami akan mengunci harga ini untuk Anda dan Anda diberi waktu 20 menit untuk menyelesaikan pembayaran.</p>
+                            <div>Setelah melanjutkan ke halaman booking, kami akan mengunci harga ini untuk Anda dan Anda diberi waktu <strong>20 menit</strong> untuk menyelesaikan pembayaran.</div>
                         </AlertDescription>
                     </Alert>
                 </div>
@@ -394,6 +394,6 @@ export default function PageRoomSearch() {
             </DialogContent>
         </Dialog>
 
-        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengamankan harga untuk Anda…" />
+        <GeneralLoadingDialog show={showDialogMengamankanHarga} text="Mengunci harga untuk Anda…" />
     </>
 }

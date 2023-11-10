@@ -187,7 +187,7 @@ export default function PageBookingStep3_P() {
                             <div className="flex-1">
                                 <div className="font-bold">{item.jenis_kamar?.nama}</div>
                                 <div className="text-muted-foreground text-sm">{item.amount} kamar &times; {detail?.jumlah_malam} malam</div>
-                                <div className="text-muted-foreground">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
+                                <div>{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
                             </div>
                             <div className="font-bold">
                                 {Formatter.formatCurrency(item.harga * item.amount * (detail?.jumlah_malam ?? 0))}
@@ -198,26 +198,26 @@ export default function PageBookingStep3_P() {
                     <li className="p-4">
                         {/* <div className="font-bold">Biaya Lain</div> */}
                         <div className="flex justify-between">
-                            <div className="text-muted-foreground">Pajak</div>
+                            <div>Pajak</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="text-muted-foreground">Biaya Layanan</div>
+                            <div>Biaya Layanan</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">
-                            <div className="text-muted-foreground">Biaya Penelitian & Pengembangan Sistem</div>
+                            <div>Biaya Penelitian & Pengembangan Sistem</div>
                             <div className="text-green-600 font-bold">GRATIS</div>
                         </div>
                     </li>
                     <li className="p-1 flex justify-between bg-secondary"></li>
                     <li className="p-4 flex justify-between">
-                        <div className="font-bold">Total Harga {detail?.jumlah_malam} Malam</div>
+                        <div className="font-bold">Total Harga {detail?.jumlah_malam!! > 1 && `${detail?.jumlah_malam} Malam`}</div>
                         <div className="font-bold">
                             {Formatter.formatCurrency(detail?.total ?? 0)}
                         </div>
                     </li>
-                    <li className="px-4 py-2 flex justify-between bg-secondary text-sm text-gray-500">
+                    <li className="px-4 py-2 flex justify-between bg-secondary text-sm text-muted-foreground">
                         Layanan tambahan dan permintaan khusus akan dibayar saat check out.
                     </li>
                 </ul>

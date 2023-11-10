@@ -8,11 +8,13 @@ import { DateRange } from "react-day-picker";
 export default function ReservationDatePicker({
     className,
     value: date,
-    onChange: setDate
+    onChange: setDate,
+    minDate = new Date()
 }: {
     className?: string
     value?: DateRange
-    onChange?: (date?: DateRange) => void
+    onChange?: (date?: DateRange) => void,
+    minDate?: Date
 }) {
     return <>
         <Popover>
@@ -39,7 +41,7 @@ export default function ReservationDatePicker({
                     selected={date}
                     onSelect={setDate}
                     numberOfMonths={2}
-                    fromDate={new Date()}
+                    fromDate={minDate}
                     toDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
                     min={2}
                 />

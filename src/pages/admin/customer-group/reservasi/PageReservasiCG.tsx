@@ -24,12 +24,12 @@ export default function PageReservasiCG() {
 
     const navigate = useNavigate()
 
-    usePageTitle("Riwayat Reservasi - Grand Atma Hotel")
+    usePageTitle("Riwayat Reservasi – Grand Atma Hotel")
 
-    const getDetailReservasi = (idRes: number) => {
+    const getDetailReservasi = (item: Reservasi) => {
         setDetailLoading(true)
         setShowDialog(true)
-        apiAuthenticated.get<ApiResponse<Reservasi>>(`pegawai/reservasi/${idC}/${idRes}`).then((res) => {
+        apiAuthenticated.get<ApiResponse<Reservasi>>(`pegawai/reservasi/${idC}/${item.id}`).then((res) => {
             const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)

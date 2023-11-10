@@ -3,7 +3,7 @@ import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import { useState } from "react"
 import ModalDetailReservasi from "../../../components/modals/ModalDetailReservasi"
-import { BookmarkCheckIcon, UserIcon } from "lucide-react"
+import { BookmarkCheckIcon, BookmarkPlusIcon, UserIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
 import usePageTitle from "@/hooks/usePageTitle"
@@ -16,12 +16,12 @@ export default function PageCustomerDashboard() {
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)
 
-    usePageTitle("Dashboard - Grand Atma Hotel")
+    usePageTitle("Dashboard – Grand Atma Hotel")
 
-    const getDetailReservasi = (id: number) => {
+    const getDetailReservasi = (item: Reservasi) => {
         setDetailLoading(true)
         setShowDialog(true)
-        apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${id}`).then((res) => {
+        apiAuthenticated.get<ApiResponse<Reservasi>>(`customer/reservasi/${item.id}`).then((res) => {
             const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)
@@ -48,7 +48,14 @@ export default function PageCustomerDashboard() {
 
                 <hr className="mb-6" />
 
-                <h3 className="text-3xl font-bold mb-4"><mark>Reservasi</mark> Anda</h3>
+                <div className="flex items-center mb-4 justify-between">
+                    <h3 className="text-3xl font-bold"><mark>Reservasi</mark> Anda</h3>
+                    <Button asChild>
+                        <Link to="/search">
+                            <BookmarkPlusIcon className="h-4 w-4 me-2" /> Buat Reservasi
+                        </Link>
+                    </Button>
+                </div>
 
                 <ReservasiHistoryTab onDetailClick={getDetailReservasi} />
             </div>

@@ -63,7 +63,7 @@ export default function DetailReservasi({
                         <p className="font-bold">{data?.jumlah_dewasa} dewasa, {data?.jumlah_anak} anak ({data?.reservasi_rooms?.length ?? 0} kamar)</p>
                     </div>
                     <div className="mb-2">
-                        <p className="text-sm text-muted-foreground">Tanggal <em>down-payment</em></p>
+                        <p className="text-sm text-muted-foreground">Tanggal {data?.user_customer?.type === 'p' ? "pembayaran" : <em>down-payment</em>}</p>
                         <p className="font-bold">{data?.tanggal_dp ? Formatter.formatDateTime(new Date(data.tanggal_dp)) : <em>(Belum diverifikasi)</em>}</p>
                     </div>
                     <div className="mb-2" hidden={!data?.user_pegawai?.nama}>

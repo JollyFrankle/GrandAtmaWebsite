@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/cn/components/ui/tabs";
 import ListReservasi, { ListReservasiRef } from "./ListReservasi";
-import { UserCustomer } from "@/utils/ApiModels";
+import { Reservasi, UserCustomer } from "@/utils/ApiModels";
 import { BookMarkedIcon, BookXIcon, BookmarkCheckIcon } from "lucide-react";
 
 
@@ -12,7 +12,7 @@ export default function ReservasiHistoryTab({
 }: {
     idCustomer?: number,
     onUserFetched?: (user: UserCustomer | null) => void,
-    onDetailClick: (id: number) => void,
+    onDetailClick: (item: Reservasi) => void,
     listReservasiRef?: React.Ref<ListReservasiRef | undefined>
 }) {
     return (

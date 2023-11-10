@@ -25,7 +25,7 @@ export default function PageResetPassword() {
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    usePageTitle("Reset Password - Grand Atma Hotel")
+    usePageTitle("Reset Password – Grand Atma Hotel")
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         // Send email

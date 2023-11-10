@@ -21,7 +21,7 @@ export default function PageFasilitas() {
     const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
-    usePageTitle("Fasilitas dan Layanan Berbayar - Grand Atma Hotel")
+    usePageTitle("Fasilitas dan Layanan Berbayar – Grand Atma Hotel")
 
     const fetchTableData = () => {
         setTableLoading(true)

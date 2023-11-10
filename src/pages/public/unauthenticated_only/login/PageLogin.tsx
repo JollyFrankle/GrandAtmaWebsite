@@ -27,7 +27,7 @@ export default function PageLogin() {
     const navigate = useNavigate()
     const query = useQuery()
 
-    usePageTitle("Masuk - Grand Atma Hotel")
+    usePageTitle("Masuk – Grand Atma Hotel")
 
     const formSubmitHandler = (e?: React.FormEvent<HTMLFormElement>, loginUrl = `login-customer`) => {
         e?.preventDefault()

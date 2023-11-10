@@ -20,7 +20,7 @@ export default function PageKamar() {
     const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
-    usePageTitle("Kamar - Grand Atma Hotel")
+    usePageTitle("Kamar – Grand Atma Hotel")
 
     const fetchTableData = () => {
         setTableLoading(true)

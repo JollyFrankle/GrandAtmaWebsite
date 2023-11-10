@@ -17,7 +17,7 @@ export default function PageEmailVerification() {
     const [isLoading, setIsLoading] = useState(true)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    usePageTitle("Verifikasi Email - Grand Atma Hotel")
+    usePageTitle("Verifikasi Email – Grand Atma Hotel")
 
     const fetchData = () => {
         apiPublic.post(`confirm-email`, {

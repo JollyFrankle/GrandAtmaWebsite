@@ -23,7 +23,7 @@ export default function PageProfileCustomer() {
     const [errors, setErrors] = useState<KeyValue<string>|null>(null)
     const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
-    usePageTitle("Profil - Grand Atma Hotel")
+    usePageTitle("Profil – Grand Atma Hotel")
 
     const onInputChangeHandler = (value: string, key: keyof typeof data) => {
         setData(prev => ({

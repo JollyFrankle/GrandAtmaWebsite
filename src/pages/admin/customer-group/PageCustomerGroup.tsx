@@ -19,7 +19,7 @@ export default function PageCustomerGroup() {
     // const [openModalDelete, setOpenModalDelete] = useState(false)
     const navigate = useNavigate()
 
-    usePageTitle("Customer Group - Grand Atma Hotel")
+    usePageTitle("Customer Group – Grand Atma Hotel")
 
     const fetchTableData = () => {
         setTableLoading(true)

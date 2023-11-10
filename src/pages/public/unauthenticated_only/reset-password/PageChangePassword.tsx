@@ -27,7 +27,7 @@ export default function PageChangePassword() {
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    usePageTitle("Reset Password - Grand Atma Hotel")
+    usePageTitle("Reset Password – Grand Atma Hotel")
 
     const onFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

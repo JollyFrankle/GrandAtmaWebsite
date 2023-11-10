@@ -27,7 +27,7 @@ export default function PageDetailKamar() {
             data.data.rincian = Formatter.formatJSON<string[]>(data.data.rincian)
             data.data.fasilitas_unggulan = Formatter.formatJSON<KeyValue<string>>(data.data.fasilitas_unggulan)
             setData(data.data)
-            setPageTitle(`${data.data.nama} - Grand Atma Hotel`)
+            setPageTitle(`${data.data.nama} – Grand Atma Hotel`)
             setIsLoading(false)
         }).catch((err) => {
             toast(err.response?.data.message || "Terjadi kesalahan", {

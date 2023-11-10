@@ -30,7 +30,7 @@ export default function PageSeasonTarif() {
     const [tableLoading, setTableLoading] = useState(false)
     const navigate = useNavigate()
 
-    usePageTitle("Season dan Tarif - Grand Atma Hotel")
+    usePageTitle("Season dan Tarif – Grand Atma Hotel")
 
     const fetchTableData = () => {
         setTableLoading(true)

@@ -7,6 +7,7 @@ import { Button } from "@/cn/components/ui/button"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import DetailReservasi from "../../../../components/reservasi/DetailReservasi"
 import AuthHelper from "@/utils/AuthHelper"
+import usePageTitle from "@/hooks/usePageTitle"
 
 const urls = {
     getDetail: '',
@@ -19,6 +20,8 @@ export default function PageBookingStep4() {
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
+
+    usePageTitle("Reservasi Berhasil – Grand Atma Hotel")
 
     const getDetailReservasi = async () => {
         return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {

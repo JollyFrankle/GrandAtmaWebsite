@@ -171,7 +171,7 @@ export default function PageBookingStep3_C() {
                                 <InfoIcon className="w-4 h-4 me-2" />
                                 <AlertTitle>Informasi</AlertTitle>
                                 <AlertDescription>
-                                    Setelah transfer, silakan unggah bukti transfer melalui tombol di bawah. Kami akan memverifikasi pembayaran Anda dalam waktu 1x24 jam.
+                                    Setelah transfer, silakan unggah bukti transfer melalui tombol di bawah. Pembayaran Anda akan otomatis diverifikasi dalam beberapa saat setelah Anda mengunggah bukti transfer.
                                 </AlertDescription>
                             </Alert>
                             {fileBukti ? (
