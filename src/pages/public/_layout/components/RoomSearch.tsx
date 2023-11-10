@@ -117,7 +117,7 @@ export default function RoomSearch({
             </div>
             <div className="mt-3 lg:flex justify-between items-center">
                 <div className="mb-3 lg:mb-0 text-muted-foreground">
-                    Keterangan: Anak-anak dianggap berusia 12 tahun ke bawah, dibuktikan dengan KTP Anak.
+                    Keterangan: Anak-anak dianggap berusia 12 tahun ke bawah, dibuktikan dengan identitas resmi.
                 </div>
                 <div>
                     Ingin memesan lebih dari 5 kamar?

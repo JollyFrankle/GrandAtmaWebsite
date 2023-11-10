@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, getImage } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, UserCustomer, apiAuthenticated, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
-import { Dialog, DialogContent, DialogFooter } from "@/cn/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import { toast } from "react-toastify"
 import Lottie from "lottie-react";
@@ -62,6 +62,7 @@ export default function PageRoomSearchCG() {
         hargaNormal: 0,
         totalKamarSaatIni: 0
     })
+    const [user, setUser] = useState<UserCustomer>()
     const [pageTitle, setPageTitle] = useState("Grand Atma Hotel - Cari Kamar")
 
     const memoizedParams = useMemo(() => query, [query.get('from'), query.get('to'), query.get('dewasa'), query.get('anak'), query.get('jumlahKamar'), query.get("ts")])
@@ -75,14 +76,14 @@ export default function PageRoomSearchCG() {
         }
         setIsLoading(true)
         setIsReady(false)
-        apiAuthenticated.post(`pegawai/booking/search/${idC}`, {
+        apiAuthenticated.post<ApiResponse<TarifKamar[]>>(`pegawai/booking/search/${idC}`, {
             check_in: Formatter.dateToYMD(initData.date.from!!),
             check_out: Formatter.dateToYMD(initData.date.to!!),
             jumlah_kamar: +initData.jumlahKamar,
             jumlah_dewasa: +initData.dewasa,
             jumlah_anak: +initData.anak
         }).then(res => {
-            const data = res.data as ApiResponse<TarifKamar[]>
+            const data = res.data
             setData(data.data)
             console.log(res.data)
 
@@ -100,6 +101,10 @@ export default function PageRoomSearchCG() {
                         // If lebih banyak dari jumlah kamar yang tersedia, set ke jumlah kamar yang tersedia
                         if (newKamarDipesan[index].count > item.rincian_tarif.jumlah_kamar) {
                             newKamarDipesan[index].count = item.rincian_tarif.jumlah_kamar
+                        }
+
+                        if (newKamarDipesan[index].count === 0) {
+                            newKamarDipesan.splice(index, 1)
                         }
                     }
                 })
@@ -124,8 +129,28 @@ export default function PageRoomSearchCG() {
         })
     }
 
-    const createBooking = async () => {
+    const getDetailUser = () => {
+        apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/customer/${idC}`).then(res => {
+            const data = res.data
+            setUser(data.data)
+        }).catch(err => {
+            if (err.response?.data) {
+                const data = err.response?.data as ApiErrorResponse
+                toast(data.message, {
+                    type: "error"
+                })
+            } else {
+                toast(err.message, {
+                    type: "error"
+                })
+            }
+            navigate("/admin/cg")
+        })
+    }
+
+    const createBooking = () => {
         setShowDialogMengamankanHarga(true)
+        setShowDialogConfirm(false)
         apiAuthenticated.post(`pegawai/booking/${idC}`, {
             jenis_kamar: kamarDipesan.map(item => ({
                 id_jk: item.idJK,
@@ -153,6 +178,7 @@ export default function PageRoomSearchCG() {
                 })
             }
             setShowDialogMengamankanHarga(false)
+            setShowDialogConfirm(true)
         })
     }
 
@@ -238,10 +264,28 @@ export default function PageRoomSearchCG() {
         })
     }, [kamarDipesan])
 
+    useEffect(() => {
+        getDetailUser()
+    }, [])
+
     return <>
         <h3 className="text-3xl font-bold mb-4">
-            Pencarian Kamar
+            Reservasi Group
         </h3>
+        {user && (
+            <section className="pb-4 border-b mb-4">
+                <div className="flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
+                    <span>{user?.nama}<span className="ms-2 lg:hidden">&ndash;</span></span>
+                    <Separator orientation="vertical" />
+                    <span>{user?.nama_institusi}<span className="ms-2 lg:hidden">&ndash;</span></span>
+                    <Separator orientation="vertical" />
+                    <span>Telp: {user?.no_telp}<span className="ms-2 lg:hidden">&ndash;</span></span>
+                    <Separator orientation="vertical" />
+                    <span>email: {user?.email}</span>
+                </div>
+            </section>
+        )}
+
         <RoomSearchCG initData={initData} />
 
         <section className="py-4 border-b">
@@ -282,8 +326,28 @@ export default function PageRoomSearchCG() {
         <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} />
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
-            <DialogContent>
+            <DialogContent className={dialogSizeByClass("md")}>
                 <div className="pb-6">
+                    <p>Detail tamu group:</p>
+                    <ul className="list-none mb-4">
+                        <li className="flex items-center">
+                            <span className="w-28 text-muted-foreground">Nama:</span>
+                            <strong>{user?.nama}</strong>
+                        </li>
+                        <li className="flex items-center">
+                            <span className="w-28 text-muted-foreground">Nama institusi:</span>
+                            <strong>{user?.nama_institusi}</strong>
+                        </li>
+                        <li className="flex items-center">
+                            <span className="w-28 text-muted-foreground">Email:</span>
+                            <strong>{user?.email}</strong>
+                        </li>
+                        <li className="flex items-center">
+                            <span className="w-28 text-muted-foreground">No. Telp:</span>
+                            <strong>{user?.no_telp}</strong>
+                        </li>
+                    </ul>
+
                     <p>Rincian reservasi:</p>
                     <ul className="list-none mb-4">
                         <li className="flex items-center">
@@ -305,18 +369,20 @@ export default function PageRoomSearchCG() {
                         {kamarDipesan.map((item, index) => (
                             <li key={index} className="flex border-b items-center">
                                 <img src={getImage(item.gambar)} className="w-32 h-20 object-cover" />
-                                <div className="px-4 py-2 flex-1">
-                                    <div className="font-bold">{item.count} {item.nama}</div>
-                                    <div className="text-sm">{Formatter.formatCurrency(item.harga_diskon)}/kamar/malam</div>
-                                </div>
-                                <div className="pe-4">
-                                    {Formatter.formatCurrency(item.harga_diskon * item.count)}
+                                <div className="flex flex-col md:flex-row px-4 py-2 flex-1">
+                                    <div className="flex-1">
+                                        <div className="font-bold">{item.count} {item.nama}</div>
+                                        <div className="text-sm">{Formatter.formatCurrency(item.harga_diskon)}/kamar/malam</div>
+                                    </div>
+                                    <div className="flex items-baseline md:flex-col md:items-end">
+                                        {Formatter.formatCurrency(item.harga_diskon * item.count)} <span className="ms-1 text-sm text-muted-foreground">/malam</span>
+                                    </div>
                                 </div>
                             </li>
                         ))}
                         <li className="flex items-center bg-secondary">
                             <div className="px-4 py-2 flex-1">
-                                <div className="font-bold">Total</div>
+                                <div className="font-bold">Total per Malam</div>
                             </div>
                             <div className="pe-4 font-bold">
                                 {Formatter.formatCurrency(summaryKamarDipesan.hargaDiskon)}
@@ -330,8 +396,8 @@ export default function PageRoomSearchCG() {
                             Pastikan rincian di atas sudah benar sebelum melanjutkan ke halaman booking.
                         </AlertTitle>
                         <AlertDescription>
-                            <p>Pastikan tamu ini telah setuju dengan rincian ini.</p>
-                            <p>Akan diberi waktu 60 menit untuk menyelesaikan booking ini.</p>
+                            <p>Pastikan tamu ini sudah setuju dengan rincian ini.</p>
+                            <p>Anda dan tamu diberi waktu <strong>3 jam</strong> untuk menyelesaikan booking ini.</p>
                         </AlertDescription>
                     </Alert>
                 </div>

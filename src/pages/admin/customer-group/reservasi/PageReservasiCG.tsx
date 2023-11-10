@@ -17,10 +17,11 @@ export default function PageReservasiCG() {
     const { id: idC } = params
 
     // const [userP] = useState(AuthHelper.getUserPegawai()!!)
-    const [user, setUser] = useState<UserCustomer>()
+    const [user, setUser] = useState<UserCustomer | null>()
     const [showDialog, setShowDialog] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)
+
     const navigate = useNavigate()
 
     usePageTitle("Riwayat Reservasi - Grand Atma Hotel")
@@ -47,6 +48,13 @@ export default function PageReservasiCG() {
             navigate("/admin/")
         }
     }, [])
+
+    useEffect(() => {
+        if (user === null) {
+            toast.error("Gagal mengambil data customer.")
+            navigate("/admin/cg")
+        }
+    }, [user])
 
     return <>
         <div className="flex justify-between items-center">

@@ -19,6 +19,7 @@ export default function IconInput({
     disabled = false,
     placeholder = label,
     className = "mb-4",
+    inputClassName = ""
 }: {
     icon: React.ReactNode,
     type: "text" | "password" | "email" | "number" | "date" | "file",
@@ -35,13 +36,14 @@ export default function IconInput({
     required?: boolean,
     disabled?: boolean,
     placeholder?: string,
-    className?: string
+    className?: string,
+    inputClassName?: string
 }) {
     return (
         <label className={`${className} block`}>
             {label && ( <div className={`mb-1 ${size === "lg" ? "text-lg" : ""}`}>{label}</div> )}
             <InputWithIcon icon={icon} className="w-full">
-                <Input required={required} disabled={disabled} max={max} min={min} maxLength={maxLength} accept={accept} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""}`} placeholder={placeholder} type={type} value={value} onChange={(e) => {
+                <Input required={required} disabled={disabled} max={max} min={min} maxLength={maxLength} accept={accept} className={`ps-9 w-full ${size === "lg" ? "text-lg h-14" : ""} ${errorText ? "border-red-500 text-red-500" : ""} ${inputClassName}`} placeholder={placeholder} type={type} value={value} onChange={(e) => {
                     if (onValueChange) {
                         onValueChange?.(e.target.value)
                     } else if (onChange) {

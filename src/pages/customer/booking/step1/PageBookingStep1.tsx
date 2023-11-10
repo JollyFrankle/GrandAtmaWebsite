@@ -11,7 +11,7 @@ import IconTextarea from "@/components/IconTextarea"
 import { Button } from "@/cn/components/ui/button"
 import IconSelect from "@/components/IconSelect"
 import { Checkbox } from "@/cn/components/ui/checkbox"
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/cn/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 import usePageTitle from "@/hooks/usePageTitle"
@@ -342,7 +342,7 @@ export default function PageBookingStep1() {
         </section>
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
-            <DialogContent>
+            <DialogContent className={dialogSizeByClass("md")}>
                 <DialogHeader className="font-bold">
                     Konfirmasi Data Pemesanan
                 </DialogHeader>
@@ -370,7 +370,7 @@ export default function PageBookingStep1() {
                             <li>Waktu check out: <strong>{waktuCheckOut.value}</strong></li>
                         )}
                         {permintaanTambahan.trim() && (
-                            <li>Permintaan tambahan: <pre>{permintaanTambahan}</pre></li>
+                            <li>Permintaan tambahan: <div className="whitespace-pre-wrap">{permintaanTambahan}</div></li>
                         )}
                     </ul>
                     <p className="text-muted-foreground ">Apakah Anda yakin ingin melanjutkan pemesanan?</p>

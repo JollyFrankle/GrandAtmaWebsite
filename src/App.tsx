@@ -26,6 +26,7 @@ import PageBookingStep2 from './pages/customer/booking/step2/PageBookingStep2'
 import PageBookingStep3 from './pages/customer/booking/step3/PageBookingStep3'
 import PageBookingStep4 from './pages/customer/booking/step4/PageBookingStep4'
 import PageRoomSearchCG from './pages/admin/customer-group/reservasi/new/PageRoomSearchCG'
+import PageAllUpomingReservasiCG from './pages/admin/customer-group/all-upcoming-reservasi/PageAllUpomingReservasiCG'
 
 const router = createBrowserRouter([
   {
@@ -73,7 +74,8 @@ const router = createBrowserRouter([
       { path: "season", element: <PageSeasonTarif /> },
       { path: "cg", element: <PageCustomerGroup /> },
       { path: "cg/:id", element: <PageReservasiCG /> },
-      { path: "cg/:id/new", element: <PageRoomSearchCG /> }
+      { path: "cg/:id/new", element: <PageRoomSearchCG /> },
+      { path: "reservasi", element: <PageAllUpomingReservasiCG /> },
     ]
   }
 ])
@@ -81,6 +83,6 @@ const router = createBrowserRouter([
 export default function App() {
   return <>
     <RouterProvider router={router} />
-    <ToastContainer theme={"light"} />
+    <ToastContainer className="text-bold" theme={"light"} />
   </>
 }

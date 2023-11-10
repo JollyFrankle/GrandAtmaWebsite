@@ -21,6 +21,10 @@ export default class Formatter {
         return new Intl.DateTimeFormat('id-ID', { dateStyle: 'long', timeStyle: 'short' }).format(value);
     }
 
+    static formatDateTimeShort(value: Date): string {
+        return new Intl.DateTimeFormat('id-ID', { dateStyle: 'short', timeStyle: 'short' }).format(value);
+    }
+
     static formatJSON<T=any>(value: any): T|null {
         try {
             return JSON.parse(value) as T;

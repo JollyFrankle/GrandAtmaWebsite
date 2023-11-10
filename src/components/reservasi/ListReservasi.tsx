@@ -1,15 +1,20 @@
 import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
-import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
-import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, StepForwardIcon } from "lucide-react"
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { toast } from "react-toastify"
 import ModalDelete from "../modals/ModalDelete"
 import { Card, CardContent } from "@/cn/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
+import { useNavigate } from "react-router-dom"
 
 type Status = "upcoming" | "completed" | "cancelled"
+
+export interface ListReservasiRef {
+    fetchReservations: () => void
+}
 
 function getColumns(idCustomer?: number) {
     const columns: ColumnRules<Reservasi>[] = [
@@ -52,26 +57,38 @@ function getColumns(idCustomer?: number) {
             field: "status",
             header: "Status",
             enableSorting: true,
-            cell: (row) => ReservasiFormatter.generateStatusBadge(row.status, row.tanggal_dl_booking),
+            cell: (row) => <div className="text-center">{ReservasiFormatter.generateStatusBadge(row.status, row.tanggal_dl_booking)}</div>,
         },
     ]
 
     if (idCustomer) {
         // Role pegawai
-        // Add a column in 3rd index
         columns.splice(3, 0,
             {
                 field: "id_sm",
                 header: "Penanggungjawab S&M",
-                cell: (row) => <>{row?.user_pegawai?.nama}</>
+                cell: (row) => <>{row?.user_pegawai?.nama}</>,
+                accessorFn: (row) => row?.user_pegawai?.nama ?? ""
             }
         )
+
+        if (idCustomer === -1) {
+            // Get all reservasi
+            columns.splice(1, 0,
+                {
+                    field: "id_customer",
+                    header: "Customer",
+                    cell: (row) => <>{row?.user_customer?.nama}</>,
+                    accessorFn: (row) => row?.user_customer?.nama ?? ""
+                }
+            )
+        }
     }
 
     return columns
 }
 
-function getActions(status?: Status, onDetailClick?: (id: number) => void, onCancelClick?: (item: Reservasi) => void) {
+function getActions(status?: Status, onDetailClick?: (id: number) => void, onCancelClick?: (item: Reservasi) => void, onContinueClick?: (item: Reservasi) => void) {
     const actions: RowActions<Reservasi>[][] = [[
         {
             action: <><ClipboardListIcon className="w-4 h-4 me-2" /> Lihat Detail</>,
@@ -83,14 +100,19 @@ function getActions(status?: Status, onDetailClick?: (id: number) => void, onCan
         actions[0].push({
             action: <><CircleSlashIcon className="w-4 h-4 me-2" /> Batalkan</>,
             onClick: (item) => onCancelClick?.(item),
-            enabled: (item) => new Date(item.arrival_date) > new Date()
+            enabled: (item) => new Date(item.arrival_date) > new Date() && !item.status.startsWith("pending-")
+        })
+        actions[0].push({
+            action: <><StepForwardIcon className="w-4 h-4 me-2" /> Lanjutkan</>,
+            onClick: (item) => onContinueClick?.(item),
+            enabled: (item) => item.status.startsWith("pending-")
         })
     }
 
     return actions
 }
 
-export default function ListReservasi({
+const ListReservasi = forwardRef(({
     idCustomer,
     // idPegawai,
     onUserFetched,
@@ -100,15 +122,22 @@ export default function ListReservasi({
     idCustomer?: number,
     // idPegawai?: number,
     status?: Status,
-    onUserFetched?: (user: UserCustomer) => void,
+    onUserFetched?: (user: UserCustomer | null) => void,
     onDetailClick?: (id: number) => void
-}) {
+}, ref: React.Ref<ListReservasiRef | undefined>) => {
     const [isLoading, setIsLoading] = useState(false)
     const [reservations, setReservations] = useState<Reservasi[]>([])
     const [columns, setColumns] = useState<ColumnRules<Reservasi>[]>([])
     const [actions, setActions] = useState<RowActions<Reservasi>[][]>([])
     const [currentData, setCurrentData] = useState<Reservasi>()
     const [showCancelDialog, setShowCancelDialog] = useState(false)
+
+    const navigate = useNavigate()
+
+    const continueReservation = (item: Reservasi) => {
+        const step = item.status.split("-")[1]
+        navigate(`/booking/${item.id_customer}/${item.id}/step-${step}`)
+    }
 
     const openCancelDialog = (item: Reservasi) => {
         setCurrentData(item)
@@ -142,7 +171,7 @@ export default function ListReservasi({
     }
 
     useEffect(() => {
-        setActions(getActions(status, onDetailClick, openCancelDialog))
+        setActions(getActions(status, onDetailClick, openCancelDialog, continueReservation))
         setColumns(getColumns(idCustomer))
     }, [status])
 
@@ -156,7 +185,17 @@ export default function ListReservasi({
                 setReservations(data.data)
             }).catch((err) => {
                 console.log(err)
-                toast.error("Gagal memuat data reservasi.")
+                if (err.response?.data) {
+                    const data = err.response?.data as ApiErrorResponse
+                    toast(data.message, {
+                        type: "error"
+                    })
+                } else {
+                    toast(err.message, {
+                        type: "error"
+                    })
+                }
+                onUserFetched?.(null)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -168,12 +207,26 @@ export default function ListReservasi({
                 onUserFetched?.(data.data.customer)
             }).catch((err) => {
                 console.log(err)
-                toast.error("Gagal memuat data reservasi.")
+                if (err.response?.data) {
+                    const data = err.response?.data as ApiErrorResponse
+                    toast(data.message, {
+                        type: "error"
+                    })
+                } else {
+                    toast(err.message, {
+                        type: "error"
+                    })
+                }
+                onUserFetched?.(null)
             }).finally(() => {
                 setIsLoading(false)
             })
         }
     }
+
+    useImperativeHandle(ref, () => ({
+        fetchReservations
+    }))
 
     useEffect(() => {
         fetchReservations()
@@ -195,24 +248,26 @@ export default function ListReservasi({
                 <Alert>
                     <CircleDollarSignIcon className="w-4 h-4 stroke-green-600" />
                     <AlertTitle className="text-green-600">
-                        Anda akan mendapat <em>refund</em>.
+                        {idCustomer ? "Customer ini" : "Anda"} akan mendapat <em>refund</em>.
                     </AlertTitle>
                     <AlertDescription>
                         <p><em>Refund</em> diberikan sebesar 100% dari total harga kamar.</p>
-                        <p>Untuk tata cara melakukan <em>refund</em>, silakan hubungi kami.</p>
+                        <p>Untuk tata cara melakukan <em>refund</em>, silakan {idCustomer ? "dikonfirmasi dengan customer" : "hubungi kami"}.</p>
                     </AlertDescription>
                 </Alert>
             ) : (
                 <Alert variant="destructive">
                     <CircleDollarSignIcon className="w-4 h-4 " />
                     <AlertTitle>
-                        Anda tidak akan mendapat <em>refund</em>.
+                        {idCustomer ? "Customer ini" : "Anda"} tidak akan mendapat <em>refund</em>.
                     </AlertTitle>
                     <AlertDescription>
-                        <p>Uang Anda tidak akan kembali karena reservasi ini kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
+                        <p>Uang tidak akan dikembalikan karena reservasi ini kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
                     </AlertDescription>
                 </Alert>
             )}
         </ModalDelete>
     </>
-}
+})
+
+export default ListReservasi

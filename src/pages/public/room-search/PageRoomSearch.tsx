@@ -11,7 +11,7 @@ import { AxiosError } from "axios"
 import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, apiPublic, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
-import { Dialog, DialogContent, DialogFooter } from "@/cn/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
@@ -102,6 +102,10 @@ export default function PageRoomSearch() {
                         if (newKamarDipesan[index].count > item.rincian_tarif.jumlah_kamar) {
                             newKamarDipesan[index].count = item.rincian_tarif.jumlah_kamar
                         }
+
+                        if (newKamarDipesan[index].count === 0) {
+                            newKamarDipesan.splice(index, 1)
+                        }
                     }
                 })
                 return newKamarDipesan
@@ -128,6 +132,7 @@ export default function PageRoomSearch() {
     const createBooking = async () => {
         if (userType === "c") {
             setShowDialogMengamankanHarga(true)
+            setShowDialogConfirm(false)
             apiAuthenticated.post(`customer/booking`, {
                 jenis_kamar: kamarDipesan.map(item => ({
                     id_jk: item.idJK,
@@ -158,6 +163,7 @@ export default function PageRoomSearch() {
                     })
                 }
                 setShowDialogMengamankanHarga(false)
+                setShowDialogConfirm(true)
             })
         } else if (userType === "p") {
             toast("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.", {
@@ -312,7 +318,7 @@ export default function PageRoomSearch() {
         <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} />
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
-            <DialogContent>
+            <DialogContent className={dialogSizeByClass("md")}>
                 <div className="pb-6">
                     <p>Rincian reservasi:</p>
                     <ul className="list-none mb-4">
@@ -335,18 +341,20 @@ export default function PageRoomSearch() {
                         {kamarDipesan.map((item, index) => (
                             <li key={index} className="flex border-b items-center">
                                 <img src={getImage(item.gambar)} className="w-32 h-20 object-cover" />
-                                <div className="px-4 py-2 flex-1">
-                                    <div className="font-bold">{item.count} {item.nama}</div>
-                                    <div className="text-sm">{Formatter.formatCurrency(item.harga_diskon)}/kamar/malam</div>
-                                </div>
-                                <div className="pe-4">
-                                    {Formatter.formatCurrency(item.harga_diskon * item.count)}
+                                <div className="flex flex-col md:flex-row px-4 py-2 flex-1">
+                                    <div className="flex-1">
+                                        <div className="font-bold">{item.count} {item.nama}</div>
+                                        <div className="text-sm">{Formatter.formatCurrency(item.harga_diskon)}/kamar/malam</div>
+                                    </div>
+                                    <div className="flex items-baseline md:flex-col md:items-end">
+                                        {Formatter.formatCurrency(item.harga_diskon * item.count)} <span className="ms-1 text-sm text-muted-foreground">/malam</span>
+                                    </div>
                                 </div>
                             </li>
                         ))}
                         <li className="flex items-center bg-secondary">
                             <div className="px-4 py-2 flex-1">
-                                <div className="font-bold">Total</div>
+                                <div className="font-bold">Total per Malam</div>
                             </div>
                             <div className="pe-4 font-bold">
                                 {Formatter.formatCurrency(summaryKamarDipesan.hargaDiskon)}

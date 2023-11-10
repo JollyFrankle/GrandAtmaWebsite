@@ -123,7 +123,7 @@ export default function RoomSearchCG({
             </div>
             <div className="mt-3 lg:flex justify-between items-center">
                 <div className="mb-3 lg:mb-0 text-muted-foreground">
-                    Catatan: Anak-anak dianggap berusia 12 tahun ke bawah, dibuktikan dengan KTP Anak.
+                    Catatan: Anak-anak dianggap berusia 12 tahun ke bawah, dibuktikan dengan identitas resmi.
                 </div>
             </div>
         </form>

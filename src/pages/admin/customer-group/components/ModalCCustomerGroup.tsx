@@ -43,7 +43,7 @@ export default function ModalCCustomerGroup({
 
     const getDetail = () => {
         setLoading(true)
-        apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/user/${id}`).then((res) => {
+        apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/customer/${id}`).then((res) => {
             const data = res.data
             setData(data.data)
         }).catch((err) => {
@@ -69,7 +69,7 @@ export default function ModalCCustomerGroup({
     }
 
     const saveData = () => {
-        const url = id ? `pegawai/user/${id}` : `pegawai/user`
+        const url = id ? `pegawai/customer/${id}` : `pegawai/customer`
         const method = id ? "PUT" : "POST"
 
         apiAuthenticated<ApiResponse<UserCustomer>>({

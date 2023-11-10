@@ -54,8 +54,8 @@ export interface RowActions<T> {
 }
 
 function generateActionChildren<T>(actions: RowActions<T>[], row: T) {
-    return actions.map((action, i) => (
-        <DropdownMenuItem onClick={() => action.onClick(row)} key={i} disabled={!(action.enabled?.(row) ?? true)}>{action.action}</DropdownMenuItem>
+    return actions.map((action, i) => (action.enabled?.(row) ?? true) && (
+        <DropdownMenuItem onClick={() => action.onClick(row)} key={i}>{action.action}</DropdownMenuItem>
     ))
 }
 
@@ -112,8 +112,9 @@ function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][
         headers.push({
             id: "__actions",
             enableHiding: false,
+            header: "Tindakan",
             cell: ({ row }) => {
-                return (
+                return <div className="text-center">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -131,7 +132,7 @@ function generateColumns<T>(columns: ColumnRules<T>[], actions: RowActions<T>[][
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                )
+                </div>
             },
         })
     }

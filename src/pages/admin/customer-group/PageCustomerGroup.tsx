@@ -3,7 +3,7 @@ import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
 import { ApiResponse, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import { CalendarCheck2Icon, EyeIcon, UserPlusIcon } from "lucide-react";
+import { BookPlusIcon, CalendarCheck2Icon, EyeIcon, UserPlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalCCustomerGroup from "./components/ModalCCustomerGroup";
@@ -23,7 +23,7 @@ export default function PageCustomerGroup() {
 
     const fetchTableData = () => {
         setTableLoading(true)
-        apiAuthenticated.get<ApiResponse<UserCustomer[]>>(`pegawai/user`).then((res) => {
+        apiAuthenticated.get<ApiResponse<UserCustomer[]>>(`pegawai/customer`).then((res) => {
             const data = res.data
             setTableData(data.data)
         }).catch((err) => {
@@ -37,7 +37,7 @@ export default function PageCustomerGroup() {
     }
 
     // const deleteCustomer = () => {
-    //     apiAuthenticated.delete<ApiResponse<null>>(`pegawai/user/${currentData?.id}`).then((res) => {
+    //     apiAuthenticated.delete<ApiResponse<null>>(`pegawai/customer/${currentData?.id}`).then((res) => {
     //         const data = res.data
     //         toast(data.message, {
     //             type: "success"
@@ -108,6 +108,12 @@ export default function PageCustomerGroup() {
                 action: <><CalendarCheck2Icon className="w-4 h-4 me-2" /> Riwayat Reservasi</>,
                 onClick(row) {
                     navigate(`/admin/cg/${row.id}`)
+                }
+            },
+            {
+                action: <><BookPlusIcon className="w-4 h-4 me-2" /> Buat Reservasi</>,
+                onClick(row) {
+                    navigate(`/admin/cg/${row.id}/new`)
                 }
             }
         ]]} isLoading={tableLoading} />

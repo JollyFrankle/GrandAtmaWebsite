@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "@/assets/images/gah-inline-logo.png";
 import React from "react";
-import { BedIcon, CalendarClockIcon, ChevronDownIcon, HelpingHandIcon, HomeIcon, LayoutDashboardIcon, MenuIcon, UsersIcon } from "lucide-react";
+import { BedIcon, BookMarkedIcon, CalendarClockIcon, ChevronDownIcon, HelpingHandIcon, HomeIcon, LayoutDashboardIcon, MenuIcon, UsersIcon } from "lucide-react";
 import AuthHelper from "@/utils/AuthHelper";
 
 interface SidebarProps {
@@ -60,6 +60,12 @@ const sidebarItems: SidebarGroupProps[] = [
                 icon: <UsersIcon />,
                 label: "Customer Group",
                 to: "/cg",
+                roles: ["sm"]
+            },
+            {
+                icon: <BookMarkedIcon />,
+                label: "Reservasi Group",
+                to: "/reservasi",
                 roles: ["sm"]
             }
         ]

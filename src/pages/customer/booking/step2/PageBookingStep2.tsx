@@ -149,7 +149,7 @@ export default function PageBookingStep2() {
                 <h2 className="text-xl font-bold mb-2">Permintaan Khusus</h2>
 
                 <Card className="shadow">
-                    <CardContent className="whitespace-pre p-4">
+                    <CardContent className="whitespace-pre-wrap p-4">
                         {detail?.permintaan_tambahan ?? "Tidak ada permintaan khusus"}
                     </CardContent>
                 </Card>
@@ -285,7 +285,7 @@ export default function PageBookingStep2() {
                     </li>
                     <li className="p-1 flex justify-between bg-secondary"></li>
                     <li className="p-4 flex justify-between">
-                        <div className="font-bold">Dibayar Saat Ini</div>
+                        <div className="font-bold">Total Harga {detail?.jumlah_malam} Malam</div>
                         <div className="font-bold">
                             {Formatter.formatCurrency(detail?.total ?? 0)}
                         </div>
@@ -295,7 +295,7 @@ export default function PageBookingStep2() {
                     </li>
                 </ul>
 
-                <div className="md:flex justify-between mt-4">
+                <div className="md:flex justify-between mt-4 gap-4">
                     <div className="mb-4 lg:mb-0">
                         <div className="mb-1 font-bold">Persetujuan</div>
                         <div className="flex items-center space-x-2">

@@ -75,7 +75,7 @@ export default function DetailReservasi({
 
             {data?.permintaan_tambahan && <>
                 <p className="text-sm text-muted-foreground">Permintaan tambahan</p>
-                <p className="font-bold whitespace-pre mb-4">{data.permintaan_tambahan}</p>
+                <p className="font-bold whitespace-pre-wrap mb-4">{data.permintaan_tambahan}</p>
             </>}
 
             <h4 className="text-xl font-bold mt-4 mb-2">Kamar</h4>

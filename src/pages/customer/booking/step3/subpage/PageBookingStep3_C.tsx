@@ -2,35 +2,33 @@ import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { ArrowLeftCircleIcon, BanknoteIcon, BedSingleIcon, CheckCheckIcon, CopyIcon, UserIcon } from "lucide-react"
+import { BanknoteIcon, BedSingleIcon, CopyIcon, InfoIcon, Trash2Icon, UserIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 
 import BankDiamond from "@/assets/images/bank-diamond.png"
 import { Input } from "@/cn/components/ui/input"
+import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import IconInput from "@/components/IconInput"
 import usePageTitle from "@/hooks/usePageTitle"
 import AuthHelper from "@/utils/AuthHelper"
-import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
-import InlineLink from "@/components/InlineLink"
 
 const urls = {
     getDetail: '',
     submitData: ''
 }
 
-export default function PageBookingStep3_P() {
+export default function PageBookingStep3_C() {
     const params = useParams<{ idR: string, idC: string }>()
     const { idR, idC } = params
 
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
     const [kamarGroupedByJenis, setKamarGroupedByJenis] = useState<{ jenis_kamar?: JenisKamar, amount: number, harga: number }[]>()
-    const [jumlahDP, setJumlahDP] = useState("")
-    const [jumlahDPError, setJumlahDPError] = useState<string | undefined>()
+    const [fileBukti, setFileBukti] = useState<File>()
 
     const navigate = useNavigate()
     usePageTitle(`Pembayaran #${detail?.id_booking} – Grand Atma Hotel`)
@@ -56,10 +54,35 @@ export default function PageBookingStep3_P() {
         })
     }
 
+    const onBuktiSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 8 * 1024 * 1024) {
+                toast.error("Ukuran file terlalu besar. Maksimal 8 MB.")
+                return
+            } else if (!file.type.startsWith("image/")) {
+                toast.error("File yang diunggah harus berupa gambar.")
+                return
+            } else {
+                setFileBukti(file)
+            }
+            e.target.value = ""
+        }
+    }
+
     const submitData = () => {
-        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(urls.submitData, {
-            jumlah_dp: +jumlahDP
-        }).then((res) => {
+        setIsLoading(true)
+        const formData = new FormData()
+        formData.append("bukti", fileBukti as Blob)
+
+        apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi }>>(urls.submitData,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        ).then((res) => {
             const data = res.data
             setDetail(data.data.reservasi)
             toast.success("Reservasi berhasil dibuat.")
@@ -89,22 +112,6 @@ export default function PageBookingStep3_P() {
         })
     }, [])
 
-    useEffect(() => {
-        const jumlahDPAsNumber = +jumlahDP
-        const total = detail?.total ?? 0
-        if (jumlahDPAsNumber) {
-            if (jumlahDPAsNumber < total / 2) {
-                setJumlahDPError("Jumlah DP tidak boleh kurang dari 50% dari total biaya kamar")
-            } else if (jumlahDPAsNumber > total) {
-                setJumlahDPError("Jumlah DP tidak boleh lebih dari total biaya kamar")
-            } else {
-                setJumlahDPError(undefined)
-            }
-        } else {
-            setJumlahDPError(undefined)
-        }
-    }, [jumlahDP])
-
     return <>
         <section className="container py-8 flex flex-col-reverse lg:flex-row gap-6 mb-4">
             <div className="flex-1">
@@ -112,7 +119,7 @@ export default function PageBookingStep3_P() {
                 <Card className="flex flex-col md:flex-row items-center mb-4 overflow-auto">
                     <img src={BankDiamond} className="w-full lg:h-36 lg:w-auto aspect-video" />
                     <div className="p-4">
-                        <div>Melalui gerbang pembayaran:</div>
+                        <div>Silakan transfer ke:</div>
                         <div className="font-bold text-xl">Bank Diamond</div>
                     </div>
                 </Card>
@@ -142,104 +149,56 @@ export default function PageBookingStep3_P() {
                             <Input className="text-xl border-0 bg-secondary" readOnly value="PT ATMA JAYA" />
                         </div>
                     </li>
-                    <li className="pb-4 px-4 md:flex justify-between items-center">
-                        <div>Total Biaya Kamar:</div>
-                        <div className="font-bold relative md:w-72">
-                            <Input className="text-xl border-0 bg-secondary" readOnly value={Formatter.formatCurrency(detail?.total ?? 0)} />
-                        </div>
-                    </li>
                     <li className="p-4 md:flex justify-between items-center bg-secondary">
-                        <div>Minimal <em>Down-Payment</em> (DP)</div>
+                        <div>Total Transfer</div>
                         <div className="font-bold relative md:w-72">
-                            <Input className="text-xl border-0 text-green-600 bg-white" readOnly value={Formatter.formatCurrency((detail?.total ?? 0) / 2)} />
+                            <Input className="text-xl border-0 text-green-600 bg-white" readOnly value={Formatter.formatCurrency(detail?.total ?? 0)} />
                             <Button className="absolute top-0 right-0 px-4" onClick={() => {
-                                navigator.clipboard.writeText(((detail?.total ?? 0) / 2).toString())
+                                navigator.clipboard.writeText((detail?.total ?? 0).toString())
                                 toast.success("Total transfer berhasil disalin")
                             }} variant="link">
                                 <CopyIcon className="w-4 h-4 me-2" /> Salin
                             </Button>
                         </div>
                     </li>
-                    <li className="p-4 md:flex justify-between items-center bg-green-100">
-                        <div>Jumlah Dibayar:</div>
-                        <div className="md:w-72">
-                            <IconInput
-                                icon={<div className="text-base text-muted-foreground">Rp</div>}
-                                placeholder="Jumlah DP"
-                                inputClassName="text-xl font-bold"
-                                className="mb-0"
-                                type="number"
-                                min={0}
-                                value={jumlahDP}
-                                onValueChange={setJumlahDP}
-                                errorText={jumlahDPError} />
-                            <div className="text-sm mt-2">Terbaca: <strong>{Formatter.formatCurrency(+jumlahDP)}</strong></div>
-                        </div>
-                    </li>
                 </ul>
 
-                <h2 className="text-xl font-bold mb-2">Rincian Harga</h2>
-                <p className="text-muted-foreground mb-4">Dikirimkan kepada customer jika dibutuhkan.</p>
-
-                <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
-                    {kamarGroupedByJenis?.map((item) => (
-                        <li className="p-4 border-b flex justify-between" key={item.jenis_kamar?.id}>
-                            <div className="flex-1">
-                                <div className="font-bold">{item.jenis_kamar?.nama}</div>
-                                <div className="text-muted-foreground text-sm">{item.amount} kamar &times; {detail?.jumlah_malam} malam</div>
-                                <div className="text-muted-foreground">{Formatter.formatCurrency(item.harga)}/kamar/malam</div>
-                            </div>
-                            <div className="font-bold">
-                                {Formatter.formatCurrency(item.harga * item.amount * (detail?.jumlah_malam ?? 0))}
-                            </div>
-                        </li>
-                    ))}
-                    <li className="p-1 -mt-[1px] flex justify-between bg-secondary"></li>
-                    <li className="p-4">
-                        {/* <div className="font-bold">Biaya Lain</div> */}
-                        <div className="flex justify-between">
-                            <div className="text-muted-foreground">Pajak</div>
-                            <div className="text-green-600">Termasuk</div>
+                <div className="mb-4">
+                    <h2 className="text-xl font-bold mb-2">Unggah Bukti Transfer</h2>
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex-1">
+                            <Alert className="mb-4 shadow">
+                                <InfoIcon className="w-4 h-4 me-2" />
+                                <AlertTitle>Informasi</AlertTitle>
+                                <AlertDescription>
+                                    Setelah transfer, silakan unggah bukti transfer melalui tombol di bawah. Kami akan memverifikasi pembayaran Anda dalam waktu 1x24 jam.
+                                </AlertDescription>
+                            </Alert>
+                            {fileBukti ? (
+                                <div className="mt-2">
+                                    <Button className="w-full" onClick={() => setFileBukti(undefined)} variant="outline">
+                                        Hapus Bukti Transfer <Trash2Icon className="w-4 h-4 ms-2" />
+                                    </Button>
+                                </div>
+                            ) : (
+                                <IconInput
+                                    icon={<BanknoteIcon className="w-6 h-6" />}
+                                    type="file"
+                                    accept="image/jpeg,image/png"
+                                    onChange={onBuktiSelected} />
+                            )}
                         </div>
-                        <div className="flex justify-between">
-                            <div className="text-muted-foreground">Biaya Layanan</div>
-                            <div className="text-green-600">Termasuk</div>
+                        <div className="flex-1 rounded shadow overflow-auto aspect-square bg-secondary">
+                            {fileBukti && (
+                                <img src={URL.createObjectURL(fileBukti)} className="w-full h-full object-contain" />
+                            )}
                         </div>
-                        <div className="flex justify-between">
-                            <div className="text-muted-foreground">Biaya Penelitian & Pengembangan Sistem</div>
-                            <div className="text-green-600 font-bold">GRATIS</div>
-                        </div>
-                    </li>
-                    <li className="p-1 flex justify-between bg-secondary"></li>
-                    <li className="p-4 flex justify-between">
-                        <div className="font-bold">Total Harga {detail?.jumlah_malam} Malam</div>
-                        <div className="font-bold">
-                            {Formatter.formatCurrency(detail?.total ?? 0)}
-                        </div>
-                    </li>
-                    <li className="px-4 py-2 flex justify-between bg-secondary text-sm text-gray-500">
-                        Layanan tambahan dan permintaan khusus akan dibayar saat check out.
-                    </li>
-                </ul>
-
-                <Alert>
-                    <BanknoteIcon className="w-4 h-4" />
-                    <AlertTitle>Mohon diperhatikan!</AlertTitle>
-                    <AlertDescription>
-                        <div className="font-bold mb-2">Hanya klik tombol "Customer Sudah Membayar" jika customer benar-benar sudah melakukan pembayaran dan diverifikasi.</div>
-                        <div>Jika customer ingin membayar kemudian (perhatikan waktu jatuh tempo pemensanan di atas halaman), Anda bisa melanjutkan reservasi ini dengan menekan tindakan "Lanjutkan" pada halaman <InlineLink to="/admin/reservasi">Reservasi Group</InlineLink>.</div>
-                    </AlertDescription>
-                </Alert>
-
-                <div className="flex mt-4 flex-col-reverse items-center md:flex-row md:justify-between md:items-end gap-4">
-                    <div className="mb-4 lg:mb-0">
-                    <Button variant="secondary" asChild>
-                        <Link to="/admin/reservasi"><ArrowLeftCircleIcon className="w-4 h-4 me-2" /> Kembali ke Daftar Reservasi</Link>
-                    </Button>
-
                     </div>
-                    <Button className="whitespace-nowrap text-lg h-14 px-6" onClick={submitData} disabled={isLoading || jumlahDPError !== undefined || (+jumlahDP <= 0)}>
-                        Customer Sudah Membayar <CheckCheckIcon className="w-6 h-6 ms-2" />
+                </div>
+
+                <div className="md:flex mt-4">
+                    <Button className="flex-1 text-lg h-14 px-6" onClick={submitData} disabled={isLoading || !fileBukti}>
+                        Saya Sudah Membayar <BanknoteIcon className="w-6 h-6 ms-2" />
                     </Button>
                 </div>
 
