@@ -1,8 +1,8 @@
 import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
-import { ApiErrorResponse, ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, BASE_URL, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
-import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, StepForwardIcon } from "lucide-react"
+import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, StepForwardIcon } from "lucide-react"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { toast } from "react-toastify"
 import ModalDelete from "../modals/ModalDelete"
@@ -88,7 +88,13 @@ function getColumns(idCustomer?: number) {
     return columns
 }
 
-function getActions(status?: Status, onDetailClick?: (id: number) => void, onCancelClick?: (item: Reservasi) => void, onContinueClick?: (item: Reservasi) => void) {
+function getActions(
+    status?: Status,
+    onDetailClick?: (id: number) => void,
+    onCancelClick?: (item: Reservasi) => void,
+    onContinueClick?: (item: Reservasi) => void,
+    onTandaTerimaClick?: (item: Reservasi) => void
+) {
     const actions: RowActions<Reservasi>[][] = [[
         {
             action: <><ClipboardListIcon className="w-4 h-4 me-2" /> Lihat Detail</>,
@@ -106,6 +112,11 @@ function getActions(status?: Status, onDetailClick?: (id: number) => void, onCan
             action: <><StepForwardIcon className="w-4 h-4 me-2" /> Lanjutkan</>,
             onClick: (item) => onContinueClick?.(item),
             enabled: (item) => item.status.startsWith("pending-")
+        })
+        actions[0].push({
+            action: <><FileTextIcon className="w-4 h-4 me-2" /> Tanda Terima</>,
+            onClick: (item) => onTandaTerimaClick?.(item),
+            enabled: (item) => !(item.status.startsWith("pending-") || item.user_customer?.type === 'p')
         })
     }
 
@@ -137,6 +148,12 @@ const ListReservasi = forwardRef(({
     const continueReservation = (item: Reservasi) => {
         const step = item.status.split("-")[1]
         navigate(`/booking/${item.id_customer}/${item.id}/step-${step}`)
+    }
+
+    const tandaTerimaReservation = (item: Reservasi) => {
+        const b64Id = btoa([item.id, item.id_customer, item.id_booking].join(","))
+        // open in new tab
+        window.open(`${BASE_URL}/public/pdf/tanda-terima/${b64Id}`, "_blank")
     }
 
     const openCancelDialog = (item: Reservasi) => {
@@ -171,7 +188,7 @@ const ListReservasi = forwardRef(({
     }
 
     useEffect(() => {
-        setActions(getActions(status, onDetailClick, openCancelDialog, continueReservation))
+        setActions(getActions(status, onDetailClick, openCancelDialog, continueReservation, tandaTerimaReservation))
         setColumns(getColumns(idCustomer))
     }, [status])
 
