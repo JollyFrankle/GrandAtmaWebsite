@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
-import { ApiErrorResponse, ApiResponse, FasilitasLayananTambahan, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
 import { ArrowRightIcon, BanknoteIcon, BedSingleIcon, CalendarClockIcon, CalendarRangeIcon, CigaretteIcon, CircleSlashIcon, Clock4Icon, HelpingHandIcon, PawPrintIcon, ScanFaceIcon, UserIcon } from "lucide-react"
@@ -13,12 +13,6 @@ import BookingS2FasiltasItem from "./components/BookingS2FasiltasItem"
 import usePageTitle from "@/hooks/usePageTitle"
 import AuthHelper from "@/utils/AuthHelper"
 
-export interface PBS2GroupedFasilitas {
-    fasilitas?: FasilitasLayananTambahan,
-    amount: number,
-    hargaTotal: number
-}
-
 const urls = {
     getDetail: '',
     submitData: ''
@@ -31,7 +25,6 @@ export default function PageBookingStep2() {
     const [detail, setDetail] = useState<Reservasi>()
     const [isLoading, setIsLoading] = useState(true)
     const [kamarGroupedByJenis, setKamarGroupedByJenis] = useState<{ jenis_kamar?: JenisKamar, amount: number, harga: number }[]>()
-    const [layananGrouped, setLayananGrouped] = useState<PBS2GroupedFasilitas[]>([])
     const [checkSudahBaca, setCheckSudahBaca] = useState(false)
 
     const navigate = useNavigate()
@@ -53,19 +46,6 @@ export default function PageBookingStep2() {
                 }
             })
             setKamarGroupedByJenis(kamarGroupedByJenis)
-
-            // Group layanan by jenis layanan
-            const layananGrouped: PBS2GroupedFasilitas[] = []
-            data.reservasi_layanan?.forEach((item) => {
-                const index = layananGrouped.findIndex((item2) => item2.fasilitas?.id == item.layanan_tambahan?.id)
-                if (index == -1) {
-                    layananGrouped.push({ fasilitas: item.layanan_tambahan, amount: 1, hargaTotal: item.total })
-                } else {
-                    layananGrouped[index].amount += 1
-                    layananGrouped[index].hargaTotal += item.total
-                }
-            })
-            setLayananGrouped(layananGrouped)
         }).catch((err: AxiosError) => {
             console.log(err)
         })
@@ -137,8 +117,8 @@ export default function PageBookingStep2() {
                 <h2 className="text-xl font-bold mb-2">Layanan Tambahan</h2>
 
                 <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
-                    {layananGrouped.length > 0 ? layananGrouped?.map((item) => (
-                        <BookingS2FasiltasItem key={item.fasilitas?.id} groupedFasilitas={item} />
+                    {(detail?.reservasi_layanan?.length ?? 0) > 0 ? detail?.reservasi_layanan!!.map((item) => (
+                        <BookingS2FasiltasItem key={item.id} reservasiLayanan={item} />
                     )) : (
                         <li className="p-4">Tidak ada layanan tambahan</li>
                     )}

@@ -1,6 +1,6 @@
 import AuthHelper from "@/utils/AuthHelper"
 import { AxiosError } from "axios"
-import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiResponse, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import { BookmarkPlusIcon } from "lucide-react"
 import { Button } from "@/cn/components/ui/button"
@@ -18,6 +18,7 @@ export default function PageReservasiCG() {
 
     // const [userP] = useState(AuthHelper.getUserPegawai()!!)
     const [user, setUser] = useState<UserCustomer | null>()
+    const [userSM, setUserSM] = useState<UserPegawai>()
     const [showDialog, setShowDialog] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)
@@ -41,6 +42,7 @@ export default function PageReservasiCG() {
     useEffect(() => {
         if(AuthHelper.authorize(["sm"])) {
             // fetchTableData()
+            setUserSM(AuthHelper.getUserPegawai()!!)
         } else {
             toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
                 type: "error"
@@ -90,7 +92,7 @@ export default function PageReservasiCG() {
             </Table>
         </>}
 
-        <ReservasiHistoryTab idCustomer={+(idC ?? 0)} onDetailClick={getDetailReservasi} onUserFetched={setUser} />
+        <ReservasiHistoryTab idCustomer={+(idC ?? 0)} onDetailClick={getDetailReservasi} onUserFetched={setUser} userSM={userSM} />
 
         <ModalDetailReservasi show={showDialog} onOpenChange={setShowDialog} data={detailReservasi} loading={detailLoading} />
     </>

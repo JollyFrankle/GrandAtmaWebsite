@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
 import { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, UserCustomer, apiAuthenticated, getImage } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, Reservasi, ReservasiRoom, UserCustomer, apiAuthenticated, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog"
@@ -23,26 +23,8 @@ import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
 import { RoomSearchData } from "@/pages/public/_layout/components/RoomSearch"
 import RoomSearchCG from "./components/RoomSearchCG"
 import SummaryFooter from "./components/SummaryFooter"
+import { KamarDipesan, SummaryKamarDipesan, TarifKamar } from "@/pages/public/room-search/PageRoomSearch"
 
-export interface KamarDipesan {
-    idJK: number,
-    nama: string,
-    gambar: string,
-    count: number,
-    harga: number,
-    harga_diskon: number
-}
-
-export interface TarifKamar {
-    jenis_kamar: JenisKamar,
-    rincian_tarif: RincianTarif
-}
-
-export interface SummaryKamarDipesan {
-    hargaDiskon: number,
-    hargaNormal: number,
-    totalKamarSaatIni: number
-}
 
 export default function PageRoomSearchCG() {
     const params = useParams<{ id: string }>()

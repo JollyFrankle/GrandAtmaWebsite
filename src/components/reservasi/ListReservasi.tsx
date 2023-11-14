@@ -1,5 +1,5 @@
 import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
-import { ApiErrorResponse, ApiResponse, BASE_URL, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiErrorResponse, ApiResponse, BASE_URL, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter from "@/utils/ReservasiFormatter"
 import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, StepForwardIcon } from "lucide-react"
@@ -90,6 +90,7 @@ function getColumns(idCustomer?: number) {
 
 function getActions(
     status?: Status,
+    userSM?: UserPegawai,
     onDetailClick?: (item: Reservasi) => void,
     onCancelClick?: (item: Reservasi) => void,
     onContinueClick?: (item: Reservasi) => void,
@@ -106,8 +107,9 @@ function getActions(
         actions[0].push({
             action: <><CircleSlashIcon className="w-4 h-4 me-2" /> Batalkan</>,
             onClick: (item) => onCancelClick?.(item),
-            enabled: (item) => new Date(item.arrival_date) > new Date()
+            enabled: (item) => new Date(item.arrival_date) > new Date() || item.status.startsWith("pending-")
         })
+        console.log(userSM, userSM?.id)
         actions[0].push({
             action: <><StepForwardIcon className="w-4 h-4 me-2" /> Lanjutkan</>,
             onClick: (item) => onContinueClick?.(item),
@@ -125,13 +127,13 @@ function getActions(
 
 const ListReservasi = forwardRef(({
     idCustomer,
-    // idPegawai,
+    userSM,
     onUserFetched,
     status,
     onDetailClick
 }: {
     idCustomer?: number,
-    // idPegawai?: number,
+    userSM?: UserPegawai,
     status?: Status,
     onUserFetched?: (user: UserCustomer | null) => void,
     onDetailClick?: (reservasi: Reservasi) => void
@@ -169,7 +171,16 @@ const ListReservasi = forwardRef(({
                 fetchReservations()
             }).catch((err) => {
                 console.log(err)
-                toast.error("Gagal membatalkan reservasi.")
+                if (err.response?.data) {
+                    const data = err.response?.data as ApiErrorResponse
+                    toast(data.message, {
+                        type: "error"
+                    })
+                } else {
+                    toast(err.message, {
+                        type: "error"
+                    })
+                }
             }).finally(() => {
                 setShowCancelDialog(false)
             })
@@ -180,7 +191,16 @@ const ListReservasi = forwardRef(({
                 fetchReservations()
             }).catch((err) => {
                 console.log(err)
-                toast.error("Gagal membatalkan reservasi.")
+                if (err.response?.data) {
+                    const data = err.response?.data as ApiErrorResponse
+                    toast(data.message, {
+                        type: "error"
+                    })
+                } else {
+                    toast(err.message, {
+                        type: "error"
+                    })
+                }
             }).finally(() => {
                 setShowCancelDialog(false)
             })
@@ -188,7 +208,7 @@ const ListReservasi = forwardRef(({
     }
 
     useEffect(() => {
-        setActions(getActions(status, onDetailClick, openCancelDialog, continueReservation, tandaTerimaReservation))
+        setActions(getActions(status, userSM, onDetailClick, openCancelDialog, continueReservation, tandaTerimaReservation))
         setColumns(getColumns(idCustomer))
     }, [status])
 
