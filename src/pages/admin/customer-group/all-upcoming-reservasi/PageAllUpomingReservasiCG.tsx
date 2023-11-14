@@ -2,7 +2,7 @@ import InlineLink from "@/components/InlineLink";
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi";
 import ListReservasi from "@/components/reservasi/ListReservasi";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, Reservasi, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";

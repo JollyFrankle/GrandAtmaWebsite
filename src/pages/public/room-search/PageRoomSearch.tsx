@@ -227,7 +227,7 @@ export default function PageRoomSearch() {
             },
             dewasa: memoizedParams.get("dewasa") ?? "2",
             anak: memoizedParams.get("anak") ?? "0",
-            jumlahKamar: memoizedParams.get("jumlahKamar") ?? "2"
+            jumlahKamar: memoizedParams.get("jumlahKamar") ?? "1"
         })
         setJumlahMalam(Converter.jumlahMalamFromDateRange(fromDate, toDate))
 

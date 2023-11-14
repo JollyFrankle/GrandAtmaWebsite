@@ -1,7 +1,7 @@
 import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
 import { ApiErrorResponse, ApiResponse, BASE_URL, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
-import ReservasiFormatter from "@/utils/ReservasiFormatter"
+import ReservasiFormatter, { CancelableStatus } from "@/utils/ReservasiFormatter"
 import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, StepForwardIcon } from "lucide-react"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { toast } from "react-toastify"
@@ -9,6 +9,7 @@ import ModalDelete from "../modals/ModalDelete"
 import { Card, CardContent } from "@/cn/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import { useNavigate } from "react-router-dom"
+import AuthHelper from "@/utils/AuthHelper"
 
 type Status = "upcoming" | "completed" | "cancelled"
 
@@ -107,13 +108,20 @@ function getActions(
         actions[0].push({
             action: <><CircleSlashIcon className="w-4 h-4 me-2" /> Batalkan</>,
             onClick: (item) => onCancelClick?.(item),
-            enabled: (item) => new Date(item.arrival_date) > new Date() || item.status.startsWith("pending-")
+            enabled: (item) => {
+                const cancellable = ReservasiFormatter.isReservasiCancelable(item)
+                const isCancellable = cancellable === CancelableStatus.YES_REFUND || cancellable === CancelableStatus.NO_REFUND || cancellable === CancelableStatus.NO_CONSEQUENCE
+                console.log(userSM, item)
+                return userSM ? userSM.id === item.id_sm && isCancellable : isCancellable
+            }
         })
-        console.log(userSM, userSM?.id)
         actions[0].push({
             action: <><StepForwardIcon className="w-4 h-4 me-2" /> Lanjutkan</>,
             onClick: (item) => onContinueClick?.(item),
-            enabled: (item) => item.status.startsWith("pending-")
+            enabled: (item) => {
+                const continuable = item.status.startsWith("pending-")
+                return userSM ? userSM.id === item.id_sm && continuable : continuable
+            }
         })
         actions[0].push({
             action: <><FileTextIcon className="w-4 h-4 me-2" /> Tanda Terima</>,
@@ -127,13 +135,11 @@ function getActions(
 
 const ListReservasi = forwardRef(({
     idCustomer,
-    userSM,
     onUserFetched,
     status,
     onDetailClick
 }: {
     idCustomer?: number,
-    userSM?: UserPegawai,
     status?: Status,
     onUserFetched?: (user: UserCustomer | null) => void,
     onDetailClick?: (reservasi: Reservasi) => void
@@ -144,6 +150,7 @@ const ListReservasi = forwardRef(({
     const [actions, setActions] = useState<RowActions<Reservasi>[][]>([])
     const [currentData, setCurrentData] = useState<Reservasi>()
     const [showCancelDialog, setShowCancelDialog] = useState(false)
+    const [userSM, setUserSM] = useState<UserPegawai>()
 
     const navigate = useNavigate()
 
@@ -210,7 +217,11 @@ const ListReservasi = forwardRef(({
     useEffect(() => {
         setActions(getActions(status, userSM, onDetailClick, openCancelDialog, continueReservation, tandaTerimaReservation))
         setColumns(getColumns(idCustomer))
-    }, [status])
+    }, [status, userSM])
+
+    useEffect(() => {
+        setUserSM(AuthHelper.getUserPegawai() ?? undefined)
+    }, [])
 
     const fetchReservations = () => {
         const queryParam = new URLSearchParams({ status: status ?? "" }).toString()

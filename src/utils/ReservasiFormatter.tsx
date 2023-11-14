@@ -1,6 +1,14 @@
 import { Badge } from "@/cn/components/ui/badge"
 import Formatter from "./Formatter"
+import { Reservasi } from "./ApiModels"
 
+
+export enum CancelableStatus {
+    YES_REFUND,
+    NO_REFUND,
+    NO_CONSEQUENCE,
+    NOT_CANCELABLE,
+}
 
 export default class ReservasiFormatter {
     static generateStatusBadge(status: string, tanggalDL?: string|null) {
@@ -31,6 +39,27 @@ export default class ReservasiFormatter {
                 return <Badge variant="warning">Test</Badge>
             default:
                 return <Badge>Tidak Diketahui</Badge>
+        }
+    }
+
+    static isReservasiCancelable(reservasi: Reservasi) {
+        const tglArrival = new Date(reservasi.arrival_date)
+        const tglDeparture = new Date(reservasi.departure_date)
+
+        // if > 7 days, allow refund
+        const diffDays = (tglDeparture.getTime() - tglArrival.getTime()) / (1000 * 3600 * 24)
+        const isOverCheckOut = new Date().getTime() > tglDeparture.setHours(12, 0, 0, 0)
+        const isOverDl = new Date().getTime() > new Date(reservasi.tanggal_dl_booking ?? "").getTime()
+        const isReservasiUncancelable = ["checkin", "batal", "expired", "selesai"].includes(reservasi.status)
+
+        if (reservasi.status.startsWith('pending-') && !isOverDl) {
+            return CancelableStatus.NO_CONSEQUENCE
+        } else if (diffDays > 7) {
+            return CancelableStatus.YES_REFUND
+        } else if (isOverCheckOut || isReservasiUncancelable) {
+            return CancelableStatus.NOT_CANCELABLE
+        } else {
+            return CancelableStatus.NO_REFUND
         }
     }
 }

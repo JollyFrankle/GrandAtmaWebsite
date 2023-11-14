@@ -1,18 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/cn/components/ui/tabs";
 import ListReservasi, { ListReservasiRef } from "./ListReservasi";
-import { Reservasi, UserCustomer, UserPegawai } from "@/utils/ApiModels";
+import { Reservasi, UserCustomer } from "@/utils/ApiModels";
 import { BookMarkedIcon, BookXIcon, BookmarkCheckIcon } from "lucide-react";
 
 
 export default function ReservasiHistoryTab({
     idCustomer,
-    userSM,
     onUserFetched,
     onDetailClick,
     listReservasiRef
 }: {
     idCustomer?: number,
-    userSM?: UserPegawai,
     onUserFetched?: (user: UserCustomer | null) => void,
     onDetailClick: (item: Reservasi) => void,
     listReservasiRef?: React.Ref<ListReservasiRef | undefined>
@@ -25,13 +23,13 @@ export default function ReservasiHistoryTab({
                 <TabsTrigger value="cancelled" className="text-lg px-4 flex-1"><BookXIcon className="w-5 h-5 me-2" /> Batal & Kedaluwarsa</TabsTrigger>
             </TabsList>
             <TabsContent value="upcoming">
-                <ListReservasi status="upcoming" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} userSM={userSM} ref={listReservasiRef} />
+                <ListReservasi status="upcoming" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} ref={listReservasiRef} />
             </TabsContent>
             <TabsContent value="completed">
-                <ListReservasi status="completed" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} userSM={userSM} ref={listReservasiRef} />
+                <ListReservasi status="completed" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} ref={listReservasiRef} />
             </TabsContent>
             <TabsContent value="cancelled">
-                <ListReservasi status="cancelled" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} userSM={userSM} ref={listReservasiRef} />
+                <ListReservasi status="cancelled" idCustomer={idCustomer} onDetailClick={onDetailClick} onUserFetched={onUserFetched} ref={listReservasiRef} />
             </TabsContent>
         </Tabs>
     )

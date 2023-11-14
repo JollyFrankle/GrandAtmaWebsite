@@ -70,6 +70,10 @@ export default function DetailReservasi({
                         <p className="text-sm text-muted-foreground">Penanggungjawab S&M</p>
                         <p className="font-bold">{data?.user_pegawai?.nama} (#{data?.id_sm})</p>
                     </div>
+                    <div className="mb-2" hidden={!data?.user_pegawai?.nama}>
+                        <p className="text-sm text-muted-foreground">Uang Jaminan</p>
+                        <p className="font-bold">{data?.jumlah_dp && Formatter.formatCurrency(data.jumlah_dp)}</p>
+                    </div>
                 </div>
             </div>
 
