@@ -42,6 +42,10 @@ export default function DetailReservasi({
                         <p className="font-bold">{data?.user_customer?.nama_institusi}</p>
                     </div>
                     <div className="mb-2">
+                        <p className="text-sm text-muted-foreground">Nomor Identitas</p>
+                        <p className="font-bold">{data?.user_customer?.jenis_identitas?.toUpperCase()} – {data?.user_customer?.no_identitas}</p>
+                    </div>
+                    <div className="mb-2">
                         <p className="text-sm text-muted-foreground">Email</p>
                         <p className="font-bold">{data?.user_customer?.email}</p>
                     </div>

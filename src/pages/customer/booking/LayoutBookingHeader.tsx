@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ApiErrorResponse, ApiResponse, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import { toast } from "react-toastify";
 import Formatter from "@/utils/Formatter";
@@ -174,6 +174,14 @@ export default function LayoutBookingHeader() {
                                 <strong className="steps-number flex w-8 h-8 border rounded-full items-center justify-center me-2">3</strong>
                                 Pembayaran
                             </NavLink>
+                            <hr className="hidden md:block w-8 border-bottom-0" />
+                        </li>
+
+                        <li className="flex gap-4 items-center">
+                            <NavLink onClick={(e) => e.preventDefault()} to="step-4" className={(active) => `steps-breadcrumb ${active.isActive ? "active" : ""} text-sm flex items-center`}>
+                                <strong className="steps-number flex w-8 h-8 border rounded-full items-center justify-center me-2">4</strong>
+                                Tanda Terima
+                            </NavLink>
                         </li>
                     </ol>
                 </div>
@@ -226,9 +234,11 @@ export default function LayoutBookingHeader() {
 
     <GeneralLoadingDialog show={showModalExpired} text={<div className="text-center max-w-96">
         <div className="text-lg font-bold mb-2">Waktu pemesanan habis</div>
-        <div className="mb-4">Mohon lakukan pemesanan kembali.</div>
+        <div className="mb-4">Silakan ulangi pemesanan.</div>
         <div className="flex justify-center">
-            <Button className="w-36" onClick={() => navigate("/search")}>Kembali</Button>
+            <Button className="w-36" asChild>
+                <Link to="/search">OK</Link>
+            </Button>
         </div>
     </div>} />
     </>

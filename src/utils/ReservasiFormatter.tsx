@@ -52,8 +52,12 @@ export default class ReservasiFormatter {
         const isOverDl = new Date().getTime() > new Date(reservasi.tanggal_dl_booking ?? "").getTime()
         const isReservasiUncancelable = ["checkin", "batal", "expired", "selesai"].includes(reservasi.status)
 
-        if (reservasi.status.startsWith('pending-') && !isOverDl) {
-            return CancelableStatus.NO_CONSEQUENCE
+        if (reservasi.status.startsWith('pending-')) {
+            if (isOverDl) {
+                return CancelableStatus.NOT_CANCELABLE
+            } else {
+                return CancelableStatus.NO_CONSEQUENCE
+            }
         } else if (diffDays > 7) {
             return CancelableStatus.YES_REFUND
         } else if (isOverCheckOut || isReservasiUncancelable) {

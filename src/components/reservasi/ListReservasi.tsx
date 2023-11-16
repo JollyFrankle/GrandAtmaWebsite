@@ -123,10 +123,13 @@ function getActions(
                 return userSM ? userSM.id === item.id_sm && continuable : continuable
             }
         })
+    }
+
+    if (["upcoming", "completed"].includes(status ?? "")) {
         actions[0].push({
             action: <><FileTextIcon className="w-4 h-4 me-2" /> Tanda Terima</>,
             onClick: (item) => onTandaTerimaClick?.(item),
-            enabled: (item) => !(item.status.startsWith("pending-") || item.user_customer?.type === 'p')
+            enabled: (item) => !item.status.startsWith("pending-")
         })
     }
 
