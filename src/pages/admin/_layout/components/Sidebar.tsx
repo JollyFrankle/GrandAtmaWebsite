@@ -69,13 +69,30 @@ const sidebarItems: SidebarGroupProps[] = [
                 roles: ["sm"]
             }
         ]
+    },
+    {
+        label: "Administrasi",
+        children: [
+            {
+                icon: <UsersIcon />,
+                label: "User Pegawai",
+                to: "/user-p",
+                roles: ["admin"]
+            },
+            // {
+            //     icon: <UsersIcon />,
+            //     label: "User Customer",
+            //     to: "/user-c",
+            //     roles: ["admin"]
+            // }
+        ]
     }
 ]
 
 function generateSidebar(role: string) {
     return sidebarItems.map((group, i) => (
-        <div key={i}>
-            <p className="uppercase font-bold mb-3">{group.label}</p>
+        <div key={i} className="mb-4 last:mb-0">
+            <p className="uppercase font-bold mb-2">{group.label}</p>
             <ul>
                 {group.children.map((item, j) => (!item.roles || (item.roles.includes(role))) && (
                     <li key={j} className="mb-1">

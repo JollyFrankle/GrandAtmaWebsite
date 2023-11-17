@@ -1,32 +1,37 @@
+import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import LayoutHome from './pages/public/_layout/LayoutHome'
-import PageHome from './pages/public/home/PageHome'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import PageDetailKamar from './pages/public/kamar/PageDetailKamar'
-import PageLogin from './pages/public/unauthenticated_only/login/PageLogin'
-import PageCustomerDashboard from './pages/customer/dashboard/PageCustomerDashboard'
-import LayoutCustomer from './pages/customer/_layout/LayoutCustomer'
-import PageProfileCustomer from './pages/customer/profile/PageProfileCustomer'
-import PageRegister from './pages/public/unauthenticated_only/register/PageRegister'
-import PageEmailVerification from './pages/public/unauthenticated_only/email-verif/PageEmailVerification'
-import PageResetPassword from './pages/public/unauthenticated_only/reset-password/PageResetPassword'
-import PageChangePassword from './pages/public/unauthenticated_only/reset-password/PageChangePassword'
-import UnauthenticatedMiddleware from './pages/public/unauthenticated_only/UnauthenticatedMiddleware'
-import LayoutAdmin from './pages/admin/_layout/LayoutAdmin'
-import PageKamar from './pages/admin/kamar/PageKamar'
-import PageFasilitas from './pages/admin/fasilitas/PageFasilitas'
-import PageSeasonTarif from './pages/admin/season-tarif/PageSeasonTarif'
-import PageCustomerGroup from './pages/admin/customer-group/PageCustomerGroup'
-import PageReservasiCG from './pages/admin/customer-group/reservasi/PageReservasiCG'
-import PageRoomSearch from './pages/public/room-search/PageRoomSearch'
-import PageBookingStep1 from './pages/customer/booking/step1/PageBookingStep1'
-import LayoutBookingHeader from './pages/customer/booking/LayoutBookingHeader'
-import PageBookingStep2 from './pages/customer/booking/step2/PageBookingStep2'
-import PageBookingStep3 from './pages/customer/booking/step3/PageBookingStep3'
-import PageBookingStep4 from './pages/customer/booking/step4/PageBookingStep4'
-import PageRoomSearchCG from './pages/admin/customer-group/reservasi/new/PageRoomSearchCG'
-import PageAllUpomingReservasiCG from './pages/admin/customer-group/all-upcoming-reservasi/PageAllUpomingReservasiCG'
+import GeneralLoadingDialog from './components/GeneralLoadingDialog';
+
+// Dynamic import
+const LayoutHome = lazy(() => import('./pages/public/_layout/LayoutHome'));
+const PageHome = lazy(() => import('./pages/public/home/PageHome'));
+const PageDetailKamar = lazy(() => import('./pages/public/kamar/PageDetailKamar'));
+const PageLogin = lazy(() => import('./pages/public/unauthenticated_only/login/PageLogin'));
+const PageCustomerDashboard = lazy(() => import('./pages/customer/dashboard/PageCustomerDashboard'));
+const LayoutCustomer = lazy(() => import('./pages/customer/_layout/LayoutCustomer'));
+const PageProfileCustomer = lazy(() => import('./pages/customer/profile/PageProfileCustomer'));
+const PageRegister = lazy(() => import('./pages/public/unauthenticated_only/register/PageRegister'));
+const PageEmailVerification = lazy(() => import('./pages/public/unauthenticated_only/email-verif/PageEmailVerification'));
+const PageResetPassword = lazy(() => import('./pages/public/unauthenticated_only/reset-password/PageResetPassword'));
+const PageChangePassword = lazy(() => import('./pages/public/unauthenticated_only/reset-password/PageChangePassword'));
+const UnauthenticatedMiddleware = lazy(() => import('./pages/public/unauthenticated_only/UnauthenticatedMiddleware'));
+const LayoutAdmin = lazy(() => import('./pages/admin/_layout/LayoutAdmin'));
+const PageKamar = lazy(() => import('./pages/admin/kamar/PageKamar'));
+const PageFasilitas = lazy(() => import('./pages/admin/fasilitas/PageFasilitas'));
+const PageSeasonTarif = lazy(() => import('./pages/admin/season-tarif/PageSeasonTarif'));
+const PageCustomerGroup = lazy(() => import('./pages/admin/customer-group/PageCustomerGroup'));
+const PageReservasiCG = lazy(() => import('./pages/admin/customer-group/reservasi/PageReservasiCG'));
+const PageRoomSearch = lazy(() => import('./pages/public/room-search/PageRoomSearch'));
+const PageBookingStep1 = lazy(() => import('./pages/customer/booking/step1/PageBookingStep1'));
+const LayoutBookingHeader = lazy(() => import('./pages/customer/booking/LayoutBookingHeader'));
+const PageBookingStep2 = lazy(() => import('./pages/customer/booking/step2/PageBookingStep2'));
+const PageBookingStep3 = lazy(() => import('./pages/customer/booking/step3/PageBookingStep3'));
+const PageBookingStep4 = lazy(() => import('./pages/customer/booking/step4/PageBookingStep4'));
+const PageRoomSearchCG = lazy(() => import('./pages/admin/customer-group/reservasi/new/PageRoomSearchCG'));
+const PageAllUpomingReservasiCG = lazy(() => import('./pages/admin/customer-group/all-upcoming-reservasi/PageAllUpomingReservasiCG'));
+const PageUserPegawai = lazy(() => import('./pages/admin/users/PageUserPegawai'));
 
 const router = createBrowserRouter([
   {
@@ -76,13 +81,14 @@ const router = createBrowserRouter([
       { path: "cg/:id", element: <PageReservasiCG /> },
       { path: "cg/:id/new", element: <PageRoomSearchCG /> },
       { path: "reservasi", element: <PageAllUpomingReservasiCG /> },
+      { path: "user-p", element: <PageUserPegawai /> }
     ]
   }
 ])
 
 export default function App() {
-  return <>
+  return <Suspense fallback={<GeneralLoadingDialog show={true} />}>
     <RouterProvider router={router} />
     <ToastContainer className="text-bold" theme={"light"} />
-  </>
+  </Suspense>
 }

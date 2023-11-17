@@ -11,8 +11,8 @@ export enum CancelableStatus {
 }
 
 export default class ReservasiFormatter {
-    static generateStatusBadge(status: string, tanggalDL?: string|null) {
-        switch(status) {
+    static generateStatusBadge(status: string, tanggalDL?: string | null) {
+        switch (status) {
             case "pending-1": case "pending-2": case "pending-3":
                 const dateDL = new Date(tanggalDL ?? "")
                 if (new Date().getTime() > dateDL.getTime()) {
@@ -64,6 +64,23 @@ export default class ReservasiFormatter {
             return CancelableStatus.NOT_CANCELABLE
         } else {
             return CancelableStatus.NO_REFUND
+        }
+    }
+
+    static getRoleBadge(role: String) {
+        switch (role) {
+            case "sm":
+                return <Badge variant="warning">Sales & Marketing</Badge>
+            case "fo":
+                return <Badge variant="info">Front Office</Badge>
+            case "admin":
+                return <Badge variant="default">Admin</Badge>
+            case "gm":
+                return <Badge variant="success">General Manager</Badge>
+            case "owner":
+                return <Badge variant="danger">Owner</Badge>
+            default:
+                return <Badge>Tidak Diketahui</Badge>
         }
     }
 }

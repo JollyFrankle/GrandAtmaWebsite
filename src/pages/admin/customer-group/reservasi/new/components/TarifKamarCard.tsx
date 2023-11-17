@@ -1,5 +1,5 @@
 import Formatter from "@/utils/Formatter"
-import { KamarDipesan, TarifKamar } from "../PageRoomSearchCG"
+import { KamarDipesan, TarifKamar } from "@/pages/public/room-search/PageRoomSearch"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import { Link } from "react-router-dom"
