@@ -1,5 +1,4 @@
 import AuthHelper from "@/utils/AuthHelper"
-import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import { useEffect, useState } from "react"
 import { BookmarkPlusIcon } from "lucide-react"
@@ -33,8 +32,6 @@ export default function PageReservasiCG() {
             const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)
-        }).catch((err: AxiosError) => {
-            console.log(err)
         })
     }
 

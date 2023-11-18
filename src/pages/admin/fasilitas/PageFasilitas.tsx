@@ -28,11 +28,6 @@ export default function PageFasilitas() {
         apiAuthenticated.get<ApiResponse<FasilitasLayananTambahan[]>>(`pegawai/fasilitas`).then((res) => {
             const data = res.data
             setTableData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data fasilitas.", {
-                type: "error"
-            })
         }).finally(() => {
             setTableLoading(false)
         })
@@ -45,11 +40,6 @@ export default function PageFasilitas() {
                 type: "success"
             })
             fetchTableData()
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal menghapus fasilitas.", {
-                type: "error"
-            })
         })
     }
 

@@ -1,14 +1,12 @@
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
-import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiResponse, JenisKamar, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
-import { AxiosError } from "axios"
 import { ArrowRightIcon, BanknoteIcon, BedSingleIcon, CalendarClockIcon, CalendarRangeIcon, CigaretteIcon, CircleSlashIcon, Clock4Icon, HelpingHandIcon, PawPrintIcon, ScanFaceIcon, UserIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
 import { Checkbox } from "@/cn/components/ui/checkbox"
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
-import { toast } from "react-toastify"
 import BookingS2FasiltasItem from "./components/BookingS2FasiltasItem"
 import usePageTitle from "@/hooks/usePageTitle"
 import AuthHelper from "@/utils/AuthHelper"
@@ -46,8 +44,6 @@ export default function PageBookingStep2() {
                 }
             })
             setKamarGroupedByJenis(kamarGroupedByJenis)
-        }).catch((err: AxiosError) => {
-            console.log(err)
         })
     }
 
@@ -57,13 +53,7 @@ export default function PageBookingStep2() {
             const data = res.data
             setDetail(data.data.reservasi)
             navigate(`../step-3`)
-        }).catch((err: AxiosError) => {
-            if (err.response?.data) {
-                const data = err.response.data as ApiErrorResponse
-                toast.error(data.message)
-            } else {
-                toast.error("Terjadi kesalahan saat mengunggah data")
-            }
+        }).finally(() => {
             setIsLoading(false)
         })
     }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import AuthHelper from "./AuthHelper";
+import { toast } from "react-toastify";
 
 export const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -20,6 +21,37 @@ export const apiAuthenticated = axios.create({
         Accept: 'application/json',
     }
 });
+
+apiPublic.interceptors.response.use(
+    response => response,
+    error => {
+        console.error(error)
+        if (error.response?.data) {
+            const data = error.response?.data as ApiErrorResponse
+            toast.error(data.message)
+        } else {
+            toast.error(error.message)
+        }
+        return Promise.reject(error);
+    }
+)
+
+apiAuthenticated.interceptors.response.use(
+    response => response,
+    error => {
+        console.error(error)
+        if (error.response.status === 401) {
+            AuthHelper.logout();
+            window.location.href = '/login';
+        } else if (error.response?.data) {
+            const data = error.response?.data as ApiErrorResponse
+            toast.error(data.message)
+        } else {
+            toast.error(error.message)
+        }
+        return Promise.reject(error);
+    }
+)
 
 apiAuthenticated.interceptors.request.use(config => {
     config.headers.Authorization = `Bearer ${AuthHelper.getToken()}`;

@@ -162,11 +162,7 @@ export default function LayoutHome() {
         const type = localStorage.getItem("type")
         const logoutUrl = type === "c" ? `customer/logout` : `pegawai/logout`
         apiAuthenticated.post(logoutUrl).then(() => {
-            toast("Berhasil log out.", {
-                type: "success"
-            })
-        }).catch((err) => {
-            console.log(err)
+            toast.success("Berhasil log out.")
         })
 
         AuthHelper.logout()

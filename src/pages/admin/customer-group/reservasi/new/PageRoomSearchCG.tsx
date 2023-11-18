@@ -6,13 +6,11 @@ import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
-import { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, Reservasi, ReservasiRoom, UserCustomer, apiAuthenticated, getImage } from "@/utils/ApiModels"
+import { ApiResponse, Reservasi, ReservasiRoom, UserCustomer, apiAuthenticated, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
-import { toast } from "react-toastify"
 import Lottie from "lottie-react";
 
 import { Separator } from "@/cn/components/ui/separator"
@@ -94,18 +92,6 @@ export default function PageRoomSearchCG() {
             })
 
             setIsReady(true)
-        }).catch((err: AxiosError) => {
-            setData([])
-            if (err.response?.data) {
-                const data = err.response?.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast(err.message, {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setIsLoading(false)
         })
@@ -115,18 +101,6 @@ export default function PageRoomSearchCG() {
         apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/customer/${idC}`).then(res => {
             const data = res.data
             setUser(data.data)
-        }).catch(err => {
-            if (err.response?.data) {
-                const data = err.response?.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast(err.message, {
-                    type: "error"
-                })
-            }
-            navigate("/admin/cg")
         })
     }
 
@@ -148,19 +122,6 @@ export default function PageRoomSearchCG() {
         }).then(res => {
             const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
             navigate(`/booking/${data.data.reservasi.id_customer}/${data.data.reservasi.id}/step-1`)
-        }).catch(err => {
-            if (err.response?.data) {
-                const data = err.response?.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast(err.message, {
-                    type: "error"
-                })
-            }
-            setShowDialogMengamankanHarga(false)
-            setShowDialogConfirm(true)
         })
     }
 

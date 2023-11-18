@@ -7,8 +7,7 @@ import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Card, CardContent, CardHeader } from "@/cn/components/ui/card"
 import { Button } from "@/cn/components/ui/button"
 import Formatter from "@/utils/Formatter"
-import { AxiosError } from "axios"
-import { ApiErrorResponse, ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, apiPublic, getImage } from "@/utils/ApiModels"
+import { ApiResponse, JenisKamar, Reservasi, ReservasiRoom, RincianTarif, apiAuthenticated, apiPublic, getImage } from "@/utils/ApiModels"
 import { ArrowRightIcon, BanIcon, HomeIcon, InfoIcon } from "lucide-react"
 import Converter from "@/utils/Converter"
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog"
@@ -112,18 +111,6 @@ export default function PageRoomSearch() {
             })
 
             setIsReady(true)
-        }).catch((err: AxiosError) => {
-            setData([])
-            if (err.response?.data) {
-                const data = err.response?.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast(err.message, {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setIsLoading(false)
         })
@@ -151,17 +138,7 @@ export default function PageRoomSearch() {
 
                 // Delete kamarDipesan from localStorage
                 localStorage.removeItem("kamarDipesan")
-            }).catch(err => {
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
+            }).catch((_) => {
                 setShowDialogMengamankanHarga(false)
                 setShowDialogConfirm(true)
             })

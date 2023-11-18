@@ -18,6 +18,7 @@ const PageResetPassword = lazy(() => import('./pages/public/unauthenticated_only
 const PageChangePassword = lazy(() => import('./pages/public/unauthenticated_only/reset-password/PageChangePassword'));
 const UnauthenticatedMiddleware = lazy(() => import('./pages/public/unauthenticated_only/UnauthenticatedMiddleware'));
 const LayoutAdmin = lazy(() => import('./pages/admin/_layout/LayoutAdmin'));
+const PageDashboard = lazy(() => import('./pages/admin/dashboard/PageDashboard'));
 const PageKamar = lazy(() => import('./pages/admin/kamar/PageKamar'));
 const PageFasilitas = lazy(() => import('./pages/admin/fasilitas/PageFasilitas'));
 const PageSeasonTarif = lazy(() => import('./pages/admin/season-tarif/PageSeasonTarif'));
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
         { path: "register", element: <PageRegister /> },
         { path: "verification", element: <PageEmailVerification /> },
         { path: "reset-password", element: <PageResetPassword /> },
-        { path: "change-password", element: <PageChangePassword />}
+        { path: "change-password", element: <PageChangePassword /> }
       ]}
     ],
     errorElement: <>404</>
@@ -73,7 +74,7 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <LayoutAdmin />,
     children: [
-      { index: true, element: <>Selamat datang. Silakan langsung ke <em>navigation drawer</em> untuk melihat semua menu yang tersedia.</> },
+      { index: true, element: <PageDashboard /> },
       { path: "kamar", element: <PageKamar /> },
       { path: "fasilitas", element: <PageFasilitas /> },
       { path: "season", element: <PageSeasonTarif /> },
@@ -87,8 +88,10 @@ const router = createBrowserRouter([
 ])
 
 export default function App() {
-  return <Suspense fallback={<GeneralLoadingDialog show={true} />}>
-    <RouterProvider router={router} />
+  return <>
+    <Suspense fallback={<GeneralLoadingDialog show={true} />}>
+      <RouterProvider router={router} />
+    </Suspense>
     <ToastContainer className="text-bold" theme={"light"} />
-  </Suspense>
+  </>
 }

@@ -4,7 +4,7 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
-import { ApiErrorResponse, ApiResponse, JenisKamar, KeyValue, Season, Tarif, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, JenisKamar, KeyValue, Season, Tarif, apiAuthenticated } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon, HotelIcon, PlusIcon, SaveIcon, SearchIcon, Trash2Icon } from "lucide-react";
@@ -51,18 +51,6 @@ export default function ModalCUSeasonTarif({
             const data = res.data
             setData(data.data)
             setErrors(null)
-        }).catch((err) => {
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal mengambil data.", {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setLoading(false)
         })
@@ -90,19 +78,6 @@ export default function ModalCUSeasonTarif({
             onOpenChange(false)
             setData(emptySeason)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
         })
     }
 
@@ -110,11 +85,6 @@ export default function ModalCUSeasonTarif({
         apiAuthenticated.get<ApiResponse<JenisKamar[]>>(`pegawai/kamar/jenis`).then((res) => {
             const data = res.data
             setListJenis(data.data)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data jenis kamar.", {
-                type: "error"
-            })
         })
     }
 

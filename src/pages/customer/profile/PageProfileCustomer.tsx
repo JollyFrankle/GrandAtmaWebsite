@@ -4,10 +4,9 @@ import IconSelect from "@/components/IconSelect"
 import IconTextarea from "@/components/IconTextarea"
 import usePageTitle from "@/hooks/usePageTitle"
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
-import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import Formatter from "@/utils/Formatter"
-import { AxiosError } from "axios"
 import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, EditIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
@@ -64,15 +63,6 @@ export default function PageProfileCustomer() {
                 type: "success"
             })
             setErrors(null)
-        }).catch((err: AxiosError) => {
-            console.log(err)
-            if (err.response?.data) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message || "Terjadi kesalahan", {
-                    type: "error"
-                })
-            }
         })
     }
 

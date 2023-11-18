@@ -1,5 +1,4 @@
 import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
-import { AxiosError } from "axios"
 import { ClipboardListIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
@@ -27,8 +26,6 @@ export default function PageBookingStep4() {
         return apiAuthenticated.get<ApiResponse<Reservasi>>(urls.getDetail).then((res) => {
             const data = res.data.data
             setDetail(data)
-        }).catch((err: AxiosError) => {
-            console.log(err)
         })
     }
 

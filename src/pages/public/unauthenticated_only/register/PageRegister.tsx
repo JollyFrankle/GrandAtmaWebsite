@@ -69,11 +69,7 @@ export default function PageRegister() {
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
                 const data = err.response.data as ApiErrorResponse
-                if (!data.errors) {
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
+                if (data.errors) {
                     setErrors(data.errors)
                 }
                 recaptchaRef.current?.reset()

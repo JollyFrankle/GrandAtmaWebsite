@@ -26,11 +26,6 @@ export default function PageCustomerGroup() {
         apiAuthenticated.get<ApiResponse<UserCustomer[]>>(`pegawai/customer`).then((res) => {
             const data = res.data
             setTableData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data customer.", {
-                type: "error"
-            })
         }).finally(() => {
             setTableLoading(false)
         })
@@ -43,11 +38,6 @@ export default function PageCustomerGroup() {
     //             type: "success"
     //         })
     //         fetchTableData()
-    //     }).catch((err) => {
-    //         console.log(err)
-    //         toast("Gagal menghapus fasilitas.", {
-    //             type: "error"
-    //         })
     //     })
     // }
 

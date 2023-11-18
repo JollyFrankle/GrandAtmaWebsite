@@ -1,5 +1,5 @@
 import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
-import { ApiErrorResponse, ApiResponse, BASE_URL, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiResponse, BASE_URL, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter, { CancelableStatus } from "@/utils/ReservasiFormatter"
 import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, StepForwardIcon } from "lucide-react"
@@ -179,18 +179,6 @@ const ListReservasi = forwardRef(({
                 const data = res.data
                 toast.success(data.message)
                 fetchReservations()
-            }).catch((err) => {
-                console.log(err)
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
             }).finally(() => {
                 setShowCancelDialog(false)
             })
@@ -199,18 +187,6 @@ const ListReservasi = forwardRef(({
                 const data = res.data
                 toast.success(data.message)
                 fetchReservations()
-            }).catch((err) => {
-                console.log(err)
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
             }).finally(() => {
                 setShowCancelDialog(false)
             })
@@ -234,19 +210,6 @@ const ListReservasi = forwardRef(({
             apiAuthenticated.get<ApiResponse<Reservasi[]>>(`customer/reservasi?${queryParam}`).then((res) => {
                 const data = res.data
                 setReservations(data.data)
-            }).catch((err) => {
-                console.log(err)
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
-                onUserFetched?.(null)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -256,19 +219,6 @@ const ListReservasi = forwardRef(({
                 const data = res.data
                 setReservations(data.data.list)
                 onUserFetched?.(data.data.customer)
-            }).catch((err) => {
-                console.log(err)
-                if (err.response?.data) {
-                    const data = err.response?.data as ApiErrorResponse
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast(err.message, {
-                        type: "error"
-                    })
-                }
-                onUserFetched?.(null)
             }).finally(() => {
                 setIsLoading(false)
             })

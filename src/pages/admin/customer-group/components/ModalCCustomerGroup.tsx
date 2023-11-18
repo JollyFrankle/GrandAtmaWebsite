@@ -4,7 +4,7 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
 import IconTextarea from "@/components/IconTextarea";
-import { ApiErrorResponse, ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, KeyValue, UserCustomer, apiAuthenticated } from "@/utils/ApiModels";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIcon, PhoneCallIcon, SaveIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -46,18 +46,6 @@ export default function ModalCCustomerGroup({
         apiAuthenticated.get<ApiResponse<UserCustomer>>(`pegawai/customer/${id}`).then((res) => {
             const data = res.data
             setData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal mengambil data.", {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setLoading(false)
         })
@@ -85,19 +73,6 @@ export default function ModalCCustomerGroup({
             onOpenChange(false)
             setData(emptyLTB)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
         })
     }
 

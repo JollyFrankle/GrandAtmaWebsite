@@ -68,19 +68,11 @@ export default function PageLogin() {
             if (err.response?.data) {
                 const data = err.response.data as ApiErrorResponse
 
-                if (!data.errors) {
-                    toast(data.message, {
-                        type: "error"
-                    })
-                }
                 setErrors(data.errors)
                 recaptchaRef.current?.reset()
                 setCaptcha(null)
             } else {
                 console.log(err)
-                toast("Gagal masuk. Silakan hubungi pengelola.", {
-                    type: "error"
-                })
             }
         }).finally(() => {
             setIsLoading(false)

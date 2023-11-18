@@ -1,5 +1,4 @@
 import AuthHelper from "@/utils/AuthHelper"
-import { AxiosError } from "axios"
 import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import { useState } from "react"
 import ModalDetailReservasi from "../../../components/modals/ModalDetailReservasi"
@@ -25,8 +24,6 @@ export default function PageCustomerDashboard() {
             const data = res.data
             setDetailReservasi(data.data)
             setDetailLoading(false)
-        }).catch((err: AxiosError) => {
-            console.log(err)
         })
     }
 

@@ -10,7 +10,6 @@ import {  CheckCircleIcon, Loader2Icon, MailIcon } from "lucide-react";
 import { AxiosError } from "axios";
 import { ApiErrorResponse, ApiResponse, KeyValue, apiPublic } from "@/utils/ApiModels";
 import { Button } from "@/cn/components/ui/button";
-import { toast } from "react-toastify";
 import { RadioGroup, RadioGroupItem } from "@/cn/components/ui/radio-group";
 import ReCAPTCHA from "react-google-recaptcha";
 import IconInput from "@/components/IconInput";
@@ -44,9 +43,6 @@ export default function PageResetPassword() {
             if (err.response?.data) {
                 const data = err.response?.data as ApiErrorResponse
                 setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
             }
             recaptchaRef.current?.reset()
             setCaptcha(null)

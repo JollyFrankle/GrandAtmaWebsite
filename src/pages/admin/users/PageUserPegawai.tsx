@@ -1,7 +1,7 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiErrorResponse, ApiResponse, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,14 +27,6 @@ export default function PageKamar() {
         apiAuthenticated.get<ApiResponse<UserPegawai[]>>(`pegawai/users`).then((res) => {
             const data = res.data
             setTableData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast.error(data.message)
-            } else {
-                toast.error("Gagal mengambil data.")
-            }
         }).finally(() => {
             setTableLoading(false)
         })
@@ -45,11 +37,6 @@ export default function PageKamar() {
             const data = res.data
             toast.error(data.message)
             fetchTableData()
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal menghapus kamar.", {
-                type: "error"
-            })
         })
     }
 

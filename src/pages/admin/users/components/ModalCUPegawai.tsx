@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/com
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
-import { ApiErrorResponse, ApiResponse, KeyValue, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, KeyValue, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { AsteriskIcon, BanIcon, MailIcon, SaveIcon, UserCogIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -43,14 +43,6 @@ export default function ModalCUPegawai({
             const data = res.data
             setData(data.data)
             setErrors(null)
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast.error(data.message)
-            } else {
-                toast.error("Gagal mengambil data.")
-            }
         }).finally(() => {
             setLoading(false)
         })
@@ -76,15 +68,6 @@ export default function ModalCUPegawai({
             onOpenChange(false)
             setData(emptyPegawai)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast.error(data.message)
-            } else {
-                toast.error("Gagal menyimpan data.")
-            }
         })
     }
 

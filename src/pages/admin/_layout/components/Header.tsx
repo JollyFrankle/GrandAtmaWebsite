@@ -19,8 +19,6 @@ export default function Header(props: {
             toast("Berhasil log out.", {
                 type: "success"
             })
-        }).catch((err) => {
-            console.log(err)
         })
 
         AuthHelper.logout()

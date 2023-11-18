@@ -1,9 +1,8 @@
 import { Button } from "@/cn/components/ui/button";
 import DataTable from "@/components/DataTable";
 import usePageTitle from "@/hooks/usePageTitle";
-import { ApiErrorResponse, ApiResponse, Season, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, Season, apiAuthenticated } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import { AxiosError } from "axios";
 import { EditIcon, EyeIcon, PlusIcon, Trash2Icon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -37,11 +36,6 @@ export default function PageSeasonTarif() {
         apiAuthenticated.get<ApiResponse<Season[]>>(`pegawai/season`).then((res) => {
             const data = res.data
             setTableData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data season.", {
-                type: "error"
-            })
         }).finally(() => {
             setTableLoading(false)
         })
@@ -54,21 +48,6 @@ export default function PageSeasonTarif() {
                 type: "success"
             })
             fetchTableData()
-        }).catch((err: AxiosError) => {
-            console.log(err)
-            if(err.response?.data) {
-                const data = err.response?.data as ApiErrorResponse
-                if (data.message) {
-                    // siapa tau< 2 bulan, tampilkan message nya
-                    toast(data.message, {
-                        type: "error"
-                    })
-                } else {
-                    toast("Gagal menghapus season.", {
-                        type: "error"
-                    })
-                }
-            }
         })
     }
 

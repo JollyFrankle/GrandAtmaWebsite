@@ -90,26 +90,33 @@ const sidebarItems: SidebarGroupProps[] = [
 ]
 
 function generateSidebar(role: string) {
-    return sidebarItems.map((group, i) => (
-        <div key={i} className="mb-4 last:mb-0">
-            <p className="uppercase font-bold mb-2">{group.label}</p>
-            <ul>
-                {group.children.map((item, j) => (!item.roles || (item.roles.includes(role))) && (
-                    <li key={j} className="mb-1">
-                        <NavLink
-                            to={'/admin' + item.to}
-                            className={({ isActive }) => `${isActive ? 'bg-primary' : 'hover:bg-white hover:bg-opacity-10'} flex items-center gap-2 rounded p-2`}
-                        >
-                            {item.icon && React.cloneElement(item.icon, { className: "w-4 h-4" })}
-                            {item.label}
-                            {item.children && <ChevronDownIcon className="w-4 h-4 ms-auto" />}
-                        </NavLink>
-                    </li>
-                )
-                )}
-            </ul>
-        </div>
-    ))
+    return sidebarItems.map((group, i) => {
+        const thisItems = group.children.filter((item) => (!item.roles || (item.roles.includes(role))))
+        if (thisItems.length === 0) {
+            return null
+        }
+        return (
+            <div key={i} className="mb-4 last:mb-0">
+                <p className="uppercase font-bold mb-2">{group.label}</p>
+                <ul>
+                    {thisItems.map((item, j) => (
+                        <li key={j} className="mb-1">
+                            <NavLink
+                                to={'/admin' + item.to}
+                                className={({ isActive }) => `${isActive ? 'bg-primary' : 'hover:bg-white hover:bg-opacity-10'} flex items-center gap-2 rounded p-2`}
+                            >
+                                {item.icon && React.cloneElement(item.icon, { className: "w-4 h-4" })}
+                                {item.label}
+                                {item.children && <ChevronDownIcon className="w-4 h-4 ms-auto" />}
+                            </NavLink>
+                        </li>
+                    )
+                    )}
+                </ul>
+            </div>
+        )
+    }
+    )
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
@@ -119,9 +126,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     const [adminData] = useState(AuthHelper.getUserPegawai())
 
     const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
-    const [sidebarExpanded, setSidebarExpanded] = useState(
-        storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
-    );
+    const [sidebarExpanded] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true');
 
     // close on click outside
     useEffect(() => {

@@ -27,11 +27,6 @@ export default function PageKamar() {
         apiAuthenticated.get<ApiResponse<Kamar[]>>(`pegawai/kamar`).then((res) => {
             const data = res.data
             setTableData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal memuat data kamar.", {
-                type: "error"
-            })
         }).finally(() => {
             setTableLoading(false)
         })
@@ -44,11 +39,6 @@ export default function PageKamar() {
                 type: "success"
             })
             fetchTableData()
-        }).catch((err) => {
-            console.log(err)
-            toast("Gagal menghapus kamar.", {
-                type: "error"
-            })
         })
     }
 

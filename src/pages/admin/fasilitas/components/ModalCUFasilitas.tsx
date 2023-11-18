@@ -4,7 +4,7 @@ import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconTextarea from "@/components/IconTextarea";
 import ImagePreview from "@/components/ImagePreview";
-import { ApiErrorResponse, ApiResponse, KeyValue, FasilitasLayananTambahan, getImage, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, KeyValue, FasilitasLayananTambahan, getImage, apiAuthenticated } from "@/utils/ApiModels";
 import FormHelper from "@/utils/FormHelper";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
@@ -47,18 +47,6 @@ export default function ModalCUFasilitas({
         apiAuthenticated.get<ApiResponse<FasilitasLayananTambahan>>(`pegawai/fasilitas/${id}`).then((res) => {
             const data = res.data
             setData(data.data)
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal mengambil data.", {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setLoading(false)
         })
@@ -79,19 +67,6 @@ export default function ModalCUFasilitas({
             onOpenChange(false)
             setData(emptyLTB)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
         })
     }
 
@@ -121,19 +96,6 @@ export default function ModalCUFasilitas({
             onOpenChange(false)
             setData(emptyLTB)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
         })
     }
 

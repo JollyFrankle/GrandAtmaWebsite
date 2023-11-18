@@ -13,7 +13,6 @@ import { Grid2X2Icon, StarIcon, UserIcon } from "lucide-react";
 import { ApiResponse, JenisKamar, apiPublic, getImage } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
-import { toast } from "@/cn/components/ui/use-toast";
 
 export default function SwiperListJenisKamar() {
     const [data, setData] = useState<Partial<JenisKamar>[]>([])
@@ -24,12 +23,6 @@ export default function SwiperListJenisKamar() {
             const data = res.data
             setData(data.data)
             setIsLoading(false)
-        }).catch((err) => {
-            toast({
-                title: "Error",
-                content: err,
-                variant: "destructive"
-            })
         })
     }
 

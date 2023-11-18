@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ApiErrorResponse, ApiResponse, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
-import { toast } from "react-toastify";
+import { ApiResponse, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import "./LayoutBookingHeader.css"
@@ -55,17 +54,6 @@ export default function LayoutBookingHeader() {
             navigate(`/booking/${idC}/${idR}/step-${data.data.stage}`)
 
             setReady(true)
-        }).catch((err) => {
-            if (err.response?.data) {
-                const data = err.response.data as ApiErrorResponse
-                toast.error(data.message)
-
-                // if (data.errors?.ECODE === "RESERVASI_EXPIRED") {
-                    navigate("/login")
-                // }
-            } else {
-                toast.error("Terjadi kesalahan saat mengambil data")
-            }
         })
     }
 

@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/com
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
-import { ApiErrorResponse, ApiResponse, JenisKamar, Kamar, KeyValue, apiAuthenticated } from "@/utils/ApiModels";
+import { ApiResponse, JenisKamar, Kamar, KeyValue, apiAuthenticated } from "@/utils/ApiModels";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { BanIcon, BedIcon, CigaretteIcon, FootprintsIcon, HashIcon, HotelIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -48,18 +48,6 @@ export default function ModalCUKamar({
             const data = res.data
             setData(data.data)
             setErrors(null)
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal mengambil data.", {
-                    type: "error"
-                })
-            }
         }).finally(() => {
             setLoading(false)
         })
@@ -69,17 +57,6 @@ export default function ModalCUKamar({
         apiAuthenticated.get<ApiResponse<JenisKamar[]>>(`pegawai/kamar/jenis`).then((res) => {
             const data = res.data
             setListJenis(data.data)
-        }).catch((err) => {
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal mengambil data jenis kamar.", {
-                    type: "error"
-                })
-            }
         })
     }
 
@@ -110,19 +87,6 @@ export default function ModalCUKamar({
             onOpenChange(false)
             setData(emptyKamar)
             onSubmittedHandler()
-        }).catch((err) => {
-            console.log(err)
-            if (err.response) {
-                const data = err.response.data as ApiErrorResponse
-                setErrors(data.errors)
-                toast(data.message, {
-                    type: "error"
-                })
-            } else {
-                toast("Gagal menyimpan data.", {
-                    type: "error"
-                })
-            }
         })
     }
 
