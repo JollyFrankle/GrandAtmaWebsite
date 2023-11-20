@@ -1,16 +1,16 @@
 import GeneralLoadingDialog from "@/components/GeneralLoadingDialog";
 import { UserPegawai } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 
 const PageDashboardFO = lazy(() => import("./fo/PageDashboardFO"))
 
 export default function PageDashboard() {
     const [user] = useState<UserPegawai>(AuthHelper.getUserPegawai()!!)
 
-    useEffect(() => {
-        console.log(user)
-    }, [user])
+    // useEffect(() => {
+    //     console.log(user)
+    // }, [user])
 
     return <Suspense fallback={ <GeneralLoadingDialog show={true}/> }>
         {user.role === "fo" ? <PageDashboardFO /> : <>

@@ -4,12 +4,13 @@ import { useState } from "react";
 import FOCurrentTime from "./components/FOCurrentTime";
 import usePageTitle from "@/hooks/usePageTitle";
 import FOKetersediaanKamarPanel from "./components/FOKetersediaanKamarPanel";
+import FOListCIToday from "./components/FOListCIToday";
+import FOListCOToday from "./components/FOListCOToday";
 
 
 export default function PageDashboardFO() {
 
     const [lantai, setLantai] = useState("0")
-    const [isKKSILoading, setIsKKSILoading] = useState(false)
 
     usePageTitle("Dashboard – Front Office")
 
@@ -34,29 +35,41 @@ export default function PageDashboardFO() {
                         />
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <div className="flex gap-2 items-center">
+                <div className="flex items-center flex-nowrap gap-4 overflow-x-auto">
+                    <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-green-500 rounded" />
                         Tersedia
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-yellow-500 rounded" />
                         Terisi
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-red-500 rounded" />
                         Terisi <small>(Check Out Hari Ini)</small>
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-gray-500 rounded" />
-                        Tidak Tersedia
+                        Dalam Perawatan
                     </div>
                 </div>
 
-                <FOKetersediaanKamarPanel />
+                <div className="my-4 text-muted-foreground">Klik pada salah satu kamar untuk melihat yang sedang menginap saat ini.</div>
+
+                <FOKetersediaanKamarPanel noLantai={lantai} />
             </div>
             <div className="lg:col-span-4 xl:col-span-3">
-                <FOCurrentTime />
+                <FOCurrentTime className="mb-4" />
+
+                <div className="mb-4">
+                    <h4 className="text-xl font-bold mb-2 text-center">Check In Hari Ini</h4>
+                    <FOListCIToday />
+                </div>
+
+                <div className="mb-4">
+                    <h4 className="text-xl font-bold mb-2 text-center">Check Out Hari Ini</h4>
+                    <FOListCOToday />
+                </div>
             </div>
         </div>
     </>

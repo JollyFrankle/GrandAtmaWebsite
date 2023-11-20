@@ -3,7 +3,11 @@ import Formatter from "@/utils/Formatter"
 import { useEffect, useState } from "react"
 
 
-export default function FOCurrentTime() {
+export default function FOCurrentTime({
+    className = ""
+}: {
+    className?: string
+}) {
 
     const [time, setTime] = useState({
         h: "00",
@@ -29,7 +33,7 @@ export default function FOCurrentTime() {
     }, [])
 
     return (
-        <Card className="shadow">
+        <Card className={`shadow ${className}`}>
             <CardContent className="p-4 text-center">
                 <h3 className="font-bold mb-2">Waktu saat ini:</h3>
                 <h2 className="text-3xl font-bold flex items-center justify-center">
