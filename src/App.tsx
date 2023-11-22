@@ -33,6 +33,7 @@ const PageBookingStep4 = lazy(() => import('./pages/customer/booking/step4/PageB
 const PageRoomSearchCG = lazy(() => import('./pages/admin/customer-group/reservasi/new/PageRoomSearchCG'));
 const PageAllUpomingReservasiCG = lazy(() => import('./pages/admin/customer-group/all-upcoming-reservasi/PageAllUpomingReservasiCG'));
 const PageUserPegawai = lazy(() => import('./pages/admin/users/PageUserPegawai'));
+const PageTrxCICO = lazy(() => import('./pages/admin/trx-cico/PageTrxCiCO'));
 
 const router = createBrowserRouter([
   {
@@ -82,7 +83,8 @@ const router = createBrowserRouter([
       { path: "cg/:id", element: <PageReservasiCG /> },
       { path: "cg/:id/new", element: <PageRoomSearchCG /> },
       { path: "reservasi", element: <PageAllUpomingReservasiCG /> },
-      { path: "user-p", element: <PageUserPegawai /> }
+      { path: "user-p", element: <PageUserPegawai /> },
+      { path: "trx-cico", element: <PageTrxCICO /> }
     ]
   }
 ])

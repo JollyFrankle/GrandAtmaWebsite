@@ -44,7 +44,7 @@ export interface ColumnRules<T> {
     cell?: (row: T) => React.ReactNode
     enableSorting?: boolean
     enableHiding?: boolean,
-    accessorFn?: (row: T) => string
+    accessorFn?: (row: T) => string | number
 }
 
 export interface RowActions<T> {

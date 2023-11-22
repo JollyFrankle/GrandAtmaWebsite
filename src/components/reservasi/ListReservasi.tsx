@@ -33,20 +33,16 @@ function getColumns(idCustomer?: number) {
             field: "arrival_date",
             header: "Tanggal Menginap",
             enableSorting: true,
-            cell(row) {
-                return Formatter.formatDate(new Date(row.arrival_date)) + " - " + Formatter.formatDate(new Date(row.departure_date))
-            },
+            cell: (row) => <>
+                <div className="font-bold">{Formatter.formatDate(new Date(row.arrival_date))} - {Formatter.formatDate(new Date(row.departure_date))}</div>
+                <div>{row.jumlah_malam} malam</div>
+            </>
         },
         {
             field: "jumlah_malam",
             header: "Detail",
             enableSorting: false,
-            cell: (row) => (
-                <div>
-                    <p>{row.jumlah_malam} malam</p>
-                    <p>{row.jumlah_dewasa} dewasa &bull; {row.jumlah_anak} anak-anak</p>
-                </div>
-            )
+            cell: (row) => <>{row.jumlah_dewasa} dewasa &bull; {row.jumlah_anak} anak-anak</>
         },
         {
             field: "total",

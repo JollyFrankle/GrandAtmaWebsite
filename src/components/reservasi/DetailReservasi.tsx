@@ -151,11 +151,11 @@ export default function DetailReservasi({
                 <TableBody>
                     <TableRow>
                         <TableHead className="w-[35%]">Tanggal Check In</TableHead>
-                        <TableCell className="w-[65%]">{Formatter.formatDateTime(new Date(data.checked_in!!))}</TableCell>
+                        <TableCell className="w-[65%]">{Formatter.formatDateTime(new Date(data.arrival_date))}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableHead>Tanggal Check Out</TableHead>
-                        <TableCell>{Formatter.formatDateTime(new Date(data.checked_out!!))}</TableCell>
+                        <TableCell>{Formatter.formatDateTime(new Date(data.departure_date))}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableHead>Total Kamar</TableHead>

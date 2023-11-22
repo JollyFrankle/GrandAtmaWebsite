@@ -102,7 +102,7 @@ export default function PageDetailKamar() {
             </section>
         ) : (
             <section className="container py-10 text-center text-muted-foreground text-xl">
-                Memuat...
+                Memuat…
             </section>
         )}
 

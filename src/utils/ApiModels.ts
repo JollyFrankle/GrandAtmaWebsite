@@ -123,8 +123,6 @@ export interface Reservasi {
     id_booking: string|null
     arrival_date: string
     departure_date: string
-    checked_in: string|null
-    checked_out: string|null
     jumlah_malam: number
     jumlah_dewasa: number
     jumlah_anak: number
@@ -133,15 +131,26 @@ export interface Reservasi {
     jumlah_dp: number|null
     status: string
     total: number
-    deposit: number|null
     permintaan_tambahan: string|null
     created_at: string
     updated_at: string
     bukti_transfer: string|null
     reservasi_layanan?: ReservasiLayanan[]
     reservasi_rooms?: ReservasiRoom[]
+    reservasi_cico?: ReservasiCICO
     invoice?: Invoice
     user_customer?: UserCustomer
+    user_pegawai?: UserPegawai
+}
+
+export interface ReservasiCICO {
+    id_reservasi: number
+    id_fo: number
+    checked_in_at: string
+    checked_out_at: string|null
+    deposit: number
+    gambar_identitas: string
+    reservasi?: Reservasi
     user_pegawai?: UserPegawai
 }
 
@@ -214,6 +223,26 @@ export interface RincianTarif {
     harga_diskon: number
     harga: number
     catatan: { type: "w" | "e", message: string }[]
+}
+
+export interface KamarAvailibility {
+    no_kamar: string,
+    reservasi: Reservasi | null,
+    jenis_kamar: {
+        id: number,
+        nama: string
+    },
+    detail: {
+        smoking: boolean,
+        bed: string,
+    }
+    status: 'TSD' | 'TRS' | 'COT' | 'UNV'
+}
+
+export interface CICOListResponse {
+    min_date: string,
+    max_date: string,
+    reservasi: Reservasi[]
 }
 
 export interface KeyValue<T> {

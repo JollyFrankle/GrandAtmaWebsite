@@ -16,19 +16,22 @@ export default function FOCurrentTime({
         date: "Memulai..."
     })
 
+    const timerFn = () => {
+        const date = new Date()
+        const hour = Formatter.padZero(date.getHours())
+        const minute = Formatter.padZero(date.getMinutes())
+        const second = Formatter.padZero(date.getSeconds())
+        setTime({
+            h: hour,
+            m: minute,
+            s: second,
+            date: Formatter.formatDate(date)
+        })
+    }
+
     useEffect(() => {
-        const timer = setInterval(() => {
-            const date = new Date()
-            const hour = Formatter.padZero(date.getHours())
-            const minute = Formatter.padZero(date.getMinutes())
-            const second = Formatter.padZero(date.getSeconds())
-            setTime({
-                h: hour,
-                m: minute,
-                s: second,
-                date: Formatter.formatDate(date)
-            })
-        }, 1000)
+        const timer = setInterval(timerFn, 1000)
+        timerFn()
         return () => clearInterval(timer)
     }, [])
 
