@@ -4,17 +4,16 @@ import { Checkbox } from "@/cn/components/ui/checkbox"
 import DataTable from "@/components/DataTable"
 import { ApiResponse, CICOListResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
-import { ClipboardListIcon, InfoIcon, LogInIcon } from "lucide-react"
+import { ClipboardListIcon, InfoIcon, LogInIcon, RefreshCwIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import ModalCheckIn from "./ModalCheckIn"
+import ModalCheckIn from "./components/ModalCheckIn"
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
+import { Button } from "@/cn/components/ui/button"
 
 
-export default function TabContentWaitingCI() {
+export default function TabWaitingCI() {
     const [list, setList] = useState<Reservasi[]>([])
     const [isLoading, setIsLoading] = useState(false)
-    // const [tanggalMin, setTanggalMin] = useState<Date>()
-    // const [tanggalMax, setTanggalMax] = useState<Date>()
     const [showAll, setShowAll] = useState(false)
     const [showModalCheckIn, setShowModalCheckIn] = useState(false)
     const [currentReservasi, setCurrentReservasi] = useState<Reservasi>()
@@ -30,8 +29,6 @@ export default function TabContentWaitingCI() {
         await apiAuthenticated.get<ApiResponse<CICOListResponse>>(`/pegawai/fo/checkin?${params.toString()}`).then((res) => {
             const data = res.data
             setList(data.data.reservasi)
-            // setTanggalMin(new Date(data.data.min_date))
-            // setTanggalMax(new Date(data.data.max_date))
         }).finally(() => {
             setIsLoading(false)
         })
@@ -79,7 +76,7 @@ export default function TabContentWaitingCI() {
                         htmlFor="terms"
                         className="cursor-pointer"
                     >
-                        Tampilkan semua check in hari ini
+                        Tampilkan semua yang check in hari ini
                     </label>
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -88,6 +85,10 @@ export default function TabContentWaitingCI() {
                     <p><strong>Jika &gt;= 12.00</strong>: list check in hari ini yang akan tampil</p>
                 </div>
             </div>
+        </div>
+
+        <div className="text-end">
+            <Button onClick={() => fetchData()} disabled={isLoading}><RefreshCwIcon className="w-4 h-4 me-2" /> Refresh</Button>
         </div>
 
         <DataTable<Reservasi>

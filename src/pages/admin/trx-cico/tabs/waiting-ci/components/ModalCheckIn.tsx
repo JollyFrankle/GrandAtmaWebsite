@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import ModalPilihKamarCI from "./ModalPilihKamarCI";
 import { toast } from "react-toastify";
 import IconInput from "@/components/IconInput";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { Checkbox } from "@/cn/components/ui/checkbox";
 
 export interface CheckInKamar {

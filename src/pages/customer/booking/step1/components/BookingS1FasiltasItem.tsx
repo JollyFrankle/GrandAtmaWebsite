@@ -8,11 +8,13 @@ import { MinusIcon, PlusIcon } from "lucide-react";
 export default function BookingS1FasiltasItem({
     item,
     onAmountChange,
-    selectedFasilitas
+    selectedFasilitas,
+    maxAmount = 5
 }: {
     item: FasilitasLayananTambahan,
     onAmountChange: (id: number, amount: 1 | -1) => void,
     selectedFasilitas?: PBS1SelectedFasilitas,
+    maxAmount?: number
 }) {
 
     return (
@@ -28,11 +30,11 @@ export default function BookingS1FasiltasItem({
                 </div>
 
                 <div className="flex border rounded overflow-auto items-stretch w-fit h-fit">
-                    <Button variant="ghost" className="rounded-none px-3" onClick={() => onAmountChange(item.id, -1)} disabled={!selectedFasilitas || selectedFasilitas.amount == 0}>
+                    <Button type="button" variant="ghost" className="rounded-none px-3" onClick={() => onAmountChange(item.id, -1)} disabled={!selectedFasilitas || selectedFasilitas.amount == 0}>
                         <MinusIcon className="w-4 h-4" />
                     </Button>
                     <span className="px-2 py-2 w-10 text-center">{!selectedFasilitas ? 0 : selectedFasilitas.amount}</span>
-                    <Button variant="ghost" className="rounded-none px-3" onClick={() => onAmountChange(item.id, 1)} disabled={(selectedFasilitas?.amount ?? 0) >= 5}>
+                    <Button type="button" variant="ghost" className="rounded-none px-3" onClick={() => onAmountChange(item.id, 1)} disabled={(selectedFasilitas?.amount ?? 0) >= maxAmount}>
                         <PlusIcon className="w-4 h-4" />
                     </Button>
                 </div>

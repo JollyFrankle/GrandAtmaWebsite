@@ -236,7 +236,7 @@ export interface KamarAvailibility {
         smoking: boolean,
         bed: string,
     }
-    status: 'TSD' | 'TRS' | 'COT' | 'UNV'
+    status: 'TSD' | 'TRS' | 'COT' | 'UNV' | 'OVS'
 }
 
 export interface CICOListResponse {

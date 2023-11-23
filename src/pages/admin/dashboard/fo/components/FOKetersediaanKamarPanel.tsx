@@ -2,7 +2,7 @@ import { Button } from "@/cn/components/ui/button"
 import IconSelect from "@/components/IconSelect"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
-import { CheckInKamar } from "@/pages/admin/trx-cico/components/ModalCheckIn"
+import { CheckInKamar } from "@/pages/admin/trx-cico/tabs/waiting-ci/components/ModalCheckIn"
 import { ApiResponse, JenisKamar, KamarAvailibility, Reservasi, apiAuthenticated, apiPublic } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { HashIcon } from "lucide-react"
@@ -102,8 +102,8 @@ export default function FOKetersediaanKamarPanel({
 
     return (
         <>
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center flex-nowrap gap-4 overflow-x-auto">
+            <div className="flex flex-col-reverse gap-4 md:flex-row items-center justify-between mb-4">
+                <div className="flex items-center flex-wrap gap-x-4 overflow-x-auto">
                     <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-green-500 rounded" />
                         Tersedia
@@ -117,12 +117,16 @@ export default function FOKetersediaanKamarPanel({
                         Terisi <small>(Check Out Hari Ini)</small>
                     </div>
                     <div className="flex gap-2 items-center whitespace-nowrap">
+                        <div className="w-4 h-4 bg-black rounded" />
+                        Overstaying <small>(Melebihi Waktu Check Out)</small>
+                    </div>
+                    <div className="flex gap-2 items-center whitespace-nowrap">
                         <div className="w-4 h-4 bg-gray-500 rounded" />
                         Dalam Perawatan
                     </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 whitespace-nowrap">
                     <IconSelect
                         className="mb-0"
                         icon={<HashIcon className="w-full h-full" />}
@@ -164,15 +168,32 @@ export default function FOKetersediaanKamarPanel({
                         Memuat…
                     </div>
                 ) : list.map((item) => {
-                    let className = item.status === 'TSD' ? 'bg-green-500 text-white' : item.status === 'TRS' ? 'bg-yellow-500' : item.status === 'COT' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'
+                    let className: string
+                    switch(item.status) {
+                        case 'TSD':
+                            className = 'bg-green-500 text-white'
+                            break
+                        case 'TRS':
+                            className = 'bg-yellow-500'
+                            break
+                        case 'COT':
+                            className = 'bg-red-500 text-white'
+                            break
+                        case 'OVS':
+                            className = 'bg-black text-white'
+                            break
+                        default:
+                            className = 'bg-gray-500 text-white'
+                            break
+                    }
                     const kamarSudahDipilih = currentlySelectedKamars?.find((kamar) => kamar.no_kamar === item.no_kamar)
                     if (kamarSudahDipilih) {
                         className = 'bg-secondary  cursor-not-allowed'
                     }
                     return (
-                        <Button key={item.no_kamar} className={`${className} p-4 rounded block h-full`} variant="ghost" onClick={() => onKamarSelected(item)} style={{ height: "6rem" }}>
+                        <Button key={item.no_kamar} className={`${className} p-4 rounded block h-full px-2`} variant="ghost" onClick={() => onKamarSelected(item)} style={{ height: "6rem" }}>
                             <div className="font-bold text-lg">{item.no_kamar}</div>
-                            <div className="text-sm">{item.jenis_kamar.nama}</div>
+                            <div className="text-sm truncate">{item.jenis_kamar.nama}</div>
                             {item.status === "TSD" ? <>
                                 <div className="text-sm"></div>
                                 {kamarSudahDipilih && (

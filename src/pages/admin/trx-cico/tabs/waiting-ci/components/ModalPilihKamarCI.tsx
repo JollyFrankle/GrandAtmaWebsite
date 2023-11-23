@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, dialogSizeByClass } from "@/cn/components/ui/dialog";
-import FOKetersediaanKamarPanel from "../../dashboard/fo/components/FOKetersediaanKamarPanel";
+import FOKetersediaanKamarPanel from "../../../../dashboard/fo/components/FOKetersediaanKamarPanel";
 import { KamarAvailibility } from "@/utils/ApiModels";
 import { CheckInKamar } from "./ModalCheckIn";
 

@@ -187,6 +187,7 @@ export default function DataTable<T>({
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
+                    type="search"
                     placeholder="Cari..."
                     value={globalFilter}
                     onChange={(event) => {

@@ -25,6 +25,10 @@ export default class Formatter {
         return new Intl.DateTimeFormat('id-ID', { dateStyle: 'short', timeStyle: 'short' }).format(value);
     }
 
+    static formatPercent(value: number): string {
+        return new Intl.NumberFormat('id-ID', { style: 'percent', maximumFractionDigits: 0 }).format(value);
+    }
+
     static formatJSON<T=any>(value: any): T|null {
         try {
             return JSON.parse(value) as T;
