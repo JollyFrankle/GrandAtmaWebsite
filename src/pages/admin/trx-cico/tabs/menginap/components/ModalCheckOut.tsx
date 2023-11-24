@@ -11,6 +11,7 @@ import IconInput from "@/components/IconInput"
 import { Button } from "@/cn/components/ui/button"
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
 import { toast } from "react-toastify"
+import { Checkbox } from "@/cn/components/ui/checkbox"
 
 export default function ModalCheckOut({
     open,
@@ -29,6 +30,7 @@ export default function ModalCheckOut({
     const [total, setTotal] = useState(0)
     const [dibayar, setDibayar] = useState(0)
     const [inputUang, setInputUang] = useState("")
+    const [checkKonfirmasi, setCheckKonfirmasi] = useState(false)
 
     const fetchDetail = () => {
         if (!reservasi) {
@@ -45,6 +47,13 @@ export default function ModalCheckOut({
 
             const newDibayar = (data.data.reservasi.jumlah_dp ?? 0) + (data.data.reservasi.reservasi_cico?.deposit ?? 0)
             setDibayar(newDibayar)
+
+            // Kalau masih di masa depan, maka harus konfirmasi
+            if (new Date(data.data.reservasi.departure_date) > new Date()) {
+                setCheckKonfirmasi(false) // reset check konfirmasi
+            } else {
+                setCheckKonfirmasi(true)
+            }
         })
     }
 
@@ -89,7 +98,7 @@ export default function ModalCheckOut({
                 <DialogContent className={dialogSizeByClass("lg")}>
                     <DialogTitle className="mb-4">Check Out</DialogTitle>
 
-                    <Alert variant="destructive" className="mb-2">
+                    <Alert className="mb-2">
                         <InfoIcon className="w-4 h-4" />
                         <AlertTitle>
                             Informasi
@@ -176,7 +185,7 @@ export default function ModalCheckOut({
                         </TableBody>
                         <TableBody className="border-t-2">
                             <TableRow>
-                                <TableCell colSpan={3} className="text-right">
+                                <TableCell colSpan={4} className="text-right">
                                     <div>Total</div>
                                 </TableCell>
                                 <TableCell className="font-bold">
@@ -242,8 +251,8 @@ export default function ModalCheckOut({
                         </li>
                     </ul>
 
-                    <h4 className="text-xl font-bold mt-4 mb-2">Penyesuaian Pembayaran</h4>
                     <form onSubmit={showConfirmModalBeforeSaving}>
+                        <h4 className="text-xl font-bold mt-4 mb-2">Penyesuaian Pembayaran</h4>
                         <Alert className="mb-4">
                             <InfoIcon className="w-4 h-4" />
                             <AlertTitle>
@@ -299,7 +308,28 @@ export default function ModalCheckOut({
                             </div>
                         </>}
 
-                        <Button className="w-full" type="submit" size="lg" disabled={+inputUang === 0}>
+                        {detailCK && new Date(detailCK.reservasi.departure_date) > new Date() && (
+                            <Alert variant="destructive" className="mb-4">
+                                <InfoIcon className="w-4 h-4" />
+                                <AlertTitle>
+                                    Peringatan!
+                                </AlertTitle>
+                                <AlertDescription>
+                                    <div>Tanggal check out reservasi ini <strong>masih lebih awal dari tanggal seharusnya</strong>. Apakah Anda yakin customer ini benar-benar ingin melakukan check out?</div>
+                                    <div className="flex items-center space-x-2 mt-2 text-foreground">
+                                        <Checkbox id="konfirmasi-co" onCheckedChange={(cc) => setCheckKonfirmasi(cc === true)} value={+checkKonfirmasi} />
+                                        <label
+                                            htmlFor="konfirmasi-co"
+                                            className="cursor-pointer"
+                                        >
+                                            Customer ini benar-benar telah meminta check out lebih awal dari tanggal seharusnya
+                                        </label>
+                                    </div>
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        <Button className="w-full" type="submit" size="lg" disabled={+inputUang === 0 || !checkKonfirmasi}>
                             <KeyRoundIcon className="w-5 h-5 me-2" /> Check Out
                         </Button>
                     </form>

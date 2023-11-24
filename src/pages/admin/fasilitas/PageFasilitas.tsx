@@ -47,7 +47,7 @@ export default function PageFasilitas() {
         if(AuthHelper.authorize(["sm"])) {
             fetchTableData()
         } else {
-            toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
+            toast("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.", {
                 type: "error"
             })
             navigate("/admin/")

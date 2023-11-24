@@ -11,7 +11,7 @@ export default function LayoutAdmin() {
 
     useEffect(() => {
         if (!isAdmin) {
-            navigate("/login")
+            navigate(`/login?${new URLSearchParams({ redirect: window.location.href }).toString()}`)
         }
     }, [])
 

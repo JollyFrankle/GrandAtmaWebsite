@@ -2,11 +2,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import { Button } from "@/cn/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Skeleton } from "@/cn/components/ui/skeleton"
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@/cn/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table"
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
 import { PBS1SelectedFasilitas } from "@/pages/customer/booking/step1/PageBookingStep1"
 import BookingS1FasiltasItem from "@/pages/customer/booking/step1/components/BookingS1FasiltasItem"
 import { ApiResponse, FasilitasLayananTambahan, Reservasi, apiAuthenticated, apiPublic } from "@/utils/ApiModels"
+import Formatter from "@/utils/Formatter"
 import { HelpingHandIcon, InfoIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
@@ -122,6 +123,7 @@ export default function ModalPLB({
                     </Table>
 
                     <form onSubmit={showConfirmModalBeforeSaving}>
+                        <h4 className="text-xl font-bold mb-2">Layanan Yang Tersedia</h4>
                         <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
                             {listFasilitas?.map((item) => (
                                 <BookingS1FasiltasItem
@@ -132,6 +134,50 @@ export default function ModalPLB({
                                     maxAmount={10} />
                             ))}
                         </ul>
+
+                        <h4 className="text-xl font-bold mt-4 mb-2">Layanan Yang Dipilih</h4>
+                        <Table className="mb-4">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Nama Fasilitas</TableHead>
+                                    <TableHead>Jumlah</TableHead>
+                                    <TableHead>Harga</TableHead>
+                                    <TableHead>Total</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {selectedFasilitas.length > 0 ? selectedFasilitas.map((item) => {
+                                    const fasilitas = listFasilitas.find((item2) => item2.id == item.id)
+                                    if (!fasilitas) {
+                                        return null
+                                    }
+                                    return (
+                                        <TableRow key={item.id}>
+                                            <TableCell>{fasilitas.nama}</TableCell>
+                                            <TableCell>{item.amount}</TableCell>
+                                            <TableCell>{Formatter.formatCurrency(fasilitas.tarif)}</TableCell>
+                                            <TableCell>{Formatter.formatCurrency(item.amount * fasilitas.tarif)}</TableCell>
+                                        </TableRow>
+                                    )
+                                }) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center">Tidak ada fasilitas yang dipilih.</TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                            <TableBody className="border-t-2">
+                                <TableRow>
+                                    <TableCell colSpan={3} className="text-end">Total</TableCell>
+                                    <TableCell className="font-bold">{Formatter.formatCurrency(selectedFasilitas.reduce((acc, item) => {
+                                        const fasilitas = listFasilitas.find((item2) => item2.id == item.id)
+                                        if (!fasilitas) {
+                                            return acc
+                                        }
+                                        return acc + (item.amount * fasilitas.tarif)
+                                    }, 0))}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
 
                         <Button type="submit" className="w-full"><HelpingHandIcon className="w-4 h-4 me-2" /> Pesan untuk Customer</Button>
                     </form>

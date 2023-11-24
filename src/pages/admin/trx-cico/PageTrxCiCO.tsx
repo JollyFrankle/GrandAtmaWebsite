@@ -5,18 +5,29 @@ import { useEffect, useState } from "react";
 import TabWaitingCI from "./tabs/waiting-ci/TabWaitingCI";
 import TabMenginap from "./tabs/menginap/TabMenginap";
 import TabCheckedOut from "./tabs/checked-out/TabCheckedOut";
+import AuthHelper from "@/utils/AuthHelper";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 export default function PageTrxCICO() {
     const query = useQuery()
     const [selectedTab, setSelectedTab] = useState("current")
 
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (query.get("tab")) {
             setSelectedTab(query.get("tab")!)
         }
     }, [query])
+
+    useEffect(() => {
+        if(!AuthHelper.authorize(["fo"])) {
+            toast.error("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.")
+            navigate("/admin/")
+        }
+    }, [])
 
     return <>
         <div className="flex justify-between items-center mb-4">

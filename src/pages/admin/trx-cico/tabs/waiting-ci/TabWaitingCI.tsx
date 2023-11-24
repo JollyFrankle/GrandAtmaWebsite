@@ -71,9 +71,9 @@ export default function TabWaitingCI() {
             <div className="col-span-3 lg:col-span-1">
                 <p>Jika ada tamu yang meminta check in lebih awal:</p>
                 <div className="flex items-center space-x-2 mb-2">
-                    <Checkbox id="terms" onCheckedChange={(cc) => cc ? setShowAll(true) : setShowAll(false)} value={+showAll} disabled={isLoading} />
+                    <Checkbox id="showAll" onCheckedChange={(cc) => setShowAll(cc === true)} value={+showAll} disabled={isLoading} />
                     <label
-                        htmlFor="terms"
+                        htmlFor="showAll"
                         className="cursor-pointer"
                     >
                         Tampilkan semua yang check in hari ini

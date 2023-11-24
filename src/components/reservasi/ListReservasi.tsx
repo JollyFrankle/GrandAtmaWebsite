@@ -2,7 +2,7 @@ import DataTable, { ColumnRules, RowActions } from "@/components/DataTable"
 import { ApiResponse, BASE_URL, Reservasi, UserCustomer, UserPegawai, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import ReservasiFormatter, { CancelableStatus } from "@/utils/ReservasiFormatter"
-import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, StepForwardIcon } from "lucide-react"
+import { CircleDollarSignIcon, CircleSlashIcon, ClipboardListIcon, FileTextIcon, ReceiptIcon, StepForwardIcon } from "lucide-react"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { toast } from "react-toastify"
 import ModalDelete from "../modals/ModalDelete"
@@ -90,8 +90,7 @@ function getActions(
     userSM?: UserPegawai,
     onDetailClick?: (item: Reservasi) => void,
     onCancelClick?: (item: Reservasi) => void,
-    onContinueClick?: (item: Reservasi) => void,
-    onTandaTerimaClick?: (item: Reservasi) => void
+    onContinueClick?: (item: Reservasi) => void
 ) {
     const actions: RowActions<Reservasi>[][] = [[
         {
@@ -124,8 +123,23 @@ function getActions(
     if (["upcoming", "completed"].includes(status ?? "")) {
         actions[0].push({
             action: <><FileTextIcon className="w-4 h-4 me-2" /> Tanda Terima</>,
-            onClick: (item) => onTandaTerimaClick?.(item),
+            onClick: (item) => {
+                const b64Id = btoa([item.id, item.id_customer, item.id_booking].join(","))
+                // open in new tab
+                window.open(`${BASE_URL}/public/pdf/tanda-terima/${b64Id}`, "_blank")
+            },
             enabled: (item) => !item.status.startsWith("pending-")
+        })
+    }
+
+    if (["completed"].includes(status ?? "")) {
+        actions[0].push({
+            action: <><ReceiptIcon className="w-4 h-4 me-2" /> Nota Lunas</>,
+            onClick: (item) => {
+                const b64Id = btoa([item.id, item.invoice?.no_invoice].join(","))
+                // open in new tab
+                window.open(`${BASE_URL}/public/pdf/invoice/${b64Id}`, "_blank")
+            }
         })
     }
 
@@ -158,12 +172,6 @@ const ListReservasi = forwardRef(({
         navigate(`/booking/${item.id_customer}/${item.id}/step-${step}`)
     }
 
-    const tandaTerimaReservation = (item: Reservasi) => {
-        const b64Id = btoa([item.id, item.id_customer, item.id_booking].join(","))
-        // open in new tab
-        window.open(`${BASE_URL}/public/pdf/tanda-terima/${b64Id}`, "_blank")
-    }
-
     const openCancelDialog = (item: Reservasi) => {
         setCurrentData(item)
         setShowCancelDialog(true)
@@ -190,7 +198,7 @@ const ListReservasi = forwardRef(({
     }
 
     useEffect(() => {
-        setActions(getActions(status, userSM, onDetailClick, openCancelDialog, continueReservation, tandaTerimaReservation))
+        setActions(getActions(status, userSM, onDetailClick, openCancelDialog, continueReservation))
         setColumns(getColumns(idCustomer))
     }, [status, userSM])
 

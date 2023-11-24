@@ -55,14 +55,13 @@ export default function PageLogin() {
                 const data = res.data as ApiResponse<{user: UserCustomer, token: string }>
                 AuthHelper.setToken(data.data.token)
                 AuthHelper.setUserCustomer(data.data.user)
-                toast(data.message, {
-                    type: "success"
-                })
+                toast.success(data.message)
                 if (!redirectUrl) {
                     redirectUrl = "/customer"
                 }
             }
-            navigate(redirectUrl)
+            const baseURL = window.location.origin
+            navigate(redirectUrl.replace(baseURL, ""), { replace: true })
             localStorage.removeItem("afterLoginRedirect")
         }).catch((err: AxiosError) => {
             if (err.response?.data) {

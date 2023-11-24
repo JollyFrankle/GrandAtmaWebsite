@@ -144,7 +144,7 @@ export default function ModalCK({
                         </TableBody>
                         <TableBody className="border-t-2">
                             <TableRow>
-                                <TableCell colSpan={3} className="text-right">
+                                <TableCell colSpan={4} className="text-right">
                                     <div>Total</div>
                                 </TableCell>
                                 <TableCell className="font-bold">

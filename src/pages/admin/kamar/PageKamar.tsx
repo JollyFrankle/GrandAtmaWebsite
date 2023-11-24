@@ -46,7 +46,7 @@ export default function PageKamar() {
         if(AuthHelper.authorize(["admin"])) {
             fetchTableData()
         } else {
-            toast("Anda tidak memiliki akses ke halaman ini. Kejadian ini telah dilaporkan.", {
+            toast("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.", {
                 type: "error"
             })
             navigate("/admin/")
