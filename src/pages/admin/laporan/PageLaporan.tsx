@@ -10,6 +10,7 @@ import { Button } from "@/cn/components/ui/button";
 
 import "./PageLaporan.css"
 import { getLaporanProperties } from "./LaporanHelper";
+import { BASE_URL } from "@/utils/ApiModels";
 
 const monthFormatter = new Intl.DateTimeFormat("id-ID", { month: "long" })
 const dropdownTahun: { value: string, label: string }[] = []
@@ -44,7 +45,7 @@ export default function PageLaporan1() {
     usePageTitle(pageTitle)
 
     const fetchLaporan = () => {
-        let baseUrl = `http://localhost:4000/public/pdf/laporan/${nomorLaporan}`
+        let baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
         const params = new URLSearchParams({
             token: AuthHelper.getToken()!!,
             readonly: "true",
@@ -71,7 +72,7 @@ export default function PageLaporan1() {
     }
 
     const printLaporan = () => {
-        let baseUrl = `http://localhost:4000/public/pdf/laporan/${nomorLaporan}`
+        let baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
         const params = new URLSearchParams({
             token: AuthHelper.getToken()!!,
             tahun: tahun,

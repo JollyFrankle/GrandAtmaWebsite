@@ -10,7 +10,7 @@ import { Button } from '@/cn/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/cn/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/cn/components/ui/accordion';
 import ScrollToTop from '@/utils/ScrollToTop';
-import { UserCustomer, UserPegawai, apiAuthenticated } from '@/utils/ApiModels';
+import { UserCustomer, UserPegawai, apiPublic } from '@/utils/ApiModels';
 import AuthHelper from '@/utils/AuthHelper';
 import { toast } from 'react-toastify';
 
@@ -161,7 +161,11 @@ export default function LayoutHome() {
     const logout = () => {
         const type = localStorage.getItem("type")
         const logoutUrl = type === "c" ? `customer/logout` : `pegawai/logout`
-        apiAuthenticated.post(logoutUrl).then(() => {
+        apiPublic.post(logoutUrl, undefined, {
+            headers: {
+                Authorization: `Bearer ${AuthHelper.getToken()}`
+            }
+        }).then(() => {
             toast.success("Berhasil log out.")
         })
 
