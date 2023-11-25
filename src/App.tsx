@@ -34,6 +34,7 @@ const PageRoomSearchCG = lazy(() => import('./pages/admin/customer-group/reserva
 const PageAllUpomingReservasiCG = lazy(() => import('./pages/admin/customer-group/all-upcoming-reservasi/PageAllUpomingReservasiCG'));
 const PageUserPegawai = lazy(() => import('./pages/admin/users/PageUserPegawai'));
 const PageTrxCICO = lazy(() => import('./pages/admin/trx-cico/PageTrxCiCO'));
+const PageLaporan = lazy(() => import('./pages/admin/laporan/PageLaporan'));
 
 const router = createBrowserRouter([
   {
@@ -84,7 +85,8 @@ const router = createBrowserRouter([
       { path: "cg/:id/new", element: <PageRoomSearchCG /> },
       { path: "reservasi", element: <PageAllUpomingReservasiCG /> },
       { path: "user-p", element: <PageUserPegawai /> },
-      { path: "trx-cico", element: <PageTrxCICO /> }
+      { path: "trx-cico", element: <PageTrxCICO /> },
+      { path: "laporan/:nomor", element: <PageLaporan /> }
     ]
   }
 ])

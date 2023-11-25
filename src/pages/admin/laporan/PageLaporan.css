@@ -1,0 +1,16 @@
+
+.btn-group>* {
+    border-radius: 0;
+    border-right-width: 0;
+}
+
+.btn-group>*:first-child {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.btn-group>*:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    border-right-width: 1px;
+}

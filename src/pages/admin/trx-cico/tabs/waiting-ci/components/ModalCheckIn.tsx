@@ -315,7 +315,7 @@ export default function ModalCheckIn({
                                 <div>
                                     {fileIdentitas ? (
                                         <div className="mt-2 mb-4">
-                                            <Button className="w-full" onClick={() => setFileIdentitas(undefined)} variant="outline">
+                                            <Button className="w-full" onClick={() => setFileIdentitas(undefined)} variant="outline" type="button">
                                                 Hapus Bukti Identitas <Trash2Icon className="w-4 h-4 ms-2" />
                                             </Button>
                                         </div>

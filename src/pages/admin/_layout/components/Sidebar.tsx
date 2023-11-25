@@ -4,6 +4,7 @@ import Logo from "@/assets/images/gah-inline-logo.png";
 import React from "react";
 import { BedIcon, BookKeyIcon, BookMarkedIcon, CalendarClockIcon, ChevronDownIcon, HelpingHandIcon, HomeIcon, LayoutDashboardIcon, MenuIcon, UsersIcon } from "lucide-react";
 import AuthHelper from "@/utils/AuthHelper";
+import { LaporanList } from "../../laporan/LaporanHelper";
 
 interface SidebarProps {
     sidebarOpen: boolean;
@@ -16,7 +17,7 @@ interface SidebarGroupProps {
 }
 
 interface SidebarItemProps {
-    icon: React.ReactElement
+    icon?: React.ReactElement
     label: string
     to: string
     roles?: string[]
@@ -92,6 +93,14 @@ const sidebarItems: SidebarGroupProps[] = [
             //     roles: ["admin"]
             // }
         ]
+    },
+    {
+        label: "Laporan",
+        children: LaporanList.map((lap) => ({
+            label: lap.nama,
+            to: "/laporan/" + lap.id,
+            roles: ["owner", "gm"]
+        }))
     }
 ]
 
