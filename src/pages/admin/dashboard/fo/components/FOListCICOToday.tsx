@@ -4,8 +4,9 @@ import { ApiResponse, CICOListResponse, Reservasi, apiAuthenticated } from "@/ut
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Formatter from "@/utils/Formatter";
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert";
-import { InfoIcon, RefreshCwIcon } from "lucide-react";
+import { ArrowRightIcon, InfoIcon, RefreshCwIcon } from "lucide-react";
 import { Button } from "@/cn/components/ui/button";
+import InlineLink from "@/components/InlineLink";
 
 
 export default function FOListCICOToday() {
@@ -85,6 +86,8 @@ export default function FOListCICOToday() {
             </TableBody>
         </Table>
 
+        <InlineLink to="/admin/trx-cico?tab=waiting-ci" className="w-full text-center mb-4">Lakukan Check In <ArrowRightIcon calcMode="w-4 h-4 ms-2" /></InlineLink>
+
         <h4 className="text-xl font-bold text-center">Check Out Hari Ini</h4>
         <p className="text-center mb-2">Maks. {tanggalCO && Formatter.formatDateTime(tanggalCO)}</p>
         {/* {tanggalCO?.getTime() < } */}
@@ -116,6 +119,8 @@ export default function FOListCICOToday() {
                 ))}
             </TableBody>
         </Table>
+
+        <InlineLink to="/admin/trx-cico?tab=current" className="w-full text-center mb-4">Lihat SEmua Tamu Menginap <ArrowRightIcon calcMode="w-4 h-4 ms-2" /></InlineLink>
 
         {tanggalCI && tanggalMinCI && tanggalCI?.getTime() < tanggalMinCI?.getTime() && (
             <Alert variant="destructive">

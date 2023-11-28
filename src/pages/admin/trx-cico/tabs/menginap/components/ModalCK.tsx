@@ -76,6 +76,12 @@ export default function ModalCK({
                                 <TableHead>Customer</TableHead>
                                 <TableCell>{reservasi?.user_customer?.nama}</TableCell>
                             </TableRow>
+                            {(reservasi?.id_sm) && (
+                                <TableRow>
+                                    <TableHead>PIC S&M</TableHead>
+                                    <TableCell>{reservasi?.user_pegawai?.nama} ({reservasi?.user_pegawai?.email})</TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
 
@@ -154,8 +160,8 @@ export default function ModalCK({
                         </TableBody>
                     </Table>
 
-                    <h4 className="text-xl font-bold mt-4 mb-2">Rincian</h4>
-                    <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
+                    <h4 className="text-xl font-bold mt-4 mb-2">Rincian Total</h4>
+                    <ul className="list-none border rounded-lg overflow-auto shadow">
                         <li className="p-4">
                             <div className="flex justify-between">
                                 <div>Total Harga Kamar</div>

@@ -8,19 +8,16 @@ import TabCheckedOut from "./tabs/checked-out/TabCheckedOut";
 import AuthHelper from "@/utils/AuthHelper";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import usePageTitle from "@/hooks/usePageTitle";
 
 
 export default function PageTrxCICO() {
     const query = useQuery()
-    const [selectedTab, setSelectedTab] = useState("current")
+    const [selectedTab, setSelectedTab] = useState(query.get("tab") ?? "current")
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (query.get("tab")) {
-            setSelectedTab(query.get("tab")!)
-        }
-    }, [query])
+    usePageTitle("Transaksi Menginap – Grand Atma Hotel")
 
     useEffect(() => {
         if(!AuthHelper.authorize(["fo"])) {

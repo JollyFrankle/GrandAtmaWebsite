@@ -14,12 +14,14 @@ export default function TabCheckedOut() {
     const [openModalDetail, setOpenModalDetail] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)
+    const [lastFetch, setLastFetch] = useState("Belum pernah")
 
     const fetchData = async () => {
         setIsLoading(true)
         await apiAuthenticated.get<ApiResponse<Reservasi[]>>(`/pegawai/fo/checkedout`).then((res) => {
             const data = res.data
             setList(data.data)
+            setLastFetch(Formatter.formatDateTime(new Date()))
         }).finally(() => {
             setIsLoading(false)
         })
@@ -40,7 +42,10 @@ export default function TabCheckedOut() {
     }, [])
 
     return <>
-        <div className="text-end">
+        <div className="md:flex justify-between items-center text-center md:text-start">
+            <div>
+                Data terakhir diambil pada <strong>{lastFetch}</strong>
+            </div>
             <Button onClick={() => fetchData()} disabled={isLoading}><RefreshCwIcon className="w-4 h-4 me-2" /> Refresh</Button>
         </div>
 

@@ -119,6 +119,12 @@ export default function ModalPLB({
                                 <TableHead>Customer</TableHead>
                                 <TableCell>{reservasi?.user_customer?.nama}</TableCell>
                             </TableRow>
+                            {(reservasi?.id_sm) && (
+                                <TableRow>
+                                    <TableHead>PIC S&M</TableHead>
+                                    <TableCell>{reservasi?.user_pegawai?.nama} ({reservasi?.user_pegawai?.email})</TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
 
@@ -154,7 +160,7 @@ export default function ModalPLB({
                                     return (
                                         <TableRow key={item.id}>
                                             <TableCell>{fasilitas.nama}</TableCell>
-                                            <TableCell>{item.amount}</TableCell>
+                                            <TableCell>{item.amount} {fasilitas.satuan}</TableCell>
                                             <TableCell>{Formatter.formatCurrency(fasilitas.tarif)}</TableCell>
                                             <TableCell>{Formatter.formatCurrency(item.amount * fasilitas.tarif)}</TableCell>
                                         </TableRow>
@@ -186,7 +192,7 @@ export default function ModalPLB({
         </Dialog>
 
         <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData}>
-            <p className="mb-4">Apakah Anda yakin ingin menambahkan layanan berikut untuk <strong>{reservasi?.id_booking}</strong> (customer: {reservasi?.user_customer?.nama})?</p>
+            <p className="mb-4">Apakah Anda yakin ingin menambahkan layanan tersebut untuk <strong>{reservasi?.id_booking}</strong> (customer: {reservasi?.user_customer?.nama})?</p>
 
             <Alert variant="destructive">
                 <InfoIcon className="w-4 h-4" />

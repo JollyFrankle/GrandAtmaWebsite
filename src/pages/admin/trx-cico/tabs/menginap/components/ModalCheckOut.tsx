@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, dialogSizeByClass } from "@/cn/components/ui/dialog"
 import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table"
-import { ApiResponse, BASE_URL, Invoice, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
+import { ApiResponse, Invoice, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
 import { useEffect, useState } from "react"
 import { CatatanKeuanganResponse } from "./ModalCK"
@@ -12,6 +12,7 @@ import { Button } from "@/cn/components/ui/button"
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
 import { toast } from "react-toastify"
 import { Checkbox } from "@/cn/components/ui/checkbox"
+import ModalCetakInvoice from "./ModalCetakInvoice"
 
 export default function ModalCheckOut({
     open,
@@ -25,12 +26,15 @@ export default function ModalCheckOut({
     onSubmittedHandler: () => void
 }) {
     const [loading, setLoading] = useState(false)
+    const [btnDisabled, setBtnDisabled] = useState(false)
     const [openModalConfirm, setOpenModalConfirm] = useState(false)
     const [detailCK, setDetailCK] = useState<CatatanKeuanganResponse>()
     const [total, setTotal] = useState(0)
     const [dibayar, setDibayar] = useState(0)
     const [inputUang, setInputUang] = useState("")
     const [checkKonfirmasi, setCheckKonfirmasi] = useState(false)
+    const [openModalCetakInvoice, setOpenModalCetakInvoice] = useState(false)
+    const [urlInvoice, setUrlInvoice] = useState("")
 
     const fetchDetail = () => {
         if (!reservasi) {
@@ -63,19 +67,23 @@ export default function ModalCheckOut({
     }
 
     const saveData = () => {
+        setBtnDisabled(true)
         apiAuthenticated.post<ApiResponse<{ reservasi: Reservasi, invoice: Invoice }>>(`/pegawai/fo/checkout/${reservasi?.id}`, {
             total_dibayar: (total - dibayar) > 0 ? +inputUang : -inputUang
         }).then((res) => {
             const data = res.data
             toast.success(data.message)
 
+            onOpenChange(false)
+
             // Buka invoice
             const b64Id = btoa([data.data.reservasi.id, data.data.invoice.no_invoice].join(","))
-            // open in new tab
-            window.open(`${BASE_URL}/public/pdf/invoice/${b64Id}`, "_blank")
+            setUrlInvoice(b64Id)
+            setOpenModalCetakInvoice(true)
 
-            onOpenChange(false)
             onSubmittedHandler()
+        }).finally(() => {
+            setBtnDisabled(false)
         })
     }
 
@@ -117,6 +125,12 @@ export default function ModalCheckOut({
                                 <TableHead>Customer</TableHead>
                                 <TableCell>{reservasi?.user_customer?.nama}</TableCell>
                             </TableRow>
+                            {(reservasi?.id_sm) && (
+                                <TableRow>
+                                    <TableHead>PIC S&M</TableHead>
+                                    <TableCell>{reservasi?.user_pegawai?.nama} ({reservasi?.user_pegawai?.email})</TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
 
@@ -195,7 +209,7 @@ export default function ModalCheckOut({
                         </TableBody>
                     </Table>
 
-                    <h4 className="text-xl font-bold mt-4 mb-2">Rincian</h4>
+                    <h4 className="text-xl font-bold mt-4 mb-2">Rincian Total</h4>
                     <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
                         <li className="p-4">
                             <div className="flex justify-between">
@@ -263,13 +277,16 @@ export default function ModalCheckOut({
                             </AlertDescription>
                         </Alert>
                         {(total - dibayar) > 0 ? <>
-                            <div className="flex items-center text-red-600 text-lg mb-2">
-                                <div className="w-48 shrink-0">Total Kekurangan:</div>
+                            <div className="lg:flex items-center text-red-600 text-lg mb-2">
+                                <div className="lg:w-56 shrink-0">Total Kekurangan:</div>
                                 <div className="font-bold">{Formatter.formatCurrency(total - dibayar)}</div>
                             </div>
 
-                            <div className="flex items-center mb-4 text-lg">
-                                <div className="w-48 shrink-0">Uang yang dibayar:</div>
+                            <div className="lg:flex items-center mb-4 text-lg">
+                                <div className="lg:w-56 shrink-0">
+                                    <div>Uang yang Diterima:</div>
+                                    <div className="text-sm text-muted-foreground">Ketikkan ulang sesuai total di atas.</div>
+                                </div>
                                 <div className="w-full">
                                     <IconInput
                                         size="lg"
@@ -278,6 +295,7 @@ export default function ModalCheckOut({
                                         placeholder="Masukkan jumlah uang yang dibayar"
                                         value={inputUang}
                                         className="mb-1"
+                                        disabled={btnDisabled}
                                         min={0}
                                         onValueChange={(val) => setInputUang(val)}
                                     />
@@ -285,13 +303,16 @@ export default function ModalCheckOut({
                                 </div>
                             </div>
                         </> : <>
-                            <div className="flex items-center text-green-600 text-lg mb-2">
-                                <div className="w-48 shrink-0">Total Dikembalikan:</div>
+                            <div className="lg:flex items-center text-green-600 text-lg mb-2">
+                                <div className="lg:w-56 shrink-0">Total Dikembalikan:</div>
                                 <div className="font-bold">{Formatter.formatCurrency(dibayar - total)}</div>
                             </div>
 
-                            <div className="flex items-center mb-4 text-lg">
-                                <div className="w-48 shrink-0">Uang yang dikembalikan:</div>
+                            <div className="lg:flex items-center mb-4 text-lg">
+                                <div className="lg:w-56 shrink-0">
+                                    <div>Uang yang Dikembalikan:</div>
+                                    <div className="text-sm text-muted-foreground">Ketikkan ulang sesuai total di atas.</div>
+                                </div>
                                 <div className="w-full">
                                     <IconInput
                                         size="lg"
@@ -300,6 +321,7 @@ export default function ModalCheckOut({
                                         placeholder="Masukkan jumlah uang yang dikembalikan"
                                         value={inputUang}
                                         className="mb-1"
+                                        disabled={btnDisabled}
                                         min={0}
                                         onValueChange={(val) => setInputUang(val)}
                                     />
@@ -329,7 +351,7 @@ export default function ModalCheckOut({
                             </Alert>
                         )}
 
-                        <Button className="w-full" type="submit" size="lg" disabled={+inputUang === 0 || !checkKonfirmasi}>
+                        <Button className="w-full" type="submit" size="lg" disabled={+inputUang === 0 || !checkKonfirmasi || btnDisabled}>
                             <KeyRoundIcon className="w-5 h-5 me-2" /> Check Out
                         </Button>
                     </form>
@@ -341,5 +363,7 @@ export default function ModalCheckOut({
         <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} btnText="Check out">
             Apakah Anda yakin ingin melakukan check out untuk <strong>{reservasi?.id_booking}</strong> (customer: {reservasi?.user_customer?.nama})?
         </ModalSaveConfirm>
+
+        <ModalCetakInvoice open={openModalCetakInvoice} urlInvoice={urlInvoice} onOpenChange={setOpenModalCetakInvoice} />
     </>
 }

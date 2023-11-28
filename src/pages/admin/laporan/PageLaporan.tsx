@@ -7,10 +7,11 @@ import IconSelect from "@/components/IconSelect";
 import { CalendarClockIcon, CalendarRangeIcon, PrinterIcon, RefreshCwIcon } from "lucide-react";
 import usePageTitle from "@/hooks/usePageTitle";
 import { Button } from "@/cn/components/ui/button";
-
-import "./PageLaporan.css"
 import { getLaporanProperties } from "./LaporanHelper";
 import { BASE_URL } from "@/utils/ApiModels";
+
+import "./PageLaporan.css"
+import AbstractBG from "@/assets/images/abstract-bg.jpg"
 
 const monthFormatter = new Intl.DateTimeFormat("id-ID", { month: "long" })
 const dropdownTahun: { value: string, label: string }[] = []
@@ -38,6 +39,7 @@ export default function PageLaporan1() {
     const [loading, setLoading] = useState(false)
     const [url, setUrl] = useState("")
     const [pageTitle, setPageTitle] = useState("")
+    const [laporanTitle, setLaporanTitle] = useState("")
     const [tahun, setTahun] = useState(new Date().getFullYear().toString())
     const [bulan, setBulan] = useState((new Date().getMonth() + 1).toString())
     const [showInputBulan, setShowInputBulan] = useState(false)
@@ -58,7 +60,8 @@ export default function PageLaporan1() {
 
         setShowInputBulan(showBulan)
         setLoading(true)
-        setPageTitle(title)
+        setPageTitle(`${title} – Grand Atma Hotel`)
+        setLaporanTitle(title)
         setUrl(baseUrl + "?" + params.toString())
     }
 
@@ -91,10 +94,11 @@ export default function PageLaporan1() {
     }, [nomorLaporan, tahun, bulan])
 
     return <>
-        <section className="max-w-[210mm] mx-auto overflow-x-auto shadow-md">
+        <img src={AbstractBG} alt="Abstract background" className="select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
+        <section className="max-w-[210mm] mx-auto overflow-x-auto shadow-md relative">
             <div className="flex justify-between items-center bg-secondary px-4 py-2 w-[210mm]">
-                <h1 className="text-lg font-bold">{pageTitle}</h1>
-                <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold me-4">{laporanTitle}</h1>
+                <div className="flex items-center gap-2 shrink-0">
                     <IconSelect
                         icon={<CalendarClockIcon />}
                         values={dropdownTahun}
@@ -125,7 +129,7 @@ export default function PageLaporan1() {
                     </div>
                 </div>
             </div>
-            <div className="w-[210mm] h-[297mm] overflow-auto bg-white p-[.5in]">
+            <div className="w-[210mm] h-[297mm] overflow-auto bg-white p-[.5in] select-none">
                 {loading && (
                     <div className="flex justify-center items-center w-full h-full">
                         <LoadingSpinner />

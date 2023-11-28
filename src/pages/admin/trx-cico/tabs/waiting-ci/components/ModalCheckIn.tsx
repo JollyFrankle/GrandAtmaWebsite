@@ -36,6 +36,7 @@ export default function ModalCheckIn({
     const [openModalConfirm, setOpenModalConfirm] = useState(false)
     const [data, setData] = useState<Reservasi>()
     const [loading, setLoading] = useState(false)
+    const [btnDisabled, setBtnDisabled] = useState(false)
     const [kamarTerpilih, setKamarTerpilih] = useState<CheckInKamar[]>([])
     const [currentRR, setCurrentRR] = useState<ReservasiRoom>()
     const [openModalPK, setOpenModalPK] = useState(false)
@@ -67,7 +68,7 @@ export default function ModalCheckIn({
             return
         }
 
-        setLoading(true)
+        setBtnDisabled(true)
         // #CIOC-MultipartRequest - used in CheckInOutController.ts
         const formData = new FormData()
         formData.append("deposit", deposit)
@@ -78,8 +79,8 @@ export default function ModalCheckIn({
             toast.success(data.message)
             onOpenChange(false)
             onSubmittedHandler()
-        }).catch(() => {
-            setLoading(false)
+        }).finally(() => {
+            setBtnDisabled(false)
             setCheckSudahBenar(false)
         })
     }
@@ -187,6 +188,12 @@ export default function ModalCheckIn({
                                     <TableHead>Customer</TableHead>
                                     <TableCell>{data?.user_customer?.nama}</TableCell>
                                 </TableRow>
+                                {(data?.id_sm) && (
+                                    <TableRow>
+                                        <TableHead>PIC S&M</TableHead>
+                                        <TableCell>{data?.user_pegawai?.nama} ({data?.user_pegawai?.email})</TableCell>
+                                    </TableRow>
+                                )}
                                 <TableRow>
                                     <TableHead>Nomor Identitas</TableHead>
                                     <TableCell>{data?.user_customer?.jenis_identitas?.toUpperCase()} &ndash; {data?.user_customer?.no_identitas}</TableCell>
@@ -310,6 +317,7 @@ export default function ModalCheckIn({
                                         max={300000}
                                         value={deposit}
                                         onValueChange={setDeposit}
+                                        disabled={btnDisabled}
                                         label="Deposit" />
                                 </div>
                                 <div>
@@ -331,13 +339,13 @@ export default function ModalCheckIn({
                                 </div>
 
                                 <div className="flex items-center space-x-2 mb-4">
-                                    <Checkbox id="cbVerif" checked={checkSudahBenar} onCheckedChange={(checked) => setCheckSudahBenar(checked === true)} />
+                                    <Checkbox id="cbVerif" checked={checkSudahBenar} onCheckedChange={(checked) => setCheckSudahBenar(checked === true)} disabled={btnDisabled} />
                                     <label htmlFor="cbVerif" className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Semua data yang dimasukkan sudah benar dan saya bertanggung jawab atas data yang dimasukkan.
                                     </label>
                                 </div>
 
-                                <Button className="w-full" type="submit" size="lg" disabled={!checkSudahBenar}>
+                                <Button className="w-full" type="submit" size="lg" disabled={!checkSudahBenar || btnDisabled}>
                                     <KeyRoundIcon className="w-5 h-5 me-2" /> Check In
                                 </Button>
                             </div>

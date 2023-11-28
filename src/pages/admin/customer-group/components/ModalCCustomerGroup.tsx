@@ -196,7 +196,7 @@ export default function ModalCCustomerGroup({
                     </div>
 
                     {editable && (
-                        <DialogFooter className="mt-4 gap2">
+                        <DialogFooter className="mt-4 gap-2">
                             <Button type="button" onClick={() => onOpenChange(false)} variant="secondary"><BanIcon className="h-4 w-4 me-2" /> Batal</Button>
                             <Button type="submit"><SaveIcon className="w-4 h-4 me-2" /> Simpan</Button>
                         </DialogFooter>
