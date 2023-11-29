@@ -5,7 +5,7 @@ import { ArrowLeftCircleIcon, BanknoteIcon, BedSingleIcon, CheckCheckIcon, CopyI
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 
 import BankDiamond from "@/assets/images/bank-diamond.png"
@@ -189,7 +189,7 @@ export default function PageBookingStep3_P() {
                     <li className="p-4">
                         {/* <div className="font-bold">Biaya Lain</div> */}
                         <div className="flex justify-between">
-                            <div>Pajak</div>
+                            <div>Pajak Kamar</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">

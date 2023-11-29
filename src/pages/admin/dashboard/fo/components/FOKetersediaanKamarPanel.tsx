@@ -1,6 +1,6 @@
 import { Button } from "@/cn/components/ui/button"
 import IconSelect from "@/components/IconSelect"
-import LoadingSpinner from "@/components/LoadingSpinner"
+import LoadingSpinner from "@/components/loading/LoadingSpinner"
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
 import { CheckInKamar } from "@/pages/admin/trx-cico/tabs/waiting-ci/components/ModalCheckIn"
 import { ApiResponse, JenisKamar, KamarAvailibility, Reservasi, apiAuthenticated, apiPublic } from "@/utils/ApiModels"

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, dialogSizeByClass } from "@/cn/components/ui/dialog"
-import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Reservasi } from "@/utils/ApiModels"
 import DetailReservasi from "../reservasi/DetailReservasi"
+import ModalDialogLoading from "../loading/ModalDialogLoading"
 
 export default function ModalDetailReservasi({
     loading,
@@ -17,9 +17,7 @@ export default function ModalDetailReservasi({
     return <Dialog open={show} onOpenChange={onOpenChange}>
     {loading ? (
         <DialogContent className={dialogSizeByClass("lg")}>
-            <Skeleton className="w-full h-16 mb-2" />
-            <Skeleton className="w-3/4 h-8 mb-2" />
-            <Skeleton className="w-5/6 h-10" />
+            <ModalDialogLoading />
         </DialogContent>
     ) : (
         <DialogContent className={dialogSizeByClass("lg")}>

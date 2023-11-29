@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AuthHelper from "@/utils/AuthHelper";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import IconSelect from "@/components/IconSelect";
 import { CalendarClockIcon, CalendarRangeIcon, PrinterIcon, RefreshCwIcon } from "lucide-react";
 import usePageTitle from "@/hooks/usePageTitle";
@@ -94,7 +94,7 @@ export default function PageLaporan1() {
     }, [nomorLaporan, tahun, bulan])
 
     return <>
-        <img src={AbstractBG} alt="Abstract background" className="select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
+        <img src={AbstractBG} alt="Abstract background" className="dark:hidden select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
         <section className="max-w-[210mm] mx-auto overflow-x-auto shadow-md relative">
             <div className="flex justify-between items-center bg-secondary px-4 py-2 w-[210mm]">
                 <h1 className="text-lg font-bold me-4">{laporanTitle}</h1>

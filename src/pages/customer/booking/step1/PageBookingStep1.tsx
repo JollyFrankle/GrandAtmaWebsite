@@ -11,7 +11,7 @@ import { Button } from "@/cn/components/ui/button"
 import IconSelect from "@/components/IconSelect"
 import { Checkbox } from "@/cn/components/ui/checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, dialogSizeByClass } from "@/cn/components/ui/dialog"
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 import usePageTitle from "@/hooks/usePageTitle"
 import AuthHelper from "@/utils/AuthHelper"
 

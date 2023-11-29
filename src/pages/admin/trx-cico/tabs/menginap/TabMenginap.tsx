@@ -4,11 +4,12 @@ import DataTable from "@/components/DataTable"
 import ModalDetailReservasi from "@/components/modals/ModalDetailReservasi"
 import { ApiResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels"
 import Formatter from "@/utils/Formatter"
-import { ClipboardListIcon, HelpingHandIcon, LogOutIcon, RefreshCwIcon, WalletIcon } from "lucide-react"
+import { CalendarClockIcon, ClipboardListIcon, HelpingHandIcon, LogOutIcon, RefreshCwIcon, WalletIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import ModalPLB from "./components/ModalPLB"
 import ModalCK from "./components/ModalCK"
 import ModalCheckOut from "./components/ModalCheckOut"
+import ModalPerpanjang from "./components/ModalPerpanjang"
 
 
 export default function TabMenginap() {
@@ -23,6 +24,7 @@ export default function TabMenginap() {
     const [openModalPLB, setOpenModalPLB] = useState(false)
     const [openModalCK, setOpenModalCK] = useState(false)
     const [openModalCO, setOpenModalCO] = useState(false)
+    const [openModalPerpanjang, setOpenModalPerpanjang] = useState(false)
 
     const fetchData = async () => {
         setIsLoading(true)
@@ -132,6 +134,13 @@ export default function TabMenginap() {
                 }
             ], [
                 {
+                    action: <><CalendarClockIcon className="w-4 h-4 me-2" /> Perpanjang</>,
+                    onClick: (row) => {
+                        setCurrentReservasi(row)
+                        setOpenModalPerpanjang(true)
+                    }
+                },
+                {
                     action: <><LogOutIcon className="w-4 h-4 me-2" /> Check Out</>,
                     onClick: (row) => {
                         setCurrentReservasi(row)
@@ -148,5 +157,7 @@ export default function TabMenginap() {
         <ModalCK open={openModalCK} onOpenChange={setOpenModalCK} reservasi={currentReservasi} />
 
         <ModalCheckOut open={openModalCO} onOpenChange={setOpenModalCO} reservasi={currentReservasi} onSubmittedHandler={() => fetchData()} />
+
+        <ModalPerpanjang open={openModalPerpanjang} onOpenChange={setOpenModalPerpanjang} reservasi={currentReservasi} onSubmittedHandler={() => fetchData()} />
     </>
 }

@@ -1,6 +1,5 @@
 import { Button } from "@/cn/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog";
-import { Skeleton } from "@/cn/components/ui/skeleton";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
 import IconTextarea from "@/components/IconTextarea";
@@ -10,6 +9,7 @@ import { BanIcon, BookUserIcon, BuildingIcon, CreditCardIcon, MailIcon, MapPinIc
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
+import ModalDialogLoading from "@/components/loading/ModalDialogLoading";
 
 const emptyLTB: UserCustomer = {
     id: 0,
@@ -38,7 +38,7 @@ export default function ModalCCustomerGroup({
 }) {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<UserCustomer>(emptyLTB)
-    const [errors, setErrors] = useState<KeyValue<string>|null>(null)
+    const [errors, setErrors] = useState<KeyValue<string> | null>(null)
     const [openModalConfirm, setOpenModalConfirm] = useState(false)
 
     const getDetail = () => {
@@ -98,9 +98,7 @@ export default function ModalCCustomerGroup({
     return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>
-                <Skeleton className="w-full h-16 mb-2" />
-                <Skeleton className="w-3/4 h-8 mb-2" />
-                <Skeleton className="w-5/6 h-10" />
+                <ModalDialogLoading />
             </DialogContent>
         ) : (
             <DialogContent className={dialogSizeByClass("lg")}>
@@ -203,9 +201,9 @@ export default function ModalCCustomerGroup({
                     )}
                 </form>
             </DialogContent>
-            )}
+        )}
     </Dialog>
 
-    <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} />
+        <ModalSaveConfirm open={openModalConfirm} onOpenChange={setOpenModalConfirm} onConfirmed={saveData} />
     </>
 }

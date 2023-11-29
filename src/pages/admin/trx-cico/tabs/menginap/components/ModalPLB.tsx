@@ -1,7 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import { Button } from "@/cn/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, dialogSizeByClass } from "@/cn/components/ui/dialog"
-import { Skeleton } from "@/cn/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table"
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm"
 import { PBS1SelectedFasilitas } from "@/pages/customer/booking/step1/PageBookingStep1"
@@ -11,6 +10,8 @@ import Formatter from "@/utils/Formatter"
 import { HelpingHandIcon, InfoIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import DetailCustomerMini from "./DetailCustomerMini"
+import ModalDialogLoading from "@/components/loading/ModalDialogLoading"
 
 
 export default function ModalPLB({
@@ -91,9 +92,7 @@ export default function ModalPLB({
         <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
             {loading ? (
                 <DialogContent className={dialogSizeByClass("lg")}>
-                    <Skeleton className="w-full h-16 mb-2" />
-                    <Skeleton className="w-3/4 h-8 mb-2" />
-                    <Skeleton className="w-5/6 h-10" />
+                    <ModalDialogLoading />
                 </DialogContent>
             ) : (
                 <DialogContent className={dialogSizeByClass("lg")}>
@@ -109,24 +108,7 @@ export default function ModalPLB({
                             <div className="font-bold">Fasilitas yang telah dipesan tidak dapat dibatalkan (dihapus).</div>
                         </AlertDescription>
                     </Alert>
-                    <Table className="mb-4 -mx-4">
-                        <TableBody>
-                            <TableRow>
-                                <TableHead>ID Booking</TableHead>
-                                <TableCell>{reservasi?.id_booking}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableHead>Customer</TableHead>
-                                <TableCell>{reservasi?.user_customer?.nama}</TableCell>
-                            </TableRow>
-                            {(reservasi?.id_sm) && (
-                                <TableRow>
-                                    <TableHead>PIC S&M</TableHead>
-                                    <TableCell>{reservasi?.user_pegawai?.nama} ({reservasi?.user_pegawai?.email})</TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                    <DetailCustomerMini reservasi={reservasi} />
 
                     <form onSubmit={showConfirmModalBeforeSaving}>
                         <h4 className="text-xl font-bold mb-2">Layanan Yang Tersedia</h4>
@@ -185,7 +167,7 @@ export default function ModalPLB({
                             </TableBody>
                         </Table>
 
-                        <Button type="submit" className="w-full"><HelpingHandIcon className="w-4 h-4 me-2" /> Pesan untuk Customer</Button>
+                        <Button type="submit" className="w-full" disabled={selectedFasilitas.length === 0}><HelpingHandIcon className="w-4 h-4 me-2" /> Pesan untuk Customer</Button>
                     </form>
                 </DialogContent>
             )}

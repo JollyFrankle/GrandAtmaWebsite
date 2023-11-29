@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { useState } from "react";
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';

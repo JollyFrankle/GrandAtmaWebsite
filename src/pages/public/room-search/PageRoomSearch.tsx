@@ -23,7 +23,7 @@ import { Separator } from "@/cn/components/ui/separator"
 import TarifKamarCard from "./components/TarifKamarCard"
 import SummaryFooter from "./components/SummaryFooter"
 import LottieNoData from "@/assets/lottie/Animation - 1699364588857.json"
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 
 export interface KamarDipesan {
     idJK: number,

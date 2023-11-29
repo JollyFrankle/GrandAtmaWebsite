@@ -110,6 +110,12 @@ export default function DetailReservasi({
                         </TableRow>
                     ))}
                 </TableBody>
+                <TableBody className="border-t-2">
+                    <TableRow>
+                        <TableCell colSpan={5} className="text-end">Total</TableCell>
+                        <TableCell className="font-bold">{Formatter.formatCurrency(data?.total ?? 0)}</TableCell>
+                    </TableRow>
+                </TableBody>
             </Table>
 
             <h4 className="text-xl font-bold mb-2">Layanan Berbayar</h4>
@@ -139,6 +145,12 @@ export default function DetailReservasi({
                             <TableCell colSpan={6} className="text-center">Tidak ada data</TableCell>
                         </TableRow>
                     )}
+                </TableBody>
+                <TableBody className="border-t-2">
+                    <TableRow>
+                        <TableCell colSpan={5} className="text-end">Total</TableCell>
+                        <TableCell className="font-bold">{Formatter.formatCurrency(data?.reservasi_layanan?.reduce((acc, it) => acc + it.total, 0) ?? 0)}</TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
 

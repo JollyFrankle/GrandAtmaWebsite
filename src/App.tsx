@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import GeneralLoadingDialog from './components/GeneralLoadingDialog';
+import GeneralLoadingDialog from './components/loading/GeneralLoadingDialog';
 
 // Dynamic import
 const LayoutHome = lazy(() => import('./pages/public/_layout/LayoutHome'));

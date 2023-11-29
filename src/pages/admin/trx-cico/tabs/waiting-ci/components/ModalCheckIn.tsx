@@ -2,7 +2,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert";
 import { Badge } from "@/cn/components/ui/badge";
 import { Button } from "@/cn/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, dialogSizeByClass } from "@/cn/components/ui/dialog";
-import { Skeleton } from "@/cn/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table";
 import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm";
 import { ApiResponse, KamarAvailibility, Reservasi, ReservasiRoom, apiAuthenticated } from "@/utils/ApiModels";
@@ -13,6 +12,7 @@ import ModalPilihKamarCI from "./ModalPilihKamarCI";
 import { toast } from "react-toastify";
 import IconInput from "@/components/IconInput";
 import { Checkbox } from "@/cn/components/ui/checkbox";
+import ModalDialogLoading from "@/components/loading/ModalDialogLoading";
 
 export interface CheckInKamar {
     id_rr: number,
@@ -159,9 +159,7 @@ export default function ModalCheckIn({
         <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
             {loading ? (
                 <DialogContent className={dialogSizeByClass("lg")}>
-                    <Skeleton className="w-full h-16 mb-2" />
-                    <Skeleton className="w-3/4 h-8 mb-2" />
-                    <Skeleton className="w-5/6 h-10" />
+                    <ModalDialogLoading />
                 </DialogContent>
             ) : (
                 <DialogContent className={dialogSizeByClass("lg")}>

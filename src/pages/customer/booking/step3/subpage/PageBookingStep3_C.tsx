@@ -5,7 +5,7 @@ import { BanknoteIcon, BedSingleIcon, CopyIcon, InfoIcon, Trash2Icon, UserIcon }
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 import { toast } from "react-toastify"
 
 import BankDiamond from "@/assets/images/bank-diamond.png"

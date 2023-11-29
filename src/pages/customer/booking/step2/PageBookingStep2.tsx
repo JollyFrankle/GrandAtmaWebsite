@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/cn/components/ui/button"
 import { Checkbox } from "@/cn/components/ui/checkbox"
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog"
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 import BookingS2FasiltasItem from "./components/BookingS2FasiltasItem"
 import usePageTitle from "@/hooks/usePageTitle"
 import AuthHelper from "@/utils/AuthHelper"
@@ -241,7 +241,7 @@ export default function PageBookingStep2() {
                     <li className="p-4">
                         {/* <div className="font-bold">Biaya Lain</div> */}
                         <div className="flex justify-between">
-                            <div>Pajak</div>
+                            <div>Pajak Kamar</div>
                             <div className="text-green-600">Termasuk</div>
                         </div>
                         <div className="flex justify-between">

@@ -1,4 +1,4 @@
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog";
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog";
 import { UserPegawai } from "@/utils/ApiModels";
 import AuthHelper from "@/utils/AuthHelper";
 import { Suspense, lazy, useState } from "react";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table";
 import { ApiResponse, CICOListResponse, Reservasi, apiAuthenticated } from "@/utils/ApiModels";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import Formatter from "@/utils/Formatter";
 import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert";
 import { ArrowRightIcon, InfoIcon, RefreshCwIcon } from "lucide-react";
@@ -120,7 +120,7 @@ export default function FOListCICOToday() {
             </TableBody>
         </Table>
 
-        <InlineLink to="/admin/trx-cico?tab=current" className="w-full text-center mb-4">Lihat SEmua Tamu Menginap <ArrowRightIcon calcMode="w-4 h-4 ms-2" /></InlineLink>
+        <InlineLink to="/admin/trx-cico?tab=current" className="w-full text-center mb-4">Lihat Semua Tamu Menginap <ArrowRightIcon calcMode="w-4 h-4 ms-2" /></InlineLink>
 
         {tanggalCI && tanggalMinCI && tanggalCI?.getTime() < tanggalMinCI?.getTime() && (
             <Alert variant="destructive">

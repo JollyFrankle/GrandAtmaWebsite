@@ -35,7 +35,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/cn/components/ui/table"
-import LoadingSpinner from "./LoadingSpinner"
+import LoadingSpinner from "./loading/LoadingSpinner"
 
 export interface ColumnRules<T> {
     id?: string

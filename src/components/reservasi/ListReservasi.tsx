@@ -269,7 +269,7 @@ const ListReservasi = forwardRef(({
                     </AlertTitle>
                     <AlertDescription>
                         <p><em>Refund</em> diberikan sebesar 100% dari total harga kamar.</p>
-                        <p>Untuk tata cara melakukan <em>refund</em>, silakan {idCustomer ? "dikonfirmasi dengan customer" : "hubungi kami"}.</p>
+                        <p>Untuk tata cara melakukan <em>refund</em>, silakan {idCustomer ? "dikonfirmasi dengan customer" : "hubungi kami"} paling lambat 3 hari setelah Anda mengonfirmasi pembatalan.</p>
                     </AlertDescription>
                 </Alert>
             ) : (
@@ -279,7 +279,7 @@ const ListReservasi = forwardRef(({
                         {idCustomer ? "Customer ini" : "Anda"} tidak akan mendapat <em>refund</em>.
                     </AlertTitle>
                     <AlertDescription>
-                        <p>Uang tidak akan dikembalikan karena reservasi ini kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
+                        <p>Uang tidak akan dikembalikan karena pembatalan dilakukan kurang dari 1 (satu) minggu sebelum tanggal <em>check-in</em>.</p>
                     </AlertDescription>
                 </Alert>
             ))}

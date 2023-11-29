@@ -8,7 +8,7 @@ import "./LayoutBookingHeader.css"
 import AbstractBG from "@/assets/images/abstract-bg.jpg"
 import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import AuthHelper from "@/utils/AuthHelper";
-import GeneralLoadingDialog from "@/components/GeneralLoadingDialog";
+import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog";
 import { Button } from "@/cn/components/ui/button";
 import ScrollToTop from "@/utils/ScrollToTop";
 
@@ -54,6 +54,8 @@ export default function LayoutBookingHeader() {
             navigate(`/booking/${idC}/${idR}/step-${data.data.stage}`)
 
             setReady(true)
+        }).catch(() => {
+            navigate("/login")
         })
     }
 

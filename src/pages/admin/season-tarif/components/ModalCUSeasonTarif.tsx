@@ -1,6 +1,5 @@
 import { Button } from "@/cn/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, dialogSizeByClass } from "@/cn/components/ui/dialog";
-import { Skeleton } from "@/cn/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/cn/components/ui/table";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
@@ -11,6 +10,7 @@ import { BanIcon, CalendarClockIcon, CaseSensitiveIcon, CigaretteIcon, CoinsIcon
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
+import ModalDialogLoading from "@/components/loading/ModalDialogLoading";
 
 const emptySeason: Season = {
     id: 0,
@@ -159,9 +159,7 @@ export default function ModalCUSeasonTarif({
     return <><Dialog open={open} onOpenChange={onOpenChange} modal={true}>
         {loading ? (
             <DialogContent className={dialogSizeByClass("lg")}>
-                <Skeleton className="w-full h-16 mb-2" />
-                <Skeleton className="w-3/4 h-8 mb-2" />
-                <Skeleton className="w-5/6 h-10" />
+                <ModalDialogLoading />
             </DialogContent>
         ) : (
             <DialogContent className={dialogSizeByClass("lg")}>
