@@ -60,9 +60,7 @@ export default function ModalCUFasilitas({
 
         apiAuthenticated.post<ApiResponse<FasilitasLayananTambahan>>(`pegawai/fasilitas`, formData).then((res) => {
             const data = res.data
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             setErrors(null)
             onOpenChange(false)
             setData(emptyLTB)
@@ -89,9 +87,7 @@ export default function ModalCUFasilitas({
             data: data
         }).then((res) => {
             const data = res.data
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             setErrors(null)
             onOpenChange(false)
             setData(emptyLTB)

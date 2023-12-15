@@ -20,9 +20,7 @@ export default function Header(props: {
                 Authorization: `Bearer ${AuthHelper.getToken()}`
             }
         }).then(() => {
-            toast("Berhasil log out.", {
-                type: "success"
-            })
+            toast.success("Berhasil log out.")
         })
 
         AuthHelper.logout()

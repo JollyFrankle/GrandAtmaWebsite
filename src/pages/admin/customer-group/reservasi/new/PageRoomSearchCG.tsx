@@ -14,14 +14,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/cn/components/ui/alert"
 import Lottie from "lottie-react";
 
 import { Separator } from "@/cn/components/ui/separator"
-import TarifKamarCard from "./components/TarifKamarCard"
 // import SummaryFooter from "./components/SummaryFooter"
 import LottieNoData from "@/assets/lottie/Animation - 1699364588857.json"
 import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog"
 import { RoomSearchData } from "@/pages/public/_layout/components/RoomSearch"
 import RoomSearchCG from "./components/RoomSearchCG"
-import SummaryFooter from "./components/SummaryFooter"
 import { KamarDipesan, SummaryKamarDipesan, TarifKamar } from "@/pages/public/room-search/PageRoomSearch"
+import TarifKamarCard from "@/pages/public/room-search/components/TarifKamarCard"
+import SummaryFooter from "@/pages/public/room-search/components/SummaryFooter"
 
 
 export default function PageRoomSearchCG() {
@@ -33,7 +33,6 @@ export default function PageRoomSearchCG() {
     const [initData, setInitData] = useState<Required<RoomSearchData>>()
     const [data, setData] = useState<TarifKamar[]>([])
     const [isLoading, setIsLoading] = useState(true)
-    const [isReady, setIsReady] = useState(false)
     const [showDialogConfirm, setShowDialogConfirm] = useState(false)
     const [showDialogMengamankanHarga, setShowDialogMengamankanHarga] = useState(false)
     const [jumlahMalam, setJumlahMalam] = useState(0)
@@ -51,50 +50,46 @@ export default function PageRoomSearchCG() {
     usePageTitle(pageTitle)
 
     const fetchData = async () => {
-        if (!initData) {
-            return
-        }
-        setIsLoading(true)
-        setIsReady(false)
-        apiAuthenticated.post<ApiResponse<TarifKamar[]>>(`pegawai/booking/search/${idC}`, {
-            check_in: Formatter.dateToYMD(initData.date.from!!),
-            check_out: Formatter.dateToYMD(initData.date.to!!),
-            jumlah_kamar: +initData.jumlahKamar,
-            jumlah_dewasa: +initData.dewasa,
-            jumlah_anak: +initData.anak
-        }).then(res => {
-            const data = res.data
-            setData(data.data)
-            console.log(res.data)
+        if (initData) {
+            setIsLoading(true)
+            apiAuthenticated.post<ApiResponse<TarifKamar[]>>(`pegawai/booking/search/${idC}`, {
+                check_in: Formatter.dateToYMD(initData.date.from!),
+                check_out: Formatter.dateToYMD(initData.date.to!),
+                jumlah_kamar: +initData.jumlahKamar,
+                jumlah_dewasa: +initData.dewasa,
+                jumlah_anak: +initData.anak
+            }).then(res => {
+                const data = res.data
+                setData(data.data)
+                console.log(res.data)
 
-            // Update harga kamar dipesan
-            setKamarDipesan(prev => {
-                const newKamarDipesan = [...prev]
-                data.data.forEach(item => {
-                    const index = newKamarDipesan.findIndex(kamar => kamar.idJK === item.jenis_kamar.id)
-                    if (index !== -1) {
-                        newKamarDipesan[index].harga = item.rincian_tarif.harga
-                        newKamarDipesan[index].harga_diskon = item.rincian_tarif.harga_diskon
-                        newKamarDipesan[index].nama = item.jenis_kamar.nama
-                        newKamarDipesan[index].gambar = item.jenis_kamar.gambar
+                // Update harga kamar dipesan
+                setKamarDipesan(prev => {
+                    const newKamarDipesan = [...prev]
+                    data.data.forEach(item => {
+                        const index = newKamarDipesan.findIndex(kamar => kamar.idJK === item.jenis_kamar.id)
+                        if (index !== -1) {
+                            newKamarDipesan[index].harga = item.rincian_tarif.harga
+                            newKamarDipesan[index].harga_diskon = item.rincian_tarif.harga_diskon
+                            newKamarDipesan[index].nama = item.jenis_kamar.nama
+                            newKamarDipesan[index].gambar = item.jenis_kamar.gambar
 
-                        // If lebih banyak dari jumlah kamar yang tersedia, set ke jumlah kamar yang tersedia
-                        if (newKamarDipesan[index].count > item.rincian_tarif.jumlah_kamar) {
-                            newKamarDipesan[index].count = item.rincian_tarif.jumlah_kamar
+                            // If lebih banyak dari jumlah kamar yang tersedia, set ke jumlah kamar yang tersedia
+                            if (newKamarDipesan[index].count > item.rincian_tarif.jumlah_kamar) {
+                                newKamarDipesan[index].count = item.rincian_tarif.jumlah_kamar
+                            }
+
+                            if (newKamarDipesan[index].count === 0) {
+                                newKamarDipesan.splice(index, 1)
+                            }
                         }
-
-                        if (newKamarDipesan[index].count === 0) {
-                            newKamarDipesan.splice(index, 1)
-                        }
-                    }
+                    })
+                    return newKamarDipesan
                 })
-                return newKamarDipesan
+            }).finally(() => {
+                setIsLoading(false)
             })
-
-            setIsReady(true)
-        }).finally(() => {
-            setIsLoading(false)
-        })
+        }
     }
 
     const getDetailUser = () => {
@@ -114,10 +109,10 @@ export default function PageRoomSearchCG() {
                 harga: item.harga_diskon,
             })),
             detail: {
-                arrival_date: Formatter.dateToYMD(initData?.date.from!!),
-                departure_date: Formatter.dateToYMD(initData?.date.to!!),
-                jumlah_dewasa: +initData?.dewasa!!,
-                jumlah_anak: +initData?.anak!!,
+                arrival_date: Formatter.dateToYMD(initData?.date.from!),
+                departure_date: Formatter.dateToYMD(initData?.date.to!),
+                jumlah_dewasa: +initData?.dewasa!,
+                jumlah_anak: +initData?.anak!,
             }
         }).then(res => {
             const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
@@ -236,7 +231,7 @@ export default function PageRoomSearchCG() {
             <div className="flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
                 <p>Ketersediaan kamar untuk<span className="lg:hidden">:</span></p>
                 <Separator orientation="vertical" />
-                <strong>{Formatter.formatDate(initData?.date.from!!)} - {Formatter.formatDate(initData?.date.to!!)}<span className="ms-2 lg:hidden">&ndash;</span></strong>
+                <strong>{Formatter.formatDate(initData?.date.from!)} - {Formatter.formatDate(initData?.date.to!)}<span className="ms-2 lg:hidden">&ndash;</span></strong>
                 <Separator orientation="vertical" />
                 <strong>{initData?.dewasa} dewasa, {initData?.anak} anak<span className="ms-2 lg:hidden">&ndash;</span></strong>
                 <Separator orientation="vertical" />
@@ -247,7 +242,7 @@ export default function PageRoomSearchCG() {
         <section className="pt-8">
             <div className="relative">
                 {!isLoading ? data.length > 0 ? data.map((item) => (
-                    <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} />
+                    <TarifKamarCard kamarDipesan={kamarDipesan} item={item} key={item.jenis_kamar.id} jumlahKamarYangDipesan={+(initData?.jumlahKamar ?? 0)} jumlahKamarSaatIni={summaryKamarDipesan.totalKamarSaatIni} onKamarDipesanChange={updateKamarDipesan} showSelectAll={true} />
                 )) : (
                     <Card className="shadow-lg mb-8 overflow-auto text-center relative">
                         <CardHeader>
@@ -267,7 +262,7 @@ export default function PageRoomSearchCG() {
             </div>
         </section>
 
-        <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} show={isReady} summaryKamarDipesan={summaryKamarDipesan} />
+        <SummaryFooter kamarDipesan={kamarDipesan} initData={initData} jumlahMalam={jumlahMalam} onButtonPesanClick={() => setShowDialogConfirm(true)} summaryKamarDipesan={summaryKamarDipesan} persistent={true} />
 
         <Dialog modal={true} open={showDialogConfirm} onOpenChange={setShowDialogConfirm}>
             <DialogContent className={dialogSizeByClass("md")}>
@@ -296,11 +291,11 @@ export default function PageRoomSearchCG() {
                     <ul className="list-none mb-4">
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Check in:</span>
-                            <strong>{Formatter.formatDate(initData?.date.from!!)}</strong>
+                            <strong>{Formatter.formatDate(initData?.date.from!)}</strong>
                         </li>
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Check out:</span>
-                            <strong>{Formatter.formatDate(initData?.date.to!!)} ({jumlahMalam} malam)</strong>
+                            <strong>{Formatter.formatDate(initData?.date.to!)} ({jumlahMalam} malam)</strong>
                         </li>
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Jumlah tamu:</span>

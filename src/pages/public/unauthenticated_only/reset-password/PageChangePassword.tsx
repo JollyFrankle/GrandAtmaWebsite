@@ -41,7 +41,7 @@ export default function PageChangePassword() {
         apiPublic.patch<ApiResponse<unknown>>(`reset-password/${token}`, {
             password: password,
             recaptcha_token: captcha
-        }).then((_) => {
+        }).then(() => {
             setIsLoading(false)
             setIsSuccess(true)
         }).catch((err: AxiosError) => {

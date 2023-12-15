@@ -9,11 +9,12 @@ import usePageTitle from "@/hooks/usePageTitle"
 import Tugu from "@/assets/images/tugu-crop.png"
 import PrambananHalfRight from "@/assets/images/prambanan-half-right.png"
 import UnderDevelopment from "@/assets/images/under-dev.jpg"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
 import IconInput from "@/components/IconInput"
 import useQuery from "@/hooks/useQuery"
+import InlineLink from "@/components/InlineLink"
 
 const recaptchaRef = createRef<ReCAPTCHA>()
 
@@ -45,9 +46,7 @@ export default function PageLogin() {
                 const data = res.data as ApiResponse<{user: UserPegawai, token: string }>
                 AuthHelper.setToken(data.data.token)
                 AuthHelper.setUserPegawai(data.data.user)
-                toast(data.message, {
-                    type: "success"
-                })
+                toast.success(data.message)
                 if (!redirectUrl) {
                     redirectUrl = "/admin"
                 }
@@ -125,12 +124,8 @@ export default function PageLogin() {
 
                             <div className="text-center">
                                 Belum punya akun?
-                                <Button variant="link" className="ms-2 p-0 text-md" asChild>
-                                    <Link to="/register">Daftar</Link>
-                                </Button>
-                                <Button variant="link" className="ms-2 p-0 text-md" asChild>
-                                    <Link to="/reset-password">Lupa Password?</Link>
-                                </Button>
+                                <InlineLink to="/register" className="mx-2">Buat akun</InlineLink>
+                                <InlineLink to="/reset-password">Lupa Password?</InlineLink>
                             </div>
                         </form>
                     </div>

@@ -107,7 +107,7 @@ export default function PageBookingStep2() {
                 <h2 className="text-xl font-bold mb-2">Layanan Tambahan</h2>
 
                 <ul className="list-none mb-6 border rounded-lg overflow-auto shadow">
-                    {(detail?.reservasi_layanan?.length ?? 0) > 0 ? detail?.reservasi_layanan!!.map((item) => (
+                    {(detail?.reservasi_layanan?.length ?? 0) > 0 ? detail?.reservasi_layanan!.map((item) => (
                         <BookingS2FasiltasItem key={item.id} reservasiLayanan={item} />
                     )) : (
                         <li className="p-4">Tidak ada layanan tambahan</li>
@@ -255,7 +255,7 @@ export default function PageBookingStep2() {
                     </li>
                     <li className="p-1 flex justify-between bg-secondary"></li>
                     <li className="p-4 flex justify-between">
-                        <div className="font-bold">Total Harga {detail?.jumlah_malam!! > 1 && `${detail?.jumlah_malam} Malam`}</div>
+                        <div className="font-bold">Total Harga {detail?.jumlah_malam! > 1 && `${detail?.jumlah_malam} Malam`}</div>
                         <div className="font-bold">
                             {Formatter.formatCurrency(detail?.total ?? 0)}
                         </div>

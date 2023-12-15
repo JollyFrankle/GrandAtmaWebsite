@@ -109,7 +109,7 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 export function dialogSizeByClass(size: "sm" | "md" | "lg" | "xl") {
-  let dialogClass = "max-h-[90vh] overflow-y-auto ";
+  const dialogClass = "max-h-[90vh] overflow-y-auto ";
 
   switch (size) {
     case "sm":

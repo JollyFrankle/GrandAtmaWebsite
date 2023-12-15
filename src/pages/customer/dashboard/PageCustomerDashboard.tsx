@@ -10,7 +10,7 @@ import ReservasiHistoryTab from "../../../components/reservasi/ReservasiHistoryT
 
 
 export default function PageCustomerDashboard() {
-    const user = AuthHelper.getUserCustomer()!!
+    const user = AuthHelper.getUserCustomer()!
     const [showDialog, setShowDialog] = useState(false)
     const [detailReservasi, setDetailReservasi] = useState<Reservasi>()
     const [detailLoading, setDetailLoading] = useState(false)

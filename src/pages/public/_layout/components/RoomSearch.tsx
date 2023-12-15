@@ -6,8 +6,9 @@ import { BabyIcon, BedIcon, CalendarIcon, SearchIcon, UserIcon } from "lucide-re
 import { Button } from "@/cn/components/ui/button";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import InlineLink from "@/components/InlineLink";
 
 export interface RoomSearchData {
     date?: DateRange,
@@ -121,9 +122,7 @@ export default function RoomSearch({
                 </div>
                 <div>
                     Ingin memesan lebih dari 5 kamar?
-                    <Button variant="link" className="p-0 ms-2 text-md" asChild>
-                        <Link to="/reservasi-grup">Hubungi kami</Link>
-                    </Button>
+                    <InlineLink to="/reservasi-grup" className="ms-2">Hubungi kami</InlineLink>
                 </div>
             </div>
         </CardContent>

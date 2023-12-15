@@ -1,19 +1,21 @@
 import AuthHelper from "@/utils/AuthHelper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 
 export default function UnauthenticatedMiddleware() {
-    const userType = AuthHelper.getUserType()
+    const [userType, setUserType] = useState<'c' | 'p' | null>()
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (userType === "c") {
+        const uType = AuthHelper.getUserType()
+        setUserType(uType)
+        if (uType === "c") {
             navigate("/customer")
-        } else if (userType === "p") {
+        } else if (uType === "p") {
             navigate("/admin")
         }
-    }, [userType])
+    }, [navigate])
 
     return !userType && <Outlet />
 }

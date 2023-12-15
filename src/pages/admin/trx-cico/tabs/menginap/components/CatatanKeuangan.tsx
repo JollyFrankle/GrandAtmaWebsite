@@ -85,7 +85,7 @@ export default function CatatanKeuangan({
                         <TableCell>{item.amount}</TableCell>
                         <TableCell>{detailCK.reservasi.jumlah_malam}</TableCell>
                         <TableCell>{Formatter.formatCurrency(item.harga)}</TableCell>
-                        <TableCell>{Formatter.formatCurrency(item.harga * item.amount * detailCK.reservasi.jumlah_malam!!)}</TableCell>
+                        <TableCell>{Formatter.formatCurrency(item.harga * item.amount * detailCK.reservasi.jumlah_malam!)}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

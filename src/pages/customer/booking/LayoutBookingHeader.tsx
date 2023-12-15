@@ -5,7 +5,7 @@ import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
 import "./LayoutBookingHeader.css"
 
-import AbstractBG from "@/assets/images/abstract-bg.jpg"
+import AbstractBG from "@/assets/images/abstract-bg.png"
 import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import AuthHelper from "@/utils/AuthHelper";
 import GeneralLoadingDialog from "@/components/loading/GeneralLoadingDialog";
@@ -132,7 +132,7 @@ export default function LayoutBookingHeader() {
     return user && <>
     <ScrollToTop />
     <header className="lg:sticky -top-24 transition-all z-50">
-        <section className="pb-8 pt-8 shadow-lg data-[scrolled=true]:lg:pb-4 relative transition-all" data-scrolled={minimize}>
+        <section className="bg-background pb-8 pt-8 shadow-lg data-[scrolled=true]:lg:pb-4 relative transition-all" data-scrolled={minimize}>
             <img src={AbstractBG} className="absolute top-0 left-0 w-full h-full pointer-events-none object-cover" />
             <div className="container relative block">
                 <img src={InlineLogo} className="w-48 h-12 object-contain mb-8" />

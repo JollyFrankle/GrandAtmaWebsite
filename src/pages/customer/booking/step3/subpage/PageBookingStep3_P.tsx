@@ -203,7 +203,7 @@ export default function PageBookingStep3_P() {
                     </li>
                     <li className="p-1 flex justify-between bg-secondary"></li>
                     <li className="p-4 flex justify-between">
-                        <div className="font-bold">Total Harga {detail?.jumlah_malam!! > 1 && `${detail?.jumlah_malam} Malam`}</div>
+                        <div className="font-bold">Total Harga {detail?.jumlah_malam! > 1 && `${detail?.jumlah_malam} Malam`}</div>
                         <div className="font-bold">
                             {Formatter.formatCurrency(detail?.total ?? 0)}
                         </div>

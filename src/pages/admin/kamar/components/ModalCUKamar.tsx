@@ -78,11 +78,9 @@ export default function ModalCUKamar({
                 is_smoking: parseInt(data.is_smoking.toString()),
                 id_jenis_kamar: parseInt(data.id_jenis_kamar.toString())
             }
-        }).then((_) => {
+        }).then(() => {
             // const data = res.data
-            toast("Berhasil menyimpan data kamar.", {
-                type: "success"
-            })
+            toast.success("Berhasil menyimpan data kamar.")
             setErrors(null)
             onOpenChange(false)
             setData(emptyKamar)

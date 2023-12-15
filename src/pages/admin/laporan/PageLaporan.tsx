@@ -11,7 +11,7 @@ import { getLaporanProperties } from "./LaporanHelper";
 import { BASE_URL } from "@/utils/ApiModels";
 
 import "./PageLaporan.css"
-import AbstractBG from "@/assets/images/abstract-bg.jpg"
+import AbstractBG from "@/assets/images/abstract-bg.png"
 
 const monthFormatter = new Intl.DateTimeFormat("id-ID", { month: "long" })
 const dropdownTahun: { value: string, label: string }[] = []
@@ -47,16 +47,16 @@ export default function PageLaporan1() {
     usePageTitle(pageTitle)
 
     const fetchLaporan = () => {
-        let baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
+        const baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
         const params = new URLSearchParams({
-            token: AuthHelper.getToken()!!,
+            token: AuthHelper.getToken()!,
             readonly: "true",
             tahun: tahun,
             bulan: bulan,
             ts: Date.now().toString()
         })
 
-        let { title, showBulan } = getLaporanProperties(+(nomorLaporan ?? 0))
+        const { title, showBulan } = getLaporanProperties(+(nomorLaporan ?? 0))
 
         setShowInputBulan(showBulan)
         setLoading(true)
@@ -75,9 +75,9 @@ export default function PageLaporan1() {
     }
 
     const printLaporan = () => {
-        let baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
+        const baseUrl = `${BASE_URL}/public/pdf/laporan/${nomorLaporan}`
         const params = new URLSearchParams({
-            token: AuthHelper.getToken()!!,
+            token: AuthHelper.getToken()!,
             tahun: tahun,
             bulan: bulan
         })
@@ -94,7 +94,7 @@ export default function PageLaporan1() {
     }, [nomorLaporan, tahun, bulan])
 
     return <>
-        <img src={AbstractBG} alt="Abstract background" className="dark:hidden select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
+        <img src={AbstractBG} alt="Abstract background" className="dark:opacity-10 pointer-events-none select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
         <section className="max-w-[210mm] mx-auto overflow-x-auto shadow-md relative">
             <div className="flex justify-between items-center bg-secondary px-4 py-2 w-[210mm]">
                 <h1 className="text-lg font-bold me-4">{laporanTitle}</h1>

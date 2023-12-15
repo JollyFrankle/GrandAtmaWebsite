@@ -16,7 +16,7 @@ import AuthHelper from "@/utils/AuthHelper"
 import { toast } from "react-toastify"
 import Lottie from "lottie-react";
 
-import AbstractBG from "@/assets/images/abstract-bg.jpg"
+import AbstractBG from "@/assets/images/abstract-bg.png"
 // import PetunjukPenggunaan from "@/assets/images/petunjuk-penggunaan.jpg"
 import InlineLogo from "@/assets/images/gah-inline-logo.png"
 import { Separator } from "@/cn/components/ui/separator"
@@ -76,8 +76,8 @@ export default function PageRoomSearch() {
         setIsLoading(true)
         setIsReady(false)
         apiPublic.post(`public/booking/search`, {
-            check_in: Formatter.dateToYMD(initData.date.from!!),
-            check_out: Formatter.dateToYMD(initData.date.to!!),
+            check_in: Formatter.dateToYMD(initData.date.from!),
+            check_out: Formatter.dateToYMD(initData.date.to!),
             jumlah_kamar: +initData.jumlahKamar,
             jumlah_dewasa: +initData.dewasa,
             jumlah_anak: +initData.anak
@@ -127,10 +127,10 @@ export default function PageRoomSearch() {
                     harga: item.harga_diskon,
                 })),
                 detail: {
-                    arrival_date: Formatter.dateToYMD(initData?.date.from!!),
-                    departure_date: Formatter.dateToYMD(initData?.date.to!!),
-                    jumlah_dewasa: +initData?.dewasa!!,
-                    jumlah_anak: +initData?.anak!!,
+                    arrival_date: Formatter.dateToYMD(initData?.date.from!),
+                    departure_date: Formatter.dateToYMD(initData?.date.to!),
+                    jumlah_dewasa: +initData?.dewasa!,
+                    jumlah_anak: +initData?.anak!,
                 }
             }).then(res => {
                 const data = res.data as ApiResponse<{ reservasi: Reservasi, kamar: ReservasiRoom[] }>
@@ -138,14 +138,12 @@ export default function PageRoomSearch() {
 
                 // Delete kamarDipesan from localStorage
                 localStorage.removeItem("kamarDipesan")
-            }).catch((_) => {
+            }).catch(() => {
                 setShowDialogMengamankanHarga(false)
                 setShowDialogConfirm(true)
             })
         } else if (userType === "p") {
-            toast("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.", {
-                type: "error"
-            })
+            toast.error("Anda tidak dapat memesan kamar karena Anda login sebagai pegawai.")
         } else {
             setShowDialogLogin(true)
         }
@@ -155,18 +153,31 @@ export default function PageRoomSearch() {
         const redirectTo = new URLSearchParams()
         redirectTo.set("from", (initData?.date.from?.getTime() ?? 0).toString())
         redirectTo.set("to", (initData?.date.to?.getTime() ?? 0).toString())
-        redirectTo.set("dewasa", initData?.dewasa!!)
-        redirectTo.set("anak", initData?.anak!!)
-        redirectTo.set("jumlahKamar", initData?.jumlahKamar!!)
+        redirectTo.set("dewasa", initData?.dewasa!)
+        redirectTo.set("anak", initData?.anak!)
+        redirectTo.set("jumlahKamar", initData?.jumlahKamar!)
         const param = redirectTo.toString()
         navigate(`/login?${new URLSearchParams({ redirect: `/search?${param}` }).toString()}`)
         localStorage.setItem("afterLoginRedirect", `/search?${param}`)
     }
 
-    const updateKamarDipesan = (tarifKamar: TarifKamar, count: -1 | 1) => {
+    const updateKamarDipesan = (tarifKamar: TarifKamar, count: -1 | 0 | 1) => {
         const jenisKamar = tarifKamar.jenis_kamar
         const rincianTarif = tarifKamar.rincian_tarif
         const index = kamarDipesan.findIndex(item => item.idJK === jenisKamar.id)
+
+        let additionalKamarCount = 0
+        if (count === 0) {
+            // Bulk add this kamar
+            additionalKamarCount = +(initData?.jumlahKamar ?? 0) - summaryKamarDipesan.totalKamarSaatIni
+            const totalKamar = +(kamarDipesan[index]?.count ?? 0) + additionalKamarCount
+            console.log(totalKamar, rincianTarif.jumlah_kamar)
+            if (totalKamar > rincianTarif.jumlah_kamar) {
+                additionalKamarCount = rincianTarif.jumlah_kamar - (kamarDipesan[index]?.count ?? 0)
+            }
+        } else {
+            additionalKamarCount = count
+        }
         if (index === -1) {
             setKamarDipesan(prev => {
                 const newKamarDipesan = [...prev]
@@ -174,7 +185,7 @@ export default function PageRoomSearch() {
                     idJK: jenisKamar.id,
                     nama: jenisKamar.nama,
                     gambar: jenisKamar.gambar,
-                    count: 1,
+                    count: additionalKamarCount,
                     harga: rincianTarif.harga,
                     harga_diskon: rincianTarif.harga_diskon
                 })
@@ -183,7 +194,7 @@ export default function PageRoomSearch() {
         } else {
             setKamarDipesan(prev => {
                 const newKamarDipesan = [...prev]
-                newKamarDipesan[index].count += count
+                newKamarDipesan[index].count += additionalKamarCount
                 if (newKamarDipesan[index].count === 0) {
                     newKamarDipesan.splice(index, 1)
                 }
@@ -261,7 +272,7 @@ export default function PageRoomSearch() {
             <div className="container flex flex-wrap lg:flex-row items-center gap-1 lg:gap-4 lg:h-6">
                 <p>Ketersediaan kamar untuk<span className="lg:hidden">:</span></p>
                 <Separator orientation="vertical" />
-                <strong>{Formatter.formatDate(initData?.date.from!!)} - {Formatter.formatDate(initData?.date.to!!)}<span className="ms-2 lg:hidden">&ndash;</span></strong>
+                <strong>{Formatter.formatDate(initData?.date.from!)} - {Formatter.formatDate(initData?.date.to!)}<span className="ms-2 lg:hidden">&ndash;</span></strong>
                 <Separator orientation="vertical" />
                 <strong>{initData?.dewasa} dewasa, {initData?.anak} anak<span className="ms-2 lg:hidden">&ndash;</span></strong>
                 <Separator orientation="vertical" />
@@ -301,11 +312,11 @@ export default function PageRoomSearch() {
                     <ul className="list-none mb-4">
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Check in:</span>
-                            <strong>{Formatter.formatDate(initData?.date.from!!)}</strong>
+                            <strong>{Formatter.formatDate(initData?.date.from!)}</strong>
                         </li>
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Check out:</span>
-                            <strong>{Formatter.formatDate(initData?.date.to!!)} ({jumlahMalam} malam)</strong>
+                            <strong>{Formatter.formatDate(initData?.date.to!)} ({jumlahMalam} malam)</strong>
                         </li>
                         <li className="flex items-center">
                             <span className="w-28 text-muted-foreground">Jumlah tamu:</span>

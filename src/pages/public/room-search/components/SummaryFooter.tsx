@@ -9,20 +9,22 @@ export default function SummaryFooter({
     kamarDipesan,
     jumlahMalam,
     show,
+    persistent,
     summaryKamarDipesan,
     onButtonPesanClick,
     initData
 }: {
     kamarDipesan: KamarDipesan[],
     jumlahMalam: number,
-    show: boolean,
+    show?: boolean,
+    persistent?: boolean,
     summaryKamarDipesan: SummaryKamarDipesan,
     onButtonPesanClick: () => void,
     initData?: Required<RoomSearchData>
 }) {
     return (
-        <footer className={`fixed left-0 bottom-0 w-full transition-transform duration-500 ease-in-out transform ${(kamarDipesan.length > 0 && show) ? 'translate-y-0' : 'translate-y-full'}`}>
-            <div className="container py-4 rounded-xl bg-background shadow-lg mb-4">
+        <footer className={persistent ? `sticky bottom-2` : `fixed left-0 bottom-0 w-full transition-transform duration-500 ease-in-out transform ${(kamarDipesan.length > 0 && show) ? 'translate-y-0' : 'translate-y-full'}`}>
+            <div className={`${persistent ? 'px-6' : 'container'} py-4 rounded-xl bg-background shadow-lg mb-4`}>
                 <div className="md:flex justify-between items-center">
                     <div className="hidden md:block">
                         <div className="text-sm text-muted-foreground">Kamar yang dipesan:</div>
@@ -32,11 +34,11 @@ export default function SummaryFooter({
                         <div className="hidden md:block md:me-6">
                             <div className="flex items-center">
                                 <span className="w-24 text-muted-foreground">Check in:</span>
-                                <strong>{Formatter.formatDate(initData?.date.from!!)}</strong>
+                                <strong>{Formatter.formatDate(initData?.date.from!)}</strong>
                             </div>
                             <div className="flex items-center border-b">
                                 <span className="w-24 text-muted-foreground">Check out:</span>
-                                <strong>{Formatter.formatDate(initData?.date.to!!)}</strong>
+                                <strong>{Formatter.formatDate(initData?.date.to!)}</strong>
                             </div>
                             <div className="flex items-center">
                                 <span>{initData?.date && jumlahMalam} malam, {initData?.dewasa} dewasa, {initData?.anak} anak</span>

@@ -31,12 +31,10 @@ export default function PageAllUpomingReservasiCG() {
         if(AuthHelper.authorize(["sm"])) {
             // fetchTableData()
         } else {
-            toast("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.", {
-                type: "error"
-            })
+            toast.error("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.")
             navigate("/admin/")
         }
-    }, [])
+    }, [navigate])
 
     return <>
         <h1 className="text-3xl font-bold mb-2">Reservasi Grup Aktif & Mendatang</h1>

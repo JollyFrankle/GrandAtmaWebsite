@@ -66,9 +66,7 @@ export default function ModalCCustomerGroup({
             data: data
         }).then((res) => {
             const data = res.data
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             setErrors(null)
             onOpenChange(false)
             setData(emptyLTB)

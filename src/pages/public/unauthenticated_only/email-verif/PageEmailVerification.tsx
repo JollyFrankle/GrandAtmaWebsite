@@ -22,10 +22,10 @@ export default function PageEmailVerification() {
     const fetchData = () => {
         apiPublic.post(`confirm-email`, {
             token
-        }).then((_) => {
+        }).then(() => {
             setIsLoading(false)
             setIsSuccess(true)
-        }).catch((_) => {
+        }).catch(() => {
             setIsLoading(false)
             setIsSuccess(false)
         })

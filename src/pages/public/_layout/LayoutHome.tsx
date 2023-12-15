@@ -152,7 +152,11 @@ function generateNavSM() {
     </Sheet>
 }
 
-export default function LayoutHome() {
+export default function LayoutHome({
+    children
+}: {
+    children?: React.ReactNode
+}) {
     const [userCustomer, setUserCustomer] = React.useState<UserCustomer | null>(null)
     const [userPegawai, setUserPegawai] = React.useState<UserPegawai | null>(null)
 
@@ -235,7 +239,7 @@ export default function LayoutHome() {
             </div>
         </section>
 
-        <Outlet />
+        {children ? children : <Outlet />}
 
         <div className='bg-secondary pt-8 pb-14 rounded-t-3xl'>
             <div className="container">
@@ -328,7 +332,7 @@ const ListItem = React.forwardRef<
         <li>
             <NavigationMenuLink asChild>
                 <Link
-                    to={to!!}
+                    to={to!}
                     ref={ref}
                     className={cn(
                         "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",

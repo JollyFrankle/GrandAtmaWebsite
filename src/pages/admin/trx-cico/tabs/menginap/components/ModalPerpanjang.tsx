@@ -34,7 +34,7 @@ export default function ModalPerpanjang({
         const num = +val
         setInputJlhMalam(val)
 
-        let tglCO = new Date(reservasi.departure_date)
+        const tglCO = new Date(reservasi.departure_date)
         // add num days
         tglCO.setDate(tglCO.getDate() + num)
 

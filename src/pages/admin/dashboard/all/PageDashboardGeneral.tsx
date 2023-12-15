@@ -1,7 +1,7 @@
 import { UserPegawai } from "@/utils/ApiModels"
 import AuthHelper from "@/utils/AuthHelper"
 import { useEffect, useState } from "react"
-import AbstractBG from "@/assets/images//abstract-bg.jpg"
+import AbstractBG from "@/assets/images//abstract-bg.png"
 
 
 export default function PageDashboardGeneral() {
@@ -9,12 +9,12 @@ export default function PageDashboardGeneral() {
     const [user, setUser] = useState<UserPegawai>()
 
     useEffect(() => {
-        setUser(AuthHelper.getUserPegawai()!!)
+        setUser(AuthHelper.getUserPegawai()!)
     }, [])
 
     return (
         <>
-            <img src={AbstractBG} alt="Abstract background" className="dark:hidden select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
+            <img src={AbstractBG} alt="Abstract background" className="dark:opacity-10 pointer-events-none select-none fixed top-0 left-0 right-0 bottom-0 w-full h-full object-cover opacity-50" />
             <div className="relative">
                 <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
                 <p className="text-lg">Selamat datang,</p>

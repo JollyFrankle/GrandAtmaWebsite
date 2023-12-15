@@ -39,12 +39,10 @@ export default function PageReservasiCG() {
         if(AuthHelper.authorize(["sm"])) {
             // fetchTableData()
         } else {
-            toast("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.", {
-                type: "error"
-            })
+            toast.error("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.")
             navigate("/admin/")
         }
-    }, [])
+    }, [navigate])
 
     useEffect(() => {
         if (user === null) {

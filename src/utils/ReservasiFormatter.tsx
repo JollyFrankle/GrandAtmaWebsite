@@ -67,7 +67,7 @@ export default class ReservasiFormatter {
         }
     }
 
-    static getRoleBadge(role: String) {
+    static getRoleBadge(role: string) {
         switch (role) {
             case "sm":
                 return <Badge variant="warning">Sales & Marketing</Badge>

@@ -6,13 +6,12 @@ import 'swiper/css/navigation';
 
 import { Navigation, EffectCoverflow } from "swiper/modules"
 import { Card, CardContent, CardFooter, CardHeader } from "@/cn/components/ui/card";
-import { Button } from "@/cn/components/ui/button";
-import { Link } from "react-router-dom";
 import { Grid2X2Icon, StarIcon, UserIcon } from "lucide-react";
 
 import { ApiResponse, JenisKamar, apiPublic, getImage } from "@/utils/ApiModels";
 import Formatter from "@/utils/Formatter";
 import { Skeleton } from "@/cn/components/ui/skeleton";
+import InlineLink from "@/components/InlineLink";
 
 export default function SwiperListJenisKamar() {
     const [data, setData] = useState<Partial<JenisKamar>[]>([])
@@ -53,23 +52,17 @@ export default function SwiperListJenisKamar() {
                         <h3 className="text-lg font-bold">{it.nama}</h3>
                         <div className="flex items-center">
                             <StarIcon className="w-4 h-4 me-1 text-orange-400" />
-                            {Formatter.formatNumber(it.rating!!)}
+                            {Formatter.formatNumber(it.rating!)}
                         </div>
                     </CardHeader>
-                    <CardContent className="flex flex-col justify-between h-full">
-                        <p className="text-muted-foreground">{it.short_desc}</p>
-                        <div className="flex justify-between items-center">
-                            <Button className="text-sm p-0" variant="link" asChild>
-                                <Link to={`/kamar/${it.id}`}>
-                                    Selengkapnya
-                                </Link>
-                            </Button>
-                        </div>
+                    <CardContent>
+                        <p className="text-muted-foreground mb-2">{it.short_desc}</p>
+                        <InlineLink to={`/kamar/${it.id}`} className="text-sm">Selengkapnya</InlineLink>
                     </CardContent>
                     <CardFooter className="flex justify-between items-center">
                         <div className="flex items-center">
                             <Grid2X2Icon className="w-4 h-4 me-1" />
-                            {Formatter.formatNumber(it.ukuran!!)} meter<sup>2</sup>
+                            {Formatter.formatNumber(it.ukuran!)} meter<sup>2</sup>
                         </div>
                         <div className="flex items-center">
                             <UserIcon className="w-4 h-4 me-1" />

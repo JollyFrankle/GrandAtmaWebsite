@@ -11,11 +11,12 @@ import { ArrowLeftIcon, AsteriskIcon, BanIcon, BookUserIcon, CreditCardIcon, Edi
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
+import InlineButton from "@/components/InlineButton"
 
 
 export default function PageProfileCustomer() {
     const [isEditing, setIsEditing] = useState(false)
-    const [data, setData] = useState<UserCustomer>(AuthHelper.getUserCustomer()!!)
+    const [data, setData] = useState<UserCustomer>(AuthHelper.getUserCustomer()!)
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [oldPassword, setOldPassword] = useState("")
     const [changePassword, setChangePassword] = useState(false)
@@ -32,7 +33,7 @@ export default function PageProfileCustomer() {
     }
 
     const resetToDefault = () => {
-        setData(AuthHelper.getUserCustomer()!!)
+        setData(AuthHelper.getUserCustomer()!)
         setIsEditing(false)
     }
 
@@ -59,9 +60,7 @@ export default function PageProfileCustomer() {
             AuthHelper.setUserCustomer(data.data)
             setData(data.data)
             setIsEditing(false)
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             setErrors(null)
         })
     }
@@ -106,7 +105,7 @@ export default function PageProfileCustomer() {
 
                         <div hidden={!isEditing}>
                             <p className="text-muted-foreground text-sm">
-                                <Button type="button" variant="link" className="px-0" onClick={changePasswordHandler}>Ubah Kata Sandi</Button>
+                                <InlineButton type="button" onClick={changePasswordHandler}>Ubah Kata Sandi</InlineButton>
                                 <span className="ms-2">{data.password_last_changed ? `Terakhir diubah ${Formatter.formatDateTime(new Date(data.password_last_changed))}` : `Belum pernah diubah sebelumnya`}.</span>
                             </p>
 

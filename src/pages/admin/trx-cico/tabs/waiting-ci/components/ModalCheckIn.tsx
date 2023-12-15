@@ -91,7 +91,7 @@ export default function ModalCheckIn({
             const data = res.data
             setData(data.data)
             const kamarTerpilih: CheckInKamar[] = []
-            for (const rr of data.data.reservasi_rooms!!) {
+            for (const rr of data.data.reservasi_rooms!) {
                 kamarTerpilih.push({
                     id_rr: rr.id,
                     no_kamar: rr.no_kamar ?? "",

@@ -11,7 +11,7 @@ import ModalDelete from "../../../components/modals/ModalDelete";
 import { useNavigate } from "react-router-dom";
 import ReservasiFormatter from "@/utils/ReservasiFormatter";
 
-export default function PageKamar() {
+export default function PageUserPegawai() {
     const [tableData, setTableData] = useState<UserPegawai[]>([])
     const [currentData, setCurrentData] = useState<UserPegawai>()
     const [openModalDetail, setOpenModalDetail] = useState(false)
@@ -32,7 +32,7 @@ export default function PageKamar() {
         })
     }
 
-    const deleteKamar = () => {
+    const deleteUser = () => {
         apiAuthenticated.delete<ApiResponse<null>>(`pegawai/users/${currentData?.id}`).then((res) => {
             const data = res.data
             toast.error(data.message)
@@ -51,7 +51,7 @@ export default function PageKamar() {
 
     return <>
         <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Kamar</h1>
+            <h1 className="text-3xl font-bold">User Management</h1>
             <Button onClick={() => {
                 setCurrentData(undefined)
                 setIsEditing(true)
@@ -71,9 +71,7 @@ export default function PageKamar() {
             {
                 field: "nama",
                 header: "Nama",
-                enableSorting: true,
-                // cell: (row) => <Button variant="link" className="h-fit p-0" asChild><a href={`/kamar/${row.id_jenis_kamar}`} target="_blank">{row.jenis_kamar?.nama}</a></Button>,
-                // accessorFn: (row) => row.jenis_kamar?.nama ?? ""
+                enableSorting: true
             },
             {
                 field: "email",
@@ -107,7 +105,7 @@ export default function PageKamar() {
         ]]} isLoading={tableLoading} />
 
         <ModalCUPegawai id={currentData?.id} editable={isEditing} open={openModalDetail} onOpenChange={setOpenModalDetail} onSubmittedHandler={() => { fetchTableData(); setCurrentData(undefined) }} />
-        <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteKamar}>
+        <ModalDelete open={openModalDelete} onOpenChange={setOpenModalDelete} onConfirmed={deleteUser}>
             <p className="mb-3">Apakah Anda yakin ingin menghapus pegawai ini?</p>
             <p className="text-xl font-bold">{currentData?.nama}</p>
         </ModalDelete>

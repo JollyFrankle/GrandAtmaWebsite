@@ -8,13 +8,15 @@ import PrambananHalfRight from "@/assets/images/prambanan-half-right.png"
 import ReCAPTCHA from "react-google-recaptcha";
 import { Checkbox } from "@/cn/components/ui/checkbox";
 import { Button } from "@/cn/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/card";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import IconInput from "@/components/IconInput";
 import IconSelect from "@/components/IconSelect";
 import IconTextarea from "@/components/IconTextarea";
+import InlineButton from "@/components/InlineButton";
+import InlineLink from "@/components/InlineLink";
 
 const recaptchaRef = createRef<ReCAPTCHA>()
 
@@ -62,9 +64,7 @@ export default function PageRegister() {
             recaptcha_token: captcha,
         }).then((res) => {
             const data = res.data
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             navigate("/login")
         }).catch((err: AxiosError) => {
             if (err.response?.data) {
@@ -76,9 +76,7 @@ export default function PageRegister() {
                 setCaptcha(null)
             } else {
                 console.log(err)
-                toast("Gagal registrasi. Silakan hubungi pengelola.", {
-                    type: "error"
-                })
+                toast.error("Gagal registrasi. Silakan hubungi pengelola.")
             }
         }).finally(() => {
             setIsLoading(false)
@@ -205,9 +203,9 @@ export default function PageRegister() {
                             <Checkbox required id="terms" />
                             <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Saya telah membaca dan menyetujui
-                                <Button variant="link" className="h-auto p-0 mx-1 text-sm" type="button">Syarat dan Ketentuan</Button>
+                                <InlineButton>Syarat dan Ketentuan</InlineButton>
                                 serta
-                                <Button variant="link" className="h-auto p-0 mx-1 text-sm" type="button">Kebijakan Privasi</Button>
+                                <InlineButton>Kebijakan Privasi</InlineButton>
                                 yang berlaku.
                             </label>
                         </div>
@@ -216,12 +214,8 @@ export default function PageRegister() {
 
                         <div className="text-center">
                             Sudah punya akun?
-                            <Button variant="link" className="ms-2 p-0 text-md" asChild>
-                                <Link to="/login">Log in</Link>
-                            </Button>
-                            <Button variant="link" className="ms-2 p-0 text-md" asChild disabled={isLoading}>
-                                <Link to="/reset-password">Lupa Password?</Link>
-                            </Button>
+                            <InlineLink to="/login" className="mx-2">Masuk akun</InlineLink>
+                            <InlineLink to="/reset-password">Lupa Password?</InlineLink>
                         </div>
                     </div>
                 </form>

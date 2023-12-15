@@ -4,7 +4,6 @@ import Tugu from "@/assets/images/tugu-crop.png"
 import PrambananHalfRight from "@/assets/images/prambanan-half-right.png"
 import Logo from "@/assets/images/gah-logo.png"
 import { Card, CardContent, CardHeader, CardTitle } from "@/cn/components/ui/card";
-import { Link } from "react-router-dom";
 import { createRef, useState } from "react";
 import {  CheckCircleIcon, Loader2Icon, MailIcon } from "lucide-react";
 import { AxiosError } from "axios";
@@ -13,6 +12,7 @@ import { Button } from "@/cn/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/cn/components/ui/radio-group";
 import ReCAPTCHA from "react-google-recaptcha";
 import IconInput from "@/components/IconInput";
+import InlineLink from "@/components/InlineLink";
 
 const recaptchaRef = createRef<ReCAPTCHA>()
 
@@ -34,7 +34,7 @@ export default function PageResetPassword() {
             email,
             type,
             recaptcha_token: captcha
-        }).then((_) => {
+        }).then(() => {
             setIsLoading(false)
             setIsSuccess(true)
         }).catch((err: AxiosError) => {
@@ -69,9 +69,7 @@ export default function PageResetPassword() {
                         <div className="text-center">
                             <CheckCircleIcon className="w-20 h-20 text-green-500 mx-auto mb-4" />
                             <p>Email pemulihan telah dikirim ke alamat e-mail Anda.</p>
-                            <Button variant="link" className="p-0 text-md" asChild>
-                                <Link to="/login">Kembali ke halaman log in</Link>
-                            </Button>
+                            <InlineLink to="login">Kembali ke halaman log in</InlineLink>
                         </div>
                     ) : (
                         <form onSubmit={onSubmitHandler}>
@@ -115,12 +113,8 @@ export default function PageResetPassword() {
                             <Button className="w-full h-14 text-lg font-bold mb-3" type="submit">Kirim Email Pemulihan</Button>
 
                             <div className="text-center">
-                                <Button variant="link" className="p-0 text-md" asChild disabled={isLoading}>
-                                    <Link to="/login">Log in</Link>
-                                </Button>
-                                <Button variant="link" className="ms-2 p-0 text-md" asChild disabled={isLoading}>
-                                    <Link to="/register">Daftar akun</Link>
-                                </Button>
+                                <InlineLink to="/login">Masuk akun</InlineLink>
+                                <InlineLink to="/register" className="me-2">Buat akun</InlineLink>
                             </div>
                         </form>
                     )}

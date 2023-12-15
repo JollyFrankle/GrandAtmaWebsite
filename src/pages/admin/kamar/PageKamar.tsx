@@ -35,9 +35,7 @@ export default function PageKamar() {
     const deleteKamar = () => {
         apiAuthenticated.delete<ApiResponse<null>>(`pegawai/kamar/${currentData?.no_kamar}`).then((res) => {
             const data = res.data
-            toast(data.message, {
-                type: "success"
-            })
+            toast.success(data.message)
             fetchTableData()
         })
     }
@@ -46,12 +44,10 @@ export default function PageKamar() {
         if(AuthHelper.authorize(["admin"])) {
             fetchTableData()
         } else {
-            toast("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.", {
-                type: "error"
-            })
+            toast.error("Anda tidak memiliki akses ke halaman ini. Insiden ini telah dilaporkan.")
             navigate("/admin/")
         }
-    }, [])
+    }, [navigate])
 
     return <>
         <div className="flex justify-between items-center">
