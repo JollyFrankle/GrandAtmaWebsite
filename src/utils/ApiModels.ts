@@ -218,6 +218,27 @@ export interface Tarif {
     season?: Season
 }
 
+export interface FnBKategori {
+    id: number
+    nama: string
+    deskripsi: string
+    icon: string | null
+}
+
+export interface FnB {
+    id: number
+    id_kategori: number
+    nama: string
+    deskripsi: string
+    harga: number
+    gambar: string | null
+    availability_time: string
+    availabilty_day: string | null
+    created_at: string
+    updated_at: string
+    fnb_kategori?: FnBKategori
+}
+
 export interface RincianTarif {
     jumlah_kamar: number
     harga_diskon: number

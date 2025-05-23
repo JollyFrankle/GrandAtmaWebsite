@@ -9,7 +9,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { AlignJustifyIcon, BanIcon, CaseSensitiveIcon, DollarSignIcon, Layers2Icon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ModalSaveConfirm from "../../../../components/modals/ModalSaveConfirm";
+import ModalSaveConfirm from "@/components/modals/ModalSaveConfirm";
 import ModalDialogLoading from "@/components/loading/ModalDialogLoading";
 
 const emptyLTB: FasilitasLayananTambahan = {
